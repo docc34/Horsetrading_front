@@ -1,0 +1,20 @@
+.homeMainDiv{
+    display: flex;
+    flex-direction: column;
+    margin: 5%;
+}
+
+.homeInputDiv{
+    max-width:600px;
+}
+.form-control{
+    margin: 2%;
+    margin-top:1%;
+    max-width: 300px;
+}
+.form-label{
+    margin-left: 2%;
+}
+.homeDataGridDiv{
+    max-width: 800px;
+}
