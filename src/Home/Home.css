@@ -3,12 +3,15 @@
     flex-direction: column;
     margin: 5%;
 }
-
+.homeFormsDiv{
+    display: flex;
+    flex-direction: row;
+}
 .homeInputDiv{
     max-width:600px;
 }
-.form-control{
-    margin: 2%;
+.homeFormInputs{
+    margin: 1%;
     margin-top:1%;
     max-width: 300px;
 }
@@ -17,4 +20,9 @@
 }
 .homeDataGridDiv{
     max-width: 800px;
+}
+
+.errorMessage{
+    color:red;
+    font-size: large;
 }
