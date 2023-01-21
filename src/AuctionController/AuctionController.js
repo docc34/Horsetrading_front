@@ -29,7 +29,9 @@ const AuctionController = ()=>{
         {name:"description" , header:"Description", defaultFlex:2},
         {name:"active" , header:"Active", defaultFlex:1},
         {name:"closingTime" , header:"Closing Time", type: "number", defaultFlex:2},
-        {name:"url" , header:"Url", defaultFlex:2}
+        {name:"url" , header:"Url", defaultFlex:2, render: ({value}) => {
+            return <a href={value}>Auction</a>
+        }}
     ]
     const resetValues = ()=>{
         setPassword("");

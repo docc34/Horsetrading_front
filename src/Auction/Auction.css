@@ -1,0 +1,28 @@
+.homeMainDiv{
+    display: flex;
+    flex-direction: column;
+    margin: 5%;
+}
+.homeFormsDiv{
+    display: flex;
+    flex-direction: row;
+}
+.homeInputDiv{
+    max-width:600px;
+}
+.homeFormInputs{
+    margin: 1%;
+    margin-top:1%;
+    max-width: 300px;
+}
+.form-label{
+    margin-left: 2%;
+}
+.homeDataGridDiv{
+    max-width: 800px;
+}
+
+.errorMessage{
+    color:red;
+    font-size: large;
+}
