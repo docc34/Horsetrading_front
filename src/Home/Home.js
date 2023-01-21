@@ -1,12 +1,14 @@
 import ReactDataGrid from '@inovua/reactdatagrid-community'
-import '@inovua/reactdatagrid-community/index.css'
 
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
 import { useState, useEffect, useCallback } from 'react'
 
 import './Home.css';
+
+import Button from 'react-bootstrap/Button';
+
+import {handleInputChange} from  '../functions'
 
 const Home = ()=>{
     
@@ -30,6 +32,7 @@ const Home = ()=>{
 
     const [message, setMessage] = useState("");
     
+
     const columns = [
         {name:"id", header: "Id",  defaultVisible: false},
         {name:"igTag" , header:"Instagram tag",  defaultFlex:2},
@@ -37,6 +40,7 @@ const Home = ()=>{
         {name:"username" , header:"Username", defaultFlex:2},
         {name:"price" , header:"Price", type: "number", defaultFlex:1}
     ]
+//    headers: { "Authorization": `Bearer ${cookies.token}`}
 
     const postAuction = async ()=>{
         if(auctioneer?.igTag != "" &&  auctioneer?.price != 0){
@@ -93,16 +97,7 @@ const Home = ()=>{
         fetchAuctioneers();
     },[]);
 
-    const handleInputChange = (o)=>{
-        if(o.target.value == null  || o.target.value == ""|| o.target.value == 0){
-          o.target.setAttribute('style','border-color: #8f37aa; border-width: 2px')
-          return null;
-        }
-        else{
-          o.target.setAttribute('style','')
-          return o.target.value;
-        }
-      }
+    
 
     const onSelectionChange = useCallback((e) => {
         setUsernameModify(e.data.username);
@@ -234,13 +229,13 @@ const Home = ()=>{
                     <div className='homeFormInputs'>
                         <p className='errorMessage'>{message}</p>
                         <Button onClick={()=>{setAuctioneer({
-                    Username: username, 
-                    IgTag: igTag,
-                    Price: price,
-                    Password: password,
-                    Phonenumber:phonenumber,
-                    AuctionItemId: currentAuctionItem.id
-                });}}>Save</Button>
+                            Username: username, 
+                            IgTag: igTag,
+                            Price: price,
+                            Password: password,
+                            Phonenumber:phonenumber,
+                            AuctionItemId: currentAuctionItem.id
+                        });}}>Save</Button>
                     </div>
                 </div>
             </div>
