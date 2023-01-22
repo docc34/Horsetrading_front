@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useCookies } from 'react-cookie';
 
+import "react-datetime/css/react-datetime.css";
+import './AuctionController.css';
+
 import ReactDataGrid from '@inovua/reactdatagrid-community'
 
 import Button from 'react-bootstrap/Button';
@@ -8,8 +11,10 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import {handleInputChange} from  '../functions'
+
 import DateFilter from '@inovua/reactdatagrid-community/DateFilter'
 import moment from 'moment'
+import Datetime from 'react-datetime';
 
 const AuctionController = ()=>{
     const [loggedIn, setLoggedIn] = useState(false);
@@ -28,29 +33,15 @@ const AuctionController = ()=>{
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [closingTime, setClosingTime] = useState("");
+
+    const [auctionItemDeleteModal, setAuctionItemDeleteModal] = useState(false);
     
     const columns = [
         {name:"id", header: "Id",  defaultVisible: false},
         {name:"title" , header:"Title",  defaultFlex:2},
         {name:"description" , header:"Description", defaultFlex:2},
         {name:"active" , header:"Active", defaultFlex:1},
-        {
-            name: 'closingTime',header: 'Closing Time',defaultWidth: 150,
-            // need to specify dateFormat
-            dateFormat: 'YYYY-MM-DD, HH:mm',
-            filterEditor: DateFilter,
-            filterEditorProps: (props, { index }) => {
-              // for range and notinrange operators, the index is 1 for the after field
-              return {
-                dateFormat: 'YYYY-MM-DD, HH:mm',
-                placeholder: index == 1 ? 'Last login date is before...': 'Last login date is after...'
-              }
-            },
-            //Momentjs formats the date
-            render: ({ value, cellProps: { dateFormat } }) =>
-              moment(value).format(dateFormat),
-        },
-        //{name: 'closingTime',header: 'Closing Time', defaultFlex:2,},
+         {name: 'closingTime',header: 'Closing Time', defaultFlex:2,},
         {name:"url" , header:"Url", defaultFlex:2, render: ({value}) => {
             return <a href={value}>Auction</a>
         }}
@@ -71,10 +62,14 @@ const AuctionController = ()=>{
     //     render: ({ value, cellProps: { dateFormat } }) =>
     //       moment(value).format(dateFormat),
     // },
+    
     const resetValues = ()=>{
         setPassword("");
         setUsername("");
         setMessage("");
+        setClosingTime("");
+        setDescription("");
+        setTitle("");
         setShow(false);
         setAuctionItemPostModal(false);
     }
@@ -123,7 +118,7 @@ const AuctionController = ()=>{
         }
     }
 
-    const postAuctionItem = ()=>{
+    const postAuctionItem = async ()=>{
         if(title != "" && description != "" && closingTime != ""){
             const options = {
                 method: 'POST',
@@ -135,9 +130,38 @@ const AuctionController = ()=>{
                     Active: 1
                 })
             }
+            var search = await fetch("https://localhost:44371/api/AuctionItems",options);
+            var result = await search.json();
+            if(result?.status == "Ok"){
+                resetValues();
+                window.location.reload();
+            }
+            else{
+                setMessage(result?.message);
+            }
         }
     }
     
+    const deleteAuctionItem= async()=>{
+        if(auctionItemDeleteModal == true){
+            try{
+                const options = {
+                    method: 'DELETE',
+                    headers: {"Authorization": `Bearer ${cookies.token}`}
+                }
+                console.log(selectedRowValue);
+                var search = await fetch("https://localhost:44371/api/AuctionItems/"+selectedRowValue.id,options);
+                var data = await search.json();
+                if(data?.status == "Ok"){
+                    window.location.reload();
+                }
+            }
+            catch(e){
+
+            }
+        }
+    }
+
     const fetchAuctionItems = async ()=>{
         const options = {
             method: 'GET',
@@ -151,6 +175,7 @@ const AuctionController = ()=>{
     }
 
     const onSelectionChange = useCallback((e) => {
+        console.log(e);
         setSelectedRowValue(e.data);
         setSelectedRow(false);
     }, [])
@@ -161,32 +186,55 @@ const AuctionController = ()=>{
     },[]);
 
     return(
-    <div>
+    <div className='AuctionControlleMainDiv'>
         {loggedIn == true ? 
             <div>
                 <h1>Auction controller</h1>
                 <a href="/">Home</a>
+        
                 <div>
                     <ReactDataGrid
                         idProperty="id"
                         style={{ minHeight: 450, minWidth: 500 }}
                         columns={columns}
                         dataSource={auctionItems}
-                        enableSelection={false}
+                        enableSelection={true}
                         defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
                         sortable={false}
                         onSelectionChange={onSelectionChange}
                         
+                        
                         />
                 </div>
                 <div>
-                    <Button variant="primary" onClick={()=>{removeCookie('token',{ path: '/' });}}>
-                        logout
-                    </Button>
+                    <Button variant="primary" onClick={()=>{removeCookie('token',{ path: '/' });}}>logout</Button>
+                    <Button variant="primary" onClick={()=>{setAuctionItemPostModal(true);}}>Add auction item</Button>
+                    <Button disabled={selectedRow} onClick={()=>{setAuctionItemDeleteModal(true);}}>Delete auction item</Button>
+                    
+                    <div>
+                        <Modal show={auctionItemDeleteModal} >
 
-                    <Button variant="primary" onClick={()=>{setAuctionItemPostModal(true);}}>
-                        Add auction item
-                    </Button>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Are you sure you want to delete the auction item</Modal.Title>
+                            </Modal.Header>
+
+                            <Modal.Body>
+                                <p>This will delete the auction item, photos and auctioneers linked to this post permanently.</p>
+
+                            </Modal.Body>
+                            
+                            <Modal.Footer>
+                            <p className='errorMessage'>{message}</p>
+                                <Button variant="secondary" onClick={()=>{setAuctionItemDeleteModal(false);}}>
+                                    Cancel
+                                </Button>
+                                <Button variant="primary" onClick={()=>{deleteAuctionItem()}}>
+                                    Delete
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
+                    </div>
+
                     <div>
                         <Modal show={auctionItemPostModal} >
 
@@ -207,7 +255,9 @@ const AuctionController = ()=>{
 
                             <div className='homeFormInputs'>
                                 <Form.Label>Closing time</Form.Label>
-                                <Form.Control placeholder='Description' onChange={(e)=>{setClosingTime(handleInputChange(e));}} />
+                                <Datetime 
+                                    onChange={(e)=>{setClosingTime(e._d);}}
+                                />
                                 <Form.Text>
                                     Aika jolloin huutokauppaus suljetaan
                                 </Form.Text>

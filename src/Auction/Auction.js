@@ -99,6 +99,7 @@ const Auction = ()=>{
     
 
     const onSelectionChange = useCallback((e) => {
+        console.log(e);
         setUsernameModify(e.data.username);
         setPriceModify(e.data.price);
         setPhonenumberModify(e.data.phonenumber);
@@ -166,7 +167,7 @@ const Auction = ()=>{
                         <Form.Label>Password</Form.Label>
                         <Form.Control disabled={selectedRow} type="password" placeholder='Password' onChange={(e)=>{setPasswordModify(handleInputChange(e));}} />
                         <Form.Text className="text-muted">
-                            Your offer needs an password so you can modify it later.
+                            Use your password to modify the post.
                         </Form.Text>
                     </div>
                     <div className='homeFormInputs'>
@@ -177,7 +178,7 @@ const Auction = ()=>{
                                 IgTag: igTagModify,
                                 Price: priceModify,
                                 Password: passwordModify,
-                                Phonenumber:phonenumberModify,
+                                Phonenumber:phonenumberModify  == "" ? 0 : phonenumberModify,
                                 AuctionItemId: currentAuctionItem.id
                             });
                         }}>Save</Button>
@@ -223,7 +224,7 @@ const Auction = ()=>{
                         <Form.Label>Password</Form.Label>
                         <Form.Control type="password" placeholder='Password' onChange={(e)=>{setPassword(handleInputChange(e));}} />
                         <Form.Text className="text-muted">
-                            Your offer needs an password so you can modify it later.
+                            Your offer needs a password so you can modify it later.
                         </Form.Text>
                     </div>
                     <div className='homeFormInputs'>
@@ -233,7 +234,7 @@ const Auction = ()=>{
                             IgTag: igTag,
                             Price: price,
                             Password: password,
-                            Phonenumber:phonenumber,
+                            Phonenumber:phonenumber == "" ? 0 : phonenumber,
                             AuctionItemId: currentAuctionItem.id
                         });}}>Save</Button>
                     </div>
