@@ -1,0 +1,7 @@
+.storeCellMainDiv{
+    display: flex;
+}
+
+.storeCellImgDiv{
+    flex:2;
+}
