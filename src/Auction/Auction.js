@@ -31,6 +31,7 @@ const Auction = ()=>{
     const [igTagModify, setIgTagModify] = useState("");
     
     const [auctioneer, setAuctioneer] = useState("");
+    const [modifyAuctioneer, setModifyAuctioneer] = useState("");
 
     const [message, setMessage] = useState("");
     
@@ -45,25 +46,60 @@ const Auction = ()=>{
 //    headers: { "Authorization": `Bearer ${cookies.token}`}
 
     const postAuction = async ()=>{
-        if(auctioneer?.igTag != "" &&  auctioneer?.price != 0){
-            const options = {
-                method:'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body:JSON.stringify(auctioneer)
-            }
-            console.log(auctioneer);
+        try{
+            if(auctioneer?.igTag != "" &&  auctioneer?.price != 0){
+                const options = {
+                    method:'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:JSON.stringify(auctioneer)
+                }
+                console.log(auctioneer);
 
-            var search = await fetch("https://localhost:44371/api/Auctioneers",options);
-            var auctioneers = await search.json();
-            if(auctioneers?.status == "Ok"){
-                window.location.reload();
-                setMessage(auctioneers?.message);
-            }
-            else{
-                setMessage(auctioneers?.message);
+                var search = await fetch("https://localhost:44371/api/Auctioneers",options);
+                var auctioneers = await search.json();
+                if(auctioneers?.status == "Ok"){
+                    window.location.reload();
+                    setMessage(auctioneers?.message);
+                }
+                else{
+                    setMessage(auctioneers?.message);
+                }
             }
         }
+        catch(e){
+            console.log(e);
+        }
     }
+
+    const modifyAuction = async ()=>{
+        try{
+            if(modifyAuctioneer.igTag != "" &&  modifyAuctioneer.price != 0){
+                const options = {
+                    method:'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:JSON.stringify(modifyAuctioneer)
+                }
+    
+                var search = await fetch("https://localhost:44371/api/Auctioneers/"+auctionId,options);
+                var auctioneers = await search.json();
+                if(auctioneers?.status == "Ok"){
+                    window.location.reload();
+                    setMessage(auctioneers?.message);
+                }
+                else{
+                    setMessage(auctioneers?.message);
+                }
+            }
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+    useEffect(()=>{
+        if(modifyAuctioneer != ""){
+            modifyAuction();
+        }
+    },[modifyAuctioneer]);
 
     useEffect(()=>{
         if(auctioneer != ""){
@@ -80,14 +116,16 @@ const Auction = ()=>{
         search = await fetch("https://localhost:44371/api/Images/"+auctionId);
         var images = await search.json();
 
-        if(auctioneers != null || auctioneers != undefined && images != null || images != undefined){
+        if(images != null || images != undefined)
+            setCarouselImages(await images);
+
+        if(auctioneers != null || auctioneers != undefined){
             auctioneers.map((e)=>{
                 if(e.phonenumber == 0){
                     e.phonenumber = "";
                 }
             })
             setAuctioneers(await auctioneers);
-            setCarouselImages(await images);
         }
     }
 
@@ -190,7 +228,7 @@ const Auction = ()=>{
                         </p>
                     </div>
                     <div className='homeInputDiv'>
-                        <div className='homeFormInputs'>
+                        {/* <div className='homeFormInputs'>
                             <Form.Label>Instagram tag</Form.Label>
                             <Form.Control disabled={selectedRow} onBlur={(e)=>{handleInputChange(e);}} value={igTagModify} className='Input' placeholder='@ExampleInstagramAccount' onChange={(e)=>{setIgTagModify(handleInputChange(e));}} />
                         </div>
@@ -201,17 +239,17 @@ const Auction = ()=>{
                             <Form.Text className="text-muted" id="phonenumberText">
                                 Phonenumber is optional
                             </Form.Text>
-                        </div>
+                        </div> */}
 
                         <div className='homeFormInputs'>
                             <Form.Label>Price</Form.Label>
                             <Form.Control disabled={selectedRow} type="number" placeholder='Price' value={priceModify} onChange={(e)=>{setPriceModify(handleInputChange(e));}} />
                         </div>
-
+                        {/* 
                         <div className='homeFormInputs'>
                             <Form.Label>Username</Form.Label>
                             <Form.Control disabled={selectedRow} type="username" placeholder='Username' value={usernameModify} onChange={(e)=>{setUsernameModify(handleInputChange(e));}} />
-                        </div>
+                        </div> */}
 
                         <div className='homeFormInputs'>
                             <Form.Label>Password</Form.Label>
@@ -224,7 +262,7 @@ const Auction = ()=>{
                         <div className='homeFormInputs'>
                             <p className='errorMessage'>{message}</p>
                             <Button disabled={selectedRow} onClick={()=>{
-                                setAuctioneer({
+                                setModifyAuctioneer({
                                     Username: usernameModify, 
                                     IgTag: igTagModify,
                                     Price: priceModify,

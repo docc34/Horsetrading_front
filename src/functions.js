@@ -14,13 +14,16 @@ const handleInputChange = (o)=>{
 }
 
 const MakeStoreCell = (d)=>{
-    console.log(d);
+    var url = "/Auction?auctionId="+d.data?.id
 
     return(
         <div className="storeCellMainDiv">
-            <div className='storeCellImgDiv'>
-                <img src={d.data?.imageLink}/>
-            </div>
+            <a href={url}> 
+                <div className='storeCellImgDiv'>
+                    <img className="storeCellImg" src={d.data?.imageLink}/>
+                </div>
+            </a>
+            
             <div>
                 <h4>{d.data?.title}</h4>
                 <p>{d.data?.description}</p>

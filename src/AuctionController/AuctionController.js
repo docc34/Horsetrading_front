@@ -36,12 +36,19 @@ const AuctionController = ()=>{
 
     const [auctionItemDeleteModal, setAuctionItemDeleteModal] = useState(false);
     
+    const [auctionItemModifyModal, setAuctionItemModifyModal] = useState(false);
+    const [auctionItemModify, setAuctionItemModify] = useState([]);
+    const [titleModify, setTitleModify] = useState("");
+    const [descriptionModify, setDescriptionModify] = useState("");
+    const [closingTimeModify, setClosingTimeModify] = useState("");
+    const [active, setActive] = useState(1);
+
     const columns = [
         {name:"id", header: "Id",  defaultVisible: false},
         {name:"title" , header:"Title",  defaultFlex:2},
         {name:"description" , header:"Description", defaultFlex:2},
         {name:"active" , header:"Active", defaultFlex:1},
-         {name: 'closingTime',header: 'Closing Time', defaultFlex:2,},
+        {name: 'closingTime',header: 'Closing Time', defaultFlex:2,},
         {name:"url" , header:"Url", defaultFlex:2, render: ({value}) => {
             return <a href={value}>Auction</a>
         }}
@@ -72,6 +79,8 @@ const AuctionController = ()=>{
         setTitle("");
         setShow(false);
         setAuctionItemPostModal(false);
+        setAuctionItemModifyModal(false);
+        setAuctionItemDeleteModal(false);
     }
 
     const handleLogin = async() => {
@@ -174,8 +183,37 @@ const AuctionController = ()=>{
         }
     }
 
+    const modifyAuctionItem = async()=>{
+        try{
+            if(titleModify != "" && descriptionModify != "" && closingTimeModify != ""){
+                const options = {
+                    method:'PUT',
+                    headers: { 'Content-Type': 'application/json', "Authorization": `Bearer ${cookies.token}` },
+                    body:JSON.stringify({
+                        Title: titleModify,
+                        Description:descriptionModify,
+                        ClosingTime: closingTimeModify,
+                        Active: active
+                    })
+                }
+
+                var search = await fetch("https://localhost:44371/api/AuctionItems/"+selectedRowValue.id, options);
+                var answer = await search.json();
+                if(answer.status == "Ok"){
+                    window.location.reload();
+                }
+            }
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
     const onSelectionChange = useCallback((e) => {
         console.log(e);
+        setTitleModify(e.data?.title);
+        setDescriptionModify(e.data?.description);
+        setActive(e.data.active);
+        setClosingTimeModify(e.data.closingTime);
         setSelectedRowValue(e.data);
         setSelectedRow(false);
     }, [])
@@ -210,6 +248,7 @@ const AuctionController = ()=>{
                     <Button variant="primary" onClick={()=>{removeCookie('token',{ path: '/' });}}>logout</Button>
                     <Button variant="primary" onClick={()=>{setAuctionItemPostModal(true);}}>Add auction item</Button>
                     <Button disabled={selectedRow} onClick={()=>{setAuctionItemDeleteModal(true);}}>Delete auction item</Button>
+                    <Button disabled={selectedRow} onClick={()=>{setAuctionItemModifyModal(true);}}>Modify auction item</Button>
                     
                     <div>
                         <Modal show={auctionItemDeleteModal} >
@@ -277,7 +316,57 @@ const AuctionController = ()=>{
                         </Modal>
                     </div>
 
-                
+                    <div>
+                        <Modal show={auctionItemModifyModal} >
+
+                            <Modal.Header closeButton>
+                                <Modal.Title>Add auction item</Modal.Title>
+                            </Modal.Header>
+
+                            <Modal.Body>
+                            <div className='homeFormInputs'>
+                                <Form.Label>Title</Form.Label>
+                                <Form.Control value={titleModify} placeholder='Title' onChange={(e)=>{setTitleModify(handleInputChange(e));}} />
+                            </div>
+
+                            <div className='homeFormInputs'>
+                                <Form.Label>Description</Form.Label>
+                                <Form.Control value={descriptionModify} placeholder='Description' onChange={(e)=>{setDescriptionModify(handleInputChange(e));}} />
+                            </div>
+
+                            <div className='homeFormInputs'>
+                                <Form.Label>Active</Form.Label>
+                                <Form.Select value={active} onChange={(e)=>{setActive(e.target.value);}} >
+                                    <option value={1}>true</option>
+                                    <option value={0}>false</option>
+                                </Form.Select>
+                            </div>
+
+                            <div className='homeFormInputs'>
+                                <Form.Label>Closing time</Form.Label>
+                                <Datetime 
+                                    value={closingTimeModify}
+                                    onChange={(e)=>{setClosingTimeModify(e._d);}}
+                                />
+                                <Form.Text>
+                                    Aika jolloin huutokauppaus suljetaan
+                                </Form.Text>
+                            </div>
+
+                            </Modal.Body>
+                            
+                            <Modal.Footer>
+                            <p className='errorMessage'>{message}</p>
+                                <Button variant="secondary" onClick={()=>{resetValues()}}>
+                                    Close
+                                </Button>
+                                <Button variant="primary" onClick={()=>{modifyAuctionItem()}}>
+                                    Save
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
+                    </div>
+
                 </div>
             </div>
             :

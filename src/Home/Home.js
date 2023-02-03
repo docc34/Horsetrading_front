@@ -27,15 +27,15 @@ const Home = ()=>{
         <a href="/Auction?auctionId=1">Esimerkkin huutokauppa</a>
         <br/>
         <a href="/AuctionController">Huutokaupan hallintasivu</a>
-        { data == null || data?.length == 0 ? 
-                <div className='a'>
+        <div className='homeCellsDiv'>
+            { 
+                data == null || data?.length == 0 ? 
                     <Spinner  animation="border" /> 
-                </div>
-            :
-                <div>
-                    {renderCells}
-                </div>
+                :
+                   renderCells
+                    
             }
+        </div>
         
     </div>);
 }

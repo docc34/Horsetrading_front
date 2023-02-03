@@ -1,7 +1,13 @@
 .storeCellMainDiv{
+    flex-direction: column;
     display: flex;
+    margin: 1rem;
 }
 
 .storeCellImgDiv{
     flex:2;
+}
+
+.storeCellImg{
+    max-width: 200px;
 }

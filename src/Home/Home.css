@@ -1,0 +1,4 @@
+.homeCellsDiv{
+    display: flex;
+    flex-direction: row;
+}
