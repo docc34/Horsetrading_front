@@ -7,7 +7,7 @@ import { useState, useEffect, useCallback } from 'react';
 
 import './Auction.css';
 import { useLocation } from "react-router-dom";
-import {handleInputChange} from  '../functions';
+import { handleInputChange, CountdownTimer} from  '../functions';
 
 const Auction = ()=>{
     
@@ -34,7 +34,7 @@ const Auction = ()=>{
     const [modifyAuctioneer, setModifyAuctioneer] = useState("");
 
     const [message, setMessage] = useState("");
-    
+
     
     const columns = [
         {name:"id", header: "Id",  defaultVisible: false},
@@ -95,6 +95,7 @@ const Auction = ()=>{
             console.log(e);
         }
     }
+
     useEffect(()=>{
         if(modifyAuctioneer != ""){
             modifyAuction();
@@ -112,7 +113,6 @@ const Auction = ()=>{
         var search = await fetch("https://localhost:44371/api/Auctioneers/"+auctionId);
         var auctioneers = await search.json();
 
-
         search = await fetch("https://localhost:44371/api/Images/"+auctionId);
         var images = await search.json();
 
@@ -120,6 +120,7 @@ const Auction = ()=>{
             setCarouselImages(await images);
 
         if(auctioneers != null || auctioneers != undefined){
+            
             auctioneers.map((e)=>{
                 if(e.phonenumber == 0){
                     e.phonenumber = "";
@@ -129,16 +130,16 @@ const Auction = ()=>{
         }
     }
 
-    const fetchAuctionItems = async ()=>{
+    const fetchAuctionItem = async ()=>{
         var search = await fetch("https://localhost:44371/api/AuctionItems/"+auctionId);
-        var auctionItems = await search.json();
-        if(auctionItems != null || auctionItems != undefined){
-            setCurrentAuctionItem(await auctionItems);
+        var auctionItem = await search.json();
+        if(auctionItem != null || auctionItem != undefined){
+            setCurrentAuctionItem(await auctionItem);
         }
     }
 
     useEffect(()=>{
-        fetchAuctionItems();
+        fetchAuctionItem();
         fetchData();
     },[]);
 
@@ -203,6 +204,9 @@ const Auction = ()=>{
                         <h1>Auction!</h1>
                         <a href="/">Home</a>
                         {currentAuctionItem?.description}
+                    </div>
+                    <div>
+                        <CountdownTimer targetDate={currentAuctionItem?.closingTime} />
                     </div>
                     <div className='homeDataGridDiv'>
                         <ReactDataGrid
