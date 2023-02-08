@@ -192,7 +192,7 @@ const Auction = ()=>{
     
     return(
     <div className='homeMainDiv'>
-        <div>
+        <div className='homeCarouselDiv'>
             <Carousel>
                 {carouselImagesRender}
             </Carousel>
@@ -200,10 +200,10 @@ const Auction = ()=>{
         <div className='homeInputsMainDiv'>
             <div className='homeFormsDiv'>
                 <div>
+                    
                     <div>
                         <h1>Auction!</h1>
-                        <a href="/">Home</a>
-                        {currentAuctionItem?.description}
+                        {/* {currentAuctionItem?.description} */}
                     </div>
                     <div>
                         <CountdownTimer targetDate={currentAuctionItem?.closingTime} />
@@ -274,8 +274,12 @@ const Auction = ()=>{
                                     Phonenumber:phonenumberModify  == "" ? 0 : phonenumberModify,
                                     AuctionItemId: currentAuctionItem.id
                                 });
-                            }}>Save</Button>
+                            }}>
+                                Save
+                            </Button>
+                            
                         </div>
+                        <a href="/">Home</a>
                     </div>
                 </div>
             </div>

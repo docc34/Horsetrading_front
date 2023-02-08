@@ -36,6 +36,10 @@
 }
 
 .carouselImage{
-    width: 100%;
-    /* max-height: 60rem; */
+    /* width: 100%; */
+    max-height: 60rem;
+}
+.homeCarouselDiv{
+    display: flex;
+    justify-content:center;
 }
