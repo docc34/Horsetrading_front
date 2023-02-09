@@ -43,6 +43,7 @@ const AuctionController = ()=>{
     const [closingTimeModify, setClosingTimeModify] = useState("");
     const [active, setActive] = useState(1);
 
+    const [auctionItemVisibilityModal, setAuctionItemVisibilityModal] = useState(false);
     const columns = [
         {name:"id", header: "Id",  defaultVisible: false},
         {name:"title" , header:"Title",  defaultFlex:2},
@@ -81,6 +82,24 @@ const AuctionController = ()=>{
         setAuctionItemPostModal(false);
         setAuctionItemModifyModal(false);
         setAuctionItemDeleteModal(false);
+        setAuctionItemVisibilityModal(false);
+    }
+
+    const changeAuctionItemVisibility = async ()=>{
+        const options = {
+            method: 'PUT',
+            headers: {"Authorization": `Bearer ${cookies.token}`}
+        }
+
+        var search = await fetch("https://localhost:44371/api/AuctionItems/Visibility/"+selectedRowValue.id,options);
+        var data = await search.json();
+        if(data?.status == "Ok"){
+            await fetchAuctionItems();
+            resetValues();
+        }
+        else{
+            setMessage(data?.message);
+        }
     }
 
     const handleLogin = async() => {
@@ -97,17 +116,13 @@ const AuctionController = ()=>{
                     if (result?.status == "Error") {
                         setMessage(result.message);
                         resetValues();
-
-                        console.log(result);
                     }
                     else if(result?.status == "Ok"){
                         resetValues();
-
                         setCookie('token', result.token, { path: '/' })
                         window.location.reload();
                     }
                 resetValues();
-                console.log(result);
             }
             catch{
                 setMessage("Error");
@@ -142,8 +157,8 @@ const AuctionController = ()=>{
             var search = await fetch("https://localhost:44371/api/AuctionItems",options);
             var result = await search.json();
             if(result?.status == "Ok"){
+                await fetchAuctionItems();
                 resetValues();
-                window.location.reload();
             }
             else{
                 setMessage(result?.message);
@@ -162,7 +177,8 @@ const AuctionController = ()=>{
                 var search = await fetch("https://localhost:44371/api/AuctionItems/"+selectedRowValue.id,options);
                 var data = await search.json();
                 if(data?.status == "Ok"){
-                    window.location.reload();
+                    await fetchAuctionItems();
+                    resetValues();
                 }
             }
             catch(e){
@@ -176,7 +192,7 @@ const AuctionController = ()=>{
             method: 'GET',
             headers: {"Authorization": `Bearer ${cookies.token}`}
         }
-        var search = await fetch("https://localhost:44371/api/AuctionItems",options);
+        var search = await fetch("https://localhost:44371/api/AuctionItems/User",options);
         var auctionItems = await search.json();
         if(auctionItems != null || auctionItems != undefined){
             setAuctionItems(await auctionItems);
@@ -186,6 +202,13 @@ const AuctionController = ()=>{
     const modifyAuctionItem = async()=>{
         try{
             if(titleModify != "" && descriptionModify != "" && closingTimeModify != ""){
+                
+                var search = await fetch("https://localhost:44371/api/UserId", {
+                    method: 'GET',
+                    headers: {"Authorization": `Bearer ${cookies.token}`}
+                });
+                var answer = await search.json();
+                
                 const options = {
                     method:'PUT',
                     headers: { 'Content-Type': 'application/json', "Authorization": `Bearer ${cookies.token}` },
@@ -193,14 +216,16 @@ const AuctionController = ()=>{
                         Title: titleModify,
                         Description:descriptionModify,
                         ClosingTime: closingTimeModify,
-                        Active: active
+                        Active: active,
+                        UserId: answer
                     })
                 }
 
-                var search = await fetch("https://localhost:44371/api/AuctionItems/"+selectedRowValue.id, options);
-                var answer = await search.json();
+                search = await fetch("https://localhost:44371/api/AuctionItems/"+selectedRowValue.id, options);
+                answer = await search.json();
                 if(answer.status == "Ok"){
-                    window.location.reload();
+                    await fetchAuctionItems();
+                    resetValues();
                 }
             }
         }
@@ -209,7 +234,7 @@ const AuctionController = ()=>{
         }
     }
     const onSelectionChange = useCallback((e) => {
-        console.log(e);
+        
         setTitleModify(e.data?.title);
         setDescriptionModify(e.data?.description);
         setActive(e.data.active);
@@ -240,15 +265,14 @@ const AuctionController = ()=>{
                         defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
                         sortable={false}
                         onSelectionChange={onSelectionChange}
-                        
-                        
                         />
                 </div>
                 <div>
-                    <Button variant="primary" onClick={()=>{removeCookie('token',{ path: '/' });}}>logout</Button>
-                    <Button variant="primary" onClick={()=>{setAuctionItemPostModal(true);}}>Add auction item</Button>
-                    <Button disabled={selectedRow} onClick={()=>{setAuctionItemDeleteModal(true);}}>Delete auction item</Button>
-                    <Button disabled={selectedRow} onClick={()=>{setAuctionItemModifyModal(true);}}>Modify auction item</Button>
+                    <Button variant="primary" onClick={()=>{removeCookie('token',{ path: '/' }); window.location.reload();}}>logout</Button>
+                    <Button variant="primary" onClick={()=>{setAuctionItemPostModal(true);}}>Add auctionitem</Button>
+                    <Button disabled={selectedRow} onClick={()=>{setAuctionItemDeleteModal(true);}}>Delete auctionitem</Button>
+                    <Button disabled={selectedRow} onClick={()=>{setAuctionItemModifyModal(true);}}>Modify auctionitem</Button>
+                    <Button disabled={selectedRow} onClick={()=>{setAuctionItemVisibilityModal(true);}}>Change auctionitem visibility</Button>
                     
                     <div>
                         <Modal show={auctionItemDeleteModal} >
@@ -366,7 +390,22 @@ const AuctionController = ()=>{
                             </Modal.Footer>
                         </Modal>
                     </div>
-
+                
+                    <div>
+                        <Modal show={auctionItemVisibilityModal}>
+                            <Modal.Header>
+                                <Modal.Title>Change visibility</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <p>Are you sure you want to change the auctionitems visibility?</p>
+                                <p>If the auctionitem is not visible it cannot be accessed by customers, or seen on the platform.</p>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button onClick={()=>{resetValues();}}>Close</Button>
+                                <Button onClick={()=>{changeAuctionItemVisibility();}}>Save</Button>
+                            </Modal.Footer>
+                        </Modal>
+                    </div>
                 </div>
             </div>
             :

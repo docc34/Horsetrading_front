@@ -21,17 +21,19 @@ const Home = ()=>{
     const renderCells = data.map((x)=>{
         return<MakeStoreCell data={x}/>
     });
-    return(<div>
+    return(
+    <div className='HomeMainDiv'>
         <div className='homeCellsDiv'>
             { 
                 data == null || data?.length == 0 ? 
-                    <Spinner  animation="border" /> 
+                    <div className='HomeSpinnerDiv'>
+                        <Spinner  animation="border" />
+                    </div> 
                 :
                    renderCells
                     
             }
         </div>
-        
     </div>);
 }
 
