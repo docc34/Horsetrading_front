@@ -2,6 +2,7 @@ import ReactDataGrid from '@inovua/reactdatagrid-community';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Carousel from 'react-bootstrap/Carousel';
+import Modal from 'react-bootstrap/Modal';
 
 import { useState, useEffect, useCallback } from 'react';
 
@@ -34,6 +35,8 @@ const Auction = ()=>{
     const [modifyAuctioneer, setModifyAuctioneer] = useState("");
 
     const [message, setMessage] = useState("");
+
+    const [auctioneerParticipateModal, setAuctioneerParticipateModal] = useState(false);
 
     
     const columns = [
@@ -169,8 +172,7 @@ const Auction = ()=>{
                     </a>
 
                     <Carousel.Caption>
-                        <h1>{currentAuctionItem?.title}</h1>
-                        <p>{currentAuctionItem?.description}</p>
+                        <h1 className='carouselTitle'>{currentAuctionItem?.title}</h1>
                     </Carousel.Caption>
                 </Carousel.Item>
             )
@@ -192,37 +194,16 @@ const Auction = ()=>{
     
     return(
     <div className='homeMainDiv'>
-        <div className='homeCarouselDiv'>
-            <Carousel>
-                {carouselImagesRender}
-            </Carousel>
-        </div>
-        <div className='homeInputsMainDiv'>
-            <div className='homeFormsDiv'>
-                <div>
-                    
-                    <div>
-                        <h1>Auction!</h1>
-                        {/* {currentAuctionItem?.description} */}
-                    </div>
-                    <div>
-                        <CountdownTimer targetDate={currentAuctionItem?.closingTime} />
-                    </div>
-                    <div className='homeDataGridDiv'>
-                        <ReactDataGrid
-                        idProperty="id"
-                        style={{ minHeight: 450, minWidth: 500 }}
-                        columns={columns}
-                        dataSource={auctioneers}
-                        enableSelection={true}
-                        defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
-                        sortable={false}
-                        onSelectionChange={onSelectionChange}
-                        
-                        />
-                    </div>
-                </div>
-                
+        <div >
+            <div className='homeCarouselDiv'>
+                <Carousel>
+                    {carouselImagesRender}
+                </Carousel>
+            </div>
+            <div className='homeDescriptionDiv square rounded'>
+                <p className='homeDescription'>{currentAuctionItem?.description}</p>
+            </div>
+            <div className='homeInputDiv'>
                 <div className='modifyInputDiv'>
                     <div>
                         <h4>Modify offer</h4>
@@ -231,29 +212,12 @@ const Auction = ()=>{
                             The minimum raise is 5€
                         </p>
                     </div>
-                    <div className='homeInputDiv'>
-                        {/* <div className='homeFormInputs'>
-                            <Form.Label>Instagram tag</Form.Label>
-                            <Form.Control disabled={selectedRow} onBlur={(e)=>{handleInputChange(e);}} value={igTagModify} className='Input' placeholder='@ExampleInstagramAccount' onChange={(e)=>{setIgTagModify(handleInputChange(e));}} />
-                        </div>
-
-                        <div className='homeFormInputs'>
-                            <Form.Label>Phonenumber</Form.Label>
-                            <Form.Control disabled={selectedRow} className='Input' placeholder='Phonenumber' value={phonenumberModify} onChange={(e)=>{setPhonenumberModify(e.target.value);}} />
-                            <Form.Text className="text-muted" id="phonenumberText">
-                                Phonenumber is optional
-                            </Form.Text>
-                        </div> */}
+                    <div >
 
                         <div className='homeFormInputs'>
                             <Form.Label>Price</Form.Label>
                             <Form.Control disabled={selectedRow} type="number" placeholder='Price' value={priceModify} onChange={(e)=>{setPriceModify(handleInputChange(e));}} />
                         </div>
-                        {/* 
-                        <div className='homeFormInputs'>
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control disabled={selectedRow} type="username" placeholder='Username' value={usernameModify} onChange={(e)=>{setUsernameModify(handleInputChange(e));}} />
-                        </div> */}
 
                         <div className='homeFormInputs'>
                             <Form.Label>Password</Form.Label>
@@ -282,64 +246,107 @@ const Auction = ()=>{
                         <a href="/">Home</a>
                     </div>
                 </div>
-            </div>
-            <div >
-                <div>
+                <div className='homeParticipateDiv'>
                     <div>
-                        <h4>Participate!</h4>
-                        <p>
-                            You can participate by making an offer below. 
-                            The minimum raise is 5€
-                            The password is used to modify the offer later
-                        </p>
-                    </div>
-                    <div className='homeInputDiv'>
-                        <div className='homeFormInputs'>
-                            <Form.Label>Instagram tag</Form.Label>
-                            <Form.Control onBlur={(e)=>{handleInputChange(e);}} className='Input' placeholder='@ExampleInstagramAccount' onChange={(e)=>{setIgTag(handleInputChange(e));}} />
+                        <div>
+                            <h4>Participate!</h4>
+                            <p>
+                                You can participate by making an offer below. 
+                                The minimum raise is 5€
+                                The password is used to modify the offer later
+                            </p>
+                            <Button onClick={()=>{setAuctioneerParticipateModal(true);}}>Participate</Button>
                         </div>
-                        <div className='homeFormInputs'>
-                            <Form.Label>Phonenumber</Form.Label>
-                            <Form.Control className='Input' placeholder='Phonenumber' onChange={(e)=>{setPhonenumber(e.target.value);}} />
-                            <Form.Text className="text-muted" id="phonenumberText">
-                                Phonenumber is optional
-                            </Form.Text>
-                        </div>
+                        
+                        <Modal show={auctioneerParticipateModal} >
 
-                        <div className='homeFormInputs'>
-                            <Form.Label>Price</Form.Label>
-                            <Form.Control type="number" placeholder='Price' onChange={(e)=>{setPrice(handleInputChange(e));}} />
-                        </div>
+                        {/* closeButton ei jostaion syystä toimi */}
+                            <Modal.Header >
+                                <Modal.Title>Bid on the auction</Modal.Title>
+                            </Modal.Header>
 
-                        <div className='homeFormInputs'>
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control type="username" placeholder='Username' onChange={(e)=>{setUsername(handleInputChange(e));}} />
-                        </div>
+                            <Modal.Body>
+                                <div className='homeFormInputs'>
+                                    <Form.Label>Instagram tag</Form.Label>
+                                    <Form.Control onBlur={(e)=>{handleInputChange(e);}} className='Input' placeholder='@ExampleInstagramAccount' onChange={(e)=>{setIgTag(handleInputChange(e));}} />
+                                </div>
+                                <div className='homeFormInputs'>
+                                    <Form.Label>Phonenumber</Form.Label>
+                                    <Form.Control className='Input' placeholder='Phonenumber' onChange={(e)=>{setPhonenumber(e.target.value);}} />
+                                    <Form.Text className="text-muted" id="phonenumberText">
+                                        Phonenumber is optional
+                                    </Form.Text>
+                                </div>
 
-                        <div className='homeFormInputs'>
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder='Password' onChange={(e)=>{setPassword(handleInputChange(e));}} />
-                            <Form.Text className="text-muted">
-                                Your offer needs a password so you can modify it later.
-                            </Form.Text>
-                        </div>
-                        <div className='homeFormInputs'>
-                            <p className='errorMessage'>{message}</p>
-                            <Button onClick={()=>{setAuctioneer({
-                                Username: username, 
-                                IgTag: igTag,
-                                Price: price,
-                                Password: password,
-                                Phonenumber:phonenumber == "" ? 0 : phonenumber,
-                                AuctionItemId: currentAuctionItem.id
-                            });}}>Save</Button>
-                        </div>
+                                <div className='homeFormInputs'>
+                                    <Form.Label>Price</Form.Label>
+                                    <Form.Control type="number" placeholder='Price' onChange={(e)=>{setPrice(handleInputChange(e));}} />
+                                </div>
+
+                                <div className='homeFormInputs'>
+                                    <Form.Label>Username</Form.Label>
+                                    <Form.Control type="username" placeholder='Username' onChange={(e)=>{setUsername(handleInputChange(e));}} />
+                                </div>
+
+                                <div className='homeFormInputs'>
+                                    <Form.Label>Password</Form.Label>
+                                    <Form.Control type="password" placeholder='Password' onChange={(e)=>{setPassword(handleInputChange(e));}} />
+                                    <Form.Text className="text-muted">
+                                        Your offer needs a password so you can modify it later.
+                                    </Form.Text>
+                                </div>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <p className='errorMessage'>{message}</p>
+                                <Button variant="secondary" onClick={()=>{setAuctioneerParticipateModal(false);}}>
+                                    Close
+                                </Button>
+                                <Button onClick={()=>{setAuctioneer({
+                                    Username: username, 
+                                    IgTag: igTag,
+                                    Price: price,
+                                    Password: password,
+                                    Phonenumber:phonenumber == "" ? 0 : phonenumber,
+                                    AuctionItemId: currentAuctionItem.id
+                                });}}>Save</Button>
+                            </Modal.Footer>
+                        </Modal>
                     </div>
                 </div>
-
             </div>
         </div>
-    </div>)
+
+        <div >
+            <div className='homeDataGridDiv'>
+                <div>
+                    
+                    <div>
+                        <h1>Auction!</h1>
+                        
+                    </div>
+                    <div>
+                        <CountdownTimer targetDate={currentAuctionItem?.closingTime} />
+                    </div>
+                    <div>
+                        <ReactDataGrid
+                        idProperty="id"
+                        className='auctionReactDataGrid'
+                        style={{minHeight: 1300}}
+                        columns={columns}
+                        dataSource={auctioneers}
+                        enableSelection={true}
+                        defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
+                        sortable={false}
+                        onSelectionChange={onSelectionChange}
+                        
+                        />
+                    </div>
+                </div>
+            <div >
+            </div>
+        </div>
+    </div>
+</div>)
 }
 
 export {Auction}

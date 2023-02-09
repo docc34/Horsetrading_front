@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 
 const handleInputChange = (o)=>{
     if(o.target.value == null  || o.target.value == ""|| o.target.value == 0){
-        o.target.setAttribute('style','border-color: #8f37aa; border-width: 2px')
+        o.target.setAttribute('style','border-color: red; border-width: 2px')
         return null;
     }
     else{
@@ -83,7 +83,7 @@ const MakeStoreCell = (d)=>{
             return (
                 // TODO: tähän vielä onnittelu voittajalle.
                 <div className="expired-notice">
-                    <span>Expired!!!</span>
+                    <h4>Congratulations to the winner!</h4>
                     <p>Bidding on the auction has closed. Congratulations to the winner!</p>
                 </div>
             );

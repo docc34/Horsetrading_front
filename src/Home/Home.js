@@ -22,9 +22,6 @@ const Home = ()=>{
         return<MakeStoreCell data={x}/>
     });
     return(<div>
-        <a href="/Auction?auctionId=1">Esimerkkin huutokauppa</a>
-        <br/>
-        <a href="/AuctionController">Huutokaupan hallintasivu</a>
         <div className='homeCellsDiv'>
             { 
                 data == null || data?.length == 0 ? 

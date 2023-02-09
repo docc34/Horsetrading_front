@@ -1,23 +1,28 @@
 .homeMainDiv{
     display: flex;
-    flex-direction: column;
-    margin: 0%;
-}
-.homeInputsMainDiv{
+    flex-direction: row-reverse;
+    justify-content: center;
     margin: 5%;
     margin-top: 2%;
 }
 
-.homeFormsDiv{
-    display: flex;
-    flex-direction: row;
-}
+
 .modifyInputDiv{
+}
+
+.homeParticipateDiv{
     margin-left: 4rem;
 }
+
 .homeInputDiv{
+    width: 100%;
     max-width:37.5rem;
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+    justify-content: center;
 }
+
 .homeFormInputs{
     margin: 1%;
     margin-top:1%;
@@ -26,9 +31,7 @@
 .form-label{
     margin-left: 2%;
 }
-.homeDataGridDiv{
-    max-width: 50rem;
-}
+
 
 .errorMessage{
     color:red;
@@ -36,10 +39,32 @@
 }
 
 .carouselImage{
-    /* width: 100%; */
-    max-height: 60rem;
+    max-height: 63rem;
 }
 .homeCarouselDiv{
+}
+.carouselTitle{
+    font-size: 52px;
+}
+
+.homeDescriptionDiv{
+    text-align: center;
+    min-height: 7rem;
+
+    border: 2px solid black ;
+}
+.homeDescription{
+    margin-top: 0.5rem;
+}
+
+.homeDataGridDiv{
     display: flex;
-    justify-content:center;
+    flex-direction: row;
+
+    margin-right: 1.5rem;
+}
+
+.auctionReactDataGrid{
+    min-width: 50rem;
+    
 }

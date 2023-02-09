@@ -1,0 +1,19 @@
+.headerMainDiv{
+    background-color: rgb(8, 8, 8);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    height: 60px;
+}
+
+.headerTitle{
+    color: rgb(255, 255, 255);
+    margin-left: 1rem;
+    font-size: 40px;
+    text-decoration: none;
+}
+.headerTitle:hover{
+    color: rgb(255, 255, 255);
+
+}
