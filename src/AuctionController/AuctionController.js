@@ -33,11 +33,13 @@ const AuctionController = ()=>{
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [closingTime, setClosingTime] = useState("");
-
+    const [file, setFile] = useState(null);
+    const [imageName, setImageName] = useState("");
+    const [errors, setErrors] = useState([]);
+    
     const [auctionItemDeleteModal, setAuctionItemDeleteModal] = useState(false);
     
     const [auctionItemModifyModal, setAuctionItemModifyModal] = useState(false);
-    const [auctionItemModify, setAuctionItemModify] = useState([]);
     const [titleModify, setTitleModify] = useState("");
     const [descriptionModify, setDescriptionModify] = useState("");
     const [closingTimeModify, setClosingTimeModify] = useState("");
@@ -78,11 +80,13 @@ const AuctionController = ()=>{
         setClosingTime("");
         setDescription("");
         setTitle("");
+        setImageName("");
         setShow(false);
         setAuctionItemPostModal(false);
         setAuctionItemModifyModal(false);
         setAuctionItemDeleteModal(false);
         setAuctionItemVisibilityModal(false);
+        setFile(null);
     }
 
     const changeAuctionItemVisibility = async ()=>{
@@ -142,7 +146,7 @@ const AuctionController = ()=>{
         }
     }
 
-    const postAuctionItem = async ()=>{
+    const postAuctionItem = async (formdata)=>{
         if(title != "" && description != "" && closingTime != ""){
             const options = {
                 method: 'POST',
@@ -156,6 +160,30 @@ const AuctionController = ()=>{
             }
             var search = await fetch("https://localhost:44371/api/AuctionItems",options);
             var result = await search.json();
+            
+            if( file!==null && result.status === "Ok"){
+                const formData = new FormData();
+                formData.append("ImageLink", imageName);
+                formData.append("ImageFile", file);
+                formData.append("AuctionItemId",result.message); //Row ei valittu kun modal aukeaa
+                //formData.append("description", attachmentDescription)
+                postAuctionItem(formData);
+            }
+
+            search = await fetch("https://localhost:44371/api/AuctionItems/Image",{
+                method: 'POST',
+                headers: {"Authorization": `Bearer ${cookies.token}`},
+                body: formdata
+                
+                // {
+                //     AuctionItemId: selectedRowValue.id,
+                //     ImageFile: File,
+                //     ImageLink: imageName
+                // }
+               // , 'Content-Type': 'image/png', 'Content-Type': 'application/x-www-form-urlencoded'
+            });
+            result = await search.json();
+            
             if(result?.status == "Ok"){
                 await fetchAuctionItems();
                 resetValues();
@@ -173,7 +201,7 @@ const AuctionController = ()=>{
                     method: 'DELETE',
                     headers: {"Authorization": `Bearer ${cookies.token}`}
                 }
-                console.log(selectedRowValue);
+                
                 var search = await fetch("https://localhost:44371/api/AuctionItems/"+selectedRowValue.id,options);
                 var data = await search.json();
                 if(data?.status == "Ok"){
@@ -234,7 +262,6 @@ const AuctionController = ()=>{
         }
     }
     const onSelectionChange = useCallback((e) => {
-        
         setTitleModify(e.data?.title);
         setDescriptionModify(e.data?.description);
         setActive(e.data.active);
@@ -243,6 +270,29 @@ const AuctionController = ()=>{
         setSelectedRow(false);
     }, [])
 
+    const handleFormSubmit = e =>{
+        e.preventDefault();
+        postAuctionItem(e);
+    }
+    
+    const setFileFromInput = e =>{
+        if(e.target.files && e.target.files[0]){
+            setImageName(e.target.value);
+
+            let imageFile = e.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = x=>{
+                setFile(imageFile);
+            }
+            reader.readAsDataURL(imageFile);
+        }
+        else{
+            setFile(null);
+        }
+    }
+    const applyErrorClass= field =>((field in errors && errors[field]===false)?' invalid-field':'')
+    
     useEffect(()=>{
         checkLoginStatus();
         fetchAuctionItems();
@@ -300,43 +350,50 @@ const AuctionController = ()=>{
 
                     <div>
                         <Modal show={auctionItemPostModal} >
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Add auction item</Modal.Title>
+                                </Modal.Header>
 
-                            <Modal.Header closeButton>
-                                <Modal.Title>Add auction item</Modal.Title>
-                            </Modal.Header>
+                                <Modal.Body>
+                                <div className='homeFormInputs'>
+                                    <Form.Label>Title</Form.Label>
+                                    <Form.Control placeholder='Title' onChange={(e)=>{setTitle(handleInputChange(e));}} />
+                                </div>
 
-                            <Modal.Body>
-                            <div className='homeFormInputs'>
-                                <Form.Label>Title</Form.Label>
-                                <Form.Control placeholder='Title' onChange={(e)=>{setTitle(handleInputChange(e));}} />
-                            </div>
+                                <div className='homeFormInputs'>
+                                    <Form.Label>Description</Form.Label>
+                                    <Form.Control placeholder='Description' onChange={(e)=>{setDescription(handleInputChange(e));}} />
+                                </div>
+                                <div>
+                                    <form onSubmit={handleFormSubmit}>
+                                    <input onChange={(e)=>{setFileFromInput(e);}} type={"file"} accept={'image/*'} id={"image-uploader"} className={"form-control"+applyErrorClass("imageSource")}></input>
+                                    <Button type='submit'>sadsad</Button>                                        
+                                    </form>
 
-                            <div className='homeFormInputs'>
-                                <Form.Label>Description</Form.Label>
-                                <Form.Control placeholder='Description' onChange={(e)=>{setDescription(handleInputChange(e));}} />
-                            </div>
+                                </div>
 
-                            <div className='homeFormInputs'>
-                                <Form.Label>Closing time</Form.Label>
-                                <Datetime 
-                                    onChange={(e)=>{setClosingTime(e._d);}}
-                                />
-                                <Form.Text>
-                                    Aika jolloin huutokauppaus suljetaan
-                                </Form.Text>
-                            </div>
+                                <div className='homeFormInputs'>
+                                    <Form.Label>Closing time</Form.Label>
+                                    <Datetime 
+                                        onChange={(e)=>{setClosingTime(e._d);}}
+                                    />
+                                    <Form.Text>
+                                        Aika jolloin huutokauppaus suljetaan
+                                    </Form.Text>
+                                </div>
 
-                            </Modal.Body>
-                            
-                            <Modal.Footer>
-                            <p className='errorMessage'>{message}</p>
-                                <Button variant="secondary" onClick={()=>{resetValues()}}>
-                                    Close
-                                </Button>
-                                <Button variant="primary" onClick={()=>{postAuctionItem()}}>
-                                    Save
-                                </Button>
-                            </Modal.Footer>
+                                </Modal.Body>
+                                
+                                <Modal.Footer>
+                                <p className='errorMessage'>{message}</p>
+                                    <Button variant="secondary" onClick={()=>{resetValues()}}>
+                                        Close
+                                    </Button>
+                                    <Button variant="primary" onClick={()=>{postAuctionItem()}} >
+                                        Save
+                                    </Button>
+                                </Modal.Footer>
+
                         </Modal>
                     </div>
 
