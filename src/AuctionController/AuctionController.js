@@ -70,7 +70,7 @@ const AuctionController = ()=>{
     //     },
     //     //Momentjs formats the date
     //     render: ({ value, cellProps: { dateFormat } }) =>
-    //       moment(value).format(dateFormat),
+    //       moment(value).format(dateFormat), 
     // },
     
     const resetValues = ()=>{
@@ -147,42 +147,43 @@ const AuctionController = ()=>{
     }
 
     const postAuctionItem = async (formdata)=>{
-        if(title != "" && description != "" && closingTime != ""){
+        if(title !== "" && description !== "" && closingTime !== "" && file!==null){
+
+            const formData = new FormData();
+            formData.append("ImageLink", imageName);
+            formData.append("ImageFile", file);
+            formData.append("Title",title);
+            formData.append("Description",description);
+            formData.append("ClosingTime", moment(closingTime).format('D.M.YYYY HH.MM.s') // 'MM/DD/YYYY hh:mm:00 a'
+            );
             const options = {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json',"Authorization": `Bearer ${cookies.token}`},
-                body:JSON.stringify({
-                    Title: title,
-                    Description:description,
-                    ClosingTime: closingTime,
-                    Active: 1
-                })
+                headers: {"Authorization": `Bearer ${cookies.token}`}, // 'Content-Type': 'application/json',
+                body:formData
+                // JSON.stringify({
+                //     Title: title,
+                //     Description:description,
+                //     ClosingTime: closingTime,
+                //     Active: 1
+                // })
             }
             var search = await fetch("https://localhost:44371/api/AuctionItems",options);
             var result = await search.json();
             
-            if( file!==null && result.status === "Ok"){
-                const formData = new FormData();
-                formData.append("ImageLink", imageName);
-                formData.append("ImageFile", file);
-                formData.append("AuctionItemId",result.message); //Row ei valittu kun modal aukeaa
-                //formData.append("description", attachmentDescription)
-                postAuctionItem(formData);
-            }
 
-            search = await fetch("https://localhost:44371/api/AuctionItems/Image",{
-                method: 'POST',
-                headers: {"Authorization": `Bearer ${cookies.token}`},
-                body: formdata
+            // search = await fetch("https://localhost:44371/api/AuctionItems/Image",{
+            //     method: 'POST',
+            //     headers: {"Authorization": `Bearer ${cookies.token}`},
+            //     body: formdata
                 
-                // {
-                //     AuctionItemId: selectedRowValue.id,
-                //     ImageFile: File,
-                //     ImageLink: imageName
-                // }
-               // , 'Content-Type': 'image/png', 'Content-Type': 'application/x-www-form-urlencoded'
-            });
-            result = await search.json();
+            //     // {
+            //     //     AuctionItemId: selectedRowValue.id,
+            //     //     ImageFile: File,
+            //     //     ImageLink: imageName
+            //     // }
+            //    // , 'Content-Type': 'image/png', 'Content-Type': 'application/x-www-form-urlencoded'
+            // });
+            // result = await search.json();
             
             if(result?.status == "Ok"){
                 await fetchAuctionItems();
@@ -350,6 +351,8 @@ const AuctionController = ()=>{
 
                     <div>
                         <Modal show={auctionItemPostModal} >
+                            <form onSubmit={handleFormSubmit}>
+
                                 <Modal.Header closeButton>
                                     <Modal.Title>Add auction item</Modal.Title>
                                 </Modal.Header>
@@ -365,11 +368,7 @@ const AuctionController = ()=>{
                                     <Form.Control placeholder='Description' onChange={(e)=>{setDescription(handleInputChange(e));}} />
                                 </div>
                                 <div>
-                                    <form onSubmit={handleFormSubmit}>
                                     <input onChange={(e)=>{setFileFromInput(e);}} type={"file"} accept={'image/*'} id={"image-uploader"} className={"form-control"+applyErrorClass("imageSource")}></input>
-                                    <Button type='submit'>sadsad</Button>                                        
-                                    </form>
-
                                 </div>
 
                                 <div className='homeFormInputs'>
@@ -389,11 +388,12 @@ const AuctionController = ()=>{
                                     <Button variant="secondary" onClick={()=>{resetValues()}}>
                                         Close
                                     </Button>
-                                    <Button variant="primary" onClick={()=>{postAuctionItem()}} >
+                                    <Button variant="primary" type='submit'  >  
+                                    {/* onClick={()=>{postAuctionItem()}} */}
                                         Save
                                     </Button>
                                 </Modal.Footer>
-
+                            </form>
                         </Modal>
                     </div>
 
