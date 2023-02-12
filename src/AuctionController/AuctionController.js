@@ -150,40 +150,21 @@ const AuctionController = ()=>{
         if(title !== "" && description !== "" && closingTime !== "" && file!==null){
 
             const formData = new FormData();
-            formData.append("ImageLink", imageName);
-            formData.append("ImageFile", file);
-            formData.append("Title",title);
-            formData.append("Description",description);
-            formData.append("ClosingTime", moment(closingTime).format('D.M.YYYY HH.MM.s') // 'MM/DD/YYYY hh:mm:00 a'
+                formData.append("ImageLink", imageName);
+                formData.append("ImageFile", file);
+                formData.append("Title",title);
+                formData.append("Description",description);
+                formData.append("ClosingTime", moment(closingTime).format('D.M.YYYY HH.MM.s')
             );
+            
             const options = {
                 method: 'POST',
-                headers: {"Authorization": `Bearer ${cookies.token}`}, // 'Content-Type': 'application/json',
+                headers: {"Authorization": `Bearer ${cookies.token}`},
                 body:formData
-                // JSON.stringify({
-                //     Title: title,
-                //     Description:description,
-                //     ClosingTime: closingTime,
-                //     Active: 1
-                // })
             }
+
             var search = await fetch("https://localhost:44371/api/AuctionItems",options);
             var result = await search.json();
-            
-
-            // search = await fetch("https://localhost:44371/api/AuctionItems/Image",{
-            //     method: 'POST',
-            //     headers: {"Authorization": `Bearer ${cookies.token}`},
-            //     body: formdata
-                
-            //     // {
-            //     //     AuctionItemId: selectedRowValue.id,
-            //     //     ImageFile: File,
-            //     //     ImageLink: imageName
-            //     // }
-            //    // , 'Content-Type': 'image/png', 'Content-Type': 'application/x-www-form-urlencoded'
-            // });
-            // result = await search.json();
             
             if(result?.status == "Ok"){
                 await fetchAuctionItems();
@@ -272,8 +253,8 @@ const AuctionController = ()=>{
     }, [])
 
     const handleFormSubmit = e =>{
-        e.preventDefault();
-        postAuctionItem(e);
+       
+        
     }
     
     const setFileFromInput = e =>{
@@ -388,8 +369,8 @@ const AuctionController = ()=>{
                                     <Button variant="secondary" onClick={()=>{resetValues()}}>
                                         Close
                                     </Button>
-                                    <Button variant="primary" type='submit'  >  
-                                    {/* onClick={()=>{postAuctionItem()}} */}
+                                    <Button variant="primary" onClick={()=>{postAuctionItem()}}  >  
+                                    {/*  */}
                                         Save
                                     </Button>
                                 </Modal.Footer>
