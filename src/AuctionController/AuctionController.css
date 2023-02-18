@@ -1,3 +1,6 @@
 .AuctionControlleMainDiv{
     margin:4%;
 }
+.renderedImage{
+    max-width: 100px;
+}

@@ -36,3 +36,20 @@
     transform: rotate(360deg);
   }
 }
+h1 ,h2 ,h3 ,h4{
+  color: white;
+}
+p{
+  color: whitesmoke;
+}
+.appMainDiv{
+  background-color: #1b1e24;
+}
+#root{
+  background-color: #1b1e24;
+}
+
+.modalCloseButton{
+  
+}
+/* #282c34 */

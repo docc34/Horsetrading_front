@@ -131,7 +131,7 @@ const Auction = ()=>{
             var auctioneers = await search.json();
         }
 
-        search = await fetch("https://localhost:44371/api/Images/"+auctionId);
+        search = await fetch("https://localhost:44371/api/Images/public/"+auctionId);
         var images = await search.json();
 
         if(images != null && images != undefined && images.status != "Error")
@@ -185,10 +185,10 @@ const Auction = ()=>{
             return (
                 <Carousel.Item interval={12000}>
                     
-                    <a href={e.imageLink}>
+                    <a href={e}>
                         <img
                         className="carouselImage"
-                        src={e.imageLink}
+                        src={e}
                         />
                     </a>
 
@@ -201,10 +201,10 @@ const Auction = ()=>{
         else{
             return (
                 <Carousel.Item interval={6000}>
-                    <a href={e.imageLink}>
+                    <a href={e}>
                         <img
                         className="carouselImage"
-                        src={e.imageLink}
+                        src={e}
                         />
                     </a>
                 </Carousel.Item>

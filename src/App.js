@@ -13,11 +13,13 @@ function App() {
         <Routes>
           <Route path="/*" element={<Header />}/>
         </Routes>
-        <Routes>
-          <Route path="/" element={<Home />}/>
-          <Route path="/Auction" element={<Auction />}/>
-          <Route path="/AuctionController" element={<AuctionController />}/>
-        </Routes>
+        <div className='appMainDiv'>
+          <Routes>
+            <Route path="/" element={<Home />}/>
+            <Route path="/Auction" element={<Auction />}/>
+            <Route path="/AuctionController" element={<AuctionController />}/>
+          </Routes>
+        </div>
         <Routes>
           <Route path="/*" element={<Footer />}/>
         </Routes>

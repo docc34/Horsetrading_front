@@ -7,13 +7,13 @@ import './AuctionController.css';
 import ReactDataGrid from '@inovua/reactdatagrid-community'
 
 import Button from 'react-bootstrap/Button';
+import CloseButton from 'react-bootstrap/CloseButton';
 
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import {handleInputChange} from  '../functions'
 
-import DateFilter from '@inovua/reactdatagrid-community/DateFilter'
-import moment from 'moment'
+
 import Datetime from 'react-datetime';
 
 const AuctionController = ()=>{
@@ -21,9 +21,10 @@ const AuctionController = ()=>{
     const [auctionItems, setAuctionItems] = useState(false);
     const [selectedRow, setSelectedRow] = useState(true);
     const [selectedRowValue, setSelectedRowValue] = useState("");
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [show, setShow] = useState(false);
+    const [loginVisibilityModal, setLoginVisibilityModal] = useState(false);
     
     const [message, setMessage] = useState("");
 
@@ -33,8 +34,7 @@ const AuctionController = ()=>{
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [closingTime, setClosingTime] = useState("");
-    const [file, setFile] = useState(null);
-    const [imageName, setImageName] = useState("");
+    const [imageFiles, setImageFiles] = useState(null);
     const [errors, setErrors] = useState([]);
     
     const [auctionItemDeleteModal, setAuctionItemDeleteModal] = useState(false);
@@ -43,14 +43,15 @@ const AuctionController = ()=>{
     const [titleModify, setTitleModify] = useState("");
     const [descriptionModify, setDescriptionModify] = useState("");
     const [closingTimeModify, setClosingTimeModify] = useState("");
-    const [active, setActive] = useState(1);
-
+    const [visible, setVisible] = useState(1);
+    const [selecetdImages, setSelectedImages] = useState([]);
+    
     const [auctionItemVisibilityModal, setAuctionItemVisibilityModal] = useState(false);
     const columns = [
         {name:"id", header: "Id",  defaultVisible: false},
         {name:"title" , header:"Title",  defaultFlex:2},
         {name:"description" , header:"Description", defaultFlex:2},
-        {name:"active" , header:"Active", defaultFlex:1},
+        {name:"visible" , header:"Visible", defaultFlex:1},
         {name: 'closingTime',header: 'Closing Time', defaultFlex:2,},
         {name:"url" , header:"Url", defaultFlex:2, render: ({value}) => {
             return <a href={value}>Auction</a>
@@ -73,36 +74,70 @@ const AuctionController = ()=>{
     //       moment(value).format(dateFormat), 
     // },
     
+    //functions
     const resetValues = ()=>{
+        setLoginVisibilityModal(false);
         setPassword("");
         setUsername("");
+
         setMessage("");
+
+        setImageFiles(null);
+
+        setAuctionItemPostModal(false);
         setClosingTime("");
         setDescription("");
         setTitle("");
-        setImageName("");
-        setShow(false);
-        setAuctionItemPostModal(false);
+
         setAuctionItemModifyModal(false);
+        setClosingTimeModify("");
+        setDescriptionModify("");
+        setTitleModify("");
+        setVisible(1);
+        setSelectedImages([]);
+
         setAuctionItemDeleteModal(false);
+
         setAuctionItemVisibilityModal(false);
-        setFile(null);
+
+        console.log("Reset");
     }
 
-    const changeAuctionItemVisibility = async ()=>{
-        const options = {
-            method: 'PUT',
-            headers: {"Authorization": `Bearer ${cookies.token}`}
-        }
+    const onSelectionChange = useCallback((e) => {
+        setTitleModify(e.data?.title);
+        setDescriptionModify(e.data?.description);
+        setVisible(e.data.visible);
+        setClosingTimeModify(e.data.closingTime);
+        setSelectedRowValue(e.data);
+        setSelectedRow(false);
+    }, [])
 
-        var search = await fetch("https://localhost:44371/api/AuctionItems/Visibility/"+selectedRowValue.id,options);
-        var data = await search.json();
-        if(data?.status == "Ok"){
-            await fetchAuctionItems();
-            resetValues();
+    const applyErrorClass= field =>((field in errors && errors[field]===false)?' invalid-field':'')
+
+    const setFileFromInput = e =>{
+        if(e.target.files && e.target.files[0]){
+            var files = [];
+            Array.from(e.target.files).forEach(file => {
+                files.push(file);
+            });
+            console.log(files);
+            setImageFiles(files);
         }
         else{
-            setMessage(data?.message);
+            setImageFiles(null);
+        }
+    }
+
+    //login
+    const checkLoginStatus = async()=>{
+        const options = {
+            method: 'GET',
+            headers: { "Authorization": `Bearer ${cookies.token}`}
+        }
+        let data = await fetch("https://localhost:44371/api/Login", options);
+        let loggedIn = await data.json();
+        if(loggedIn == true){
+            setLoggedIn(loggedIn);
         }
     }
 
@@ -134,48 +169,97 @@ const AuctionController = ()=>{
         }  
     }
 
-    const checkLoginStatus = async()=>{
-        const options = {
-            method: 'GET',
-            headers: { "Authorization": `Bearer ${cookies.token}`}
-        }
-        let data = await fetch("https://localhost:44371/api/Login", options);
-        let loggedIn = await data.json();
-        if(loggedIn == true){
-            setLoggedIn(loggedIn);
-        }
-    }
 
-    const postAuctionItem = async (formdata)=>{
-        if(title !== "" && description !== "" && closingTime !== "" && file!==null){
-
-            const formData = new FormData();
-                formData.append("ImageLink", imageName);
-                formData.append("ImageFile", file);
-                formData.append("Title",title);
-                formData.append("Description",description);
-                formData.append("ClosingTime", moment(closingTime).format('D.M.YYYY HH.MM.s')
-            );
-            
+//Auctionitem CRUD
+    const postAuctionItem = async ()=>{
+        if(title !== "" && description !== "" && closingTime !== "" && imageFiles!==null){
+            console.log(imageFiles);
             const options = {
                 method: 'POST',
-                headers: {"Authorization": `Bearer ${cookies.token}`},
-                body:formData
+                headers: {"Authorization": `Bearer ${cookies.token}`, 'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    title: title, 
+                    description: description,
+                    closingTime: closingTime//moment(closingTime).format('D.M.YYYY HH.MM.s')
+                })
             }
 
             var search = await fetch("https://localhost:44371/api/AuctionItems",options);
             var result = await search.json();
-            
-            if(result?.status == "Ok"){
-                await fetchAuctionItems();
-                resetValues();
-            }
-            else{
-                setMessage(result?.message);
-            }
+
+            await postImages(result?.message);
         }
     }
-    
+
+    const fetchAuctionItems = async ()=>{
+        const options = {
+            method: 'GET',
+            headers: {"Authorization": `Bearer ${cookies.token}`}
+        }
+        var search = await fetch("https://localhost:44371/api/AuctionItems/User",options);
+        var auctionItems = await search.json();
+        if(auctionItems != null || auctionItems != undefined){
+            setAuctionItems(await auctionItems);
+        }
+    }
+
+    const changeAuctionItemVisibility = async ()=>{
+        const options = {
+            method: 'PUT',
+            headers: {"Authorization": `Bearer ${cookies.token}`}
+        }
+
+        var search = await fetch("https://localhost:44371/api/AuctionItems/Visibility/"+selectedRowValue.id,options);
+        var data = await search.json();
+        if(data?.status == "Ok"){
+            await fetchAuctionItems();
+            resetValues();
+        }
+        else{
+            setMessage(data?.message);
+        }
+    }
+
+    const modifyAuctionItem = async()=>{
+        try{
+            if(titleModify != "" && descriptionModify != "" && closingTimeModify != ""){
+                
+                var search = await fetch("https://localhost:44371/api/UserId", {
+                    method: 'GET',
+                    headers: {"Authorization": `Bearer ${cookies.token}`}
+                });
+                var answer = await search.json();
+                
+                const options = {
+                    method:'PUT',
+                    headers: { 'Content-Type': 'application/json', "Authorization": `Bearer ${cookies.token}` },
+                    body:JSON.stringify({
+                        Title: titleModify,
+                        Description:descriptionModify,
+                        ClosingTime: closingTimeModify,
+                        Visible: visible,
+                        UserId: answer
+                    })
+                }
+                console.log("Visible" + visible);
+
+                search = await fetch("https://localhost:44371/api/AuctionItems/"+selectedRowValue.id, options);
+                answer = await search.json();
+                if(answer?.status == "Ok" && imageFiles != null){
+                    console.log(answer.message);
+                    postImages(answer.message);
+                }
+                else{
+                    await fetchAuctionItems();
+                    resetValues();
+                }
+            }
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+
     const deleteAuctionItem= async()=>{
         if(auctionItemDeleteModal == true){
             try{
@@ -197,88 +281,78 @@ const AuctionController = ()=>{
         }
     }
 
-    const fetchAuctionItems = async ()=>{
+
+    //Images CRUD
+    const postImages = async (auctionItemId)=>{
+                console.log("post image");
+        if(auctionItemId != undefined && auctionItemId != 0){
+            const uploadPromises = imageFiles.map( async (file)=>{
+                console.log(file);
+
+                const formData = new FormData();
+                    formData.append("ImageFile",file);
+
+                const options = {
+                    method: 'POST',
+                    headers: {"Authorization": `Bearer ${cookies.token}`},
+                    body:formData
+                }
+
+                var search = await fetch("https://localhost:44371/api/Images/"+auctionItemId,options);
+            });
+
+            Promise.all(uploadPromises).then(async ()=>{
+                await fetchAuctionItems();
+                resetValues();
+            });
+        }
+        else{
+            setMessage(auctionItemId);
+        }
+    }
+
+    const fetchImages = async()=>{
         const options = {
             method: 'GET',
             headers: {"Authorization": `Bearer ${cookies.token}`}
         }
-        var search = await fetch("https://localhost:44371/api/AuctionItems/User",options);
-        var auctionItems = await search.json();
-        if(auctionItems != null || auctionItems != undefined){
-            setAuctionItems(await auctionItems);
+        var search = await fetch("https://localhost:44371/api/Images/"+selectedRowValue.id,options);
+        var result = await search.json();
+        if(result?.status != "Error" && result != undefined){
+            setSelectedImages(await result);
         }
     }
 
-    const modifyAuctionItem = async()=>{
-        try{
-            if(titleModify != "" && descriptionModify != "" && closingTimeModify != ""){
-                
-                var search = await fetch("https://localhost:44371/api/UserId", {
-                    method: 'GET',
-                    headers: {"Authorization": `Bearer ${cookies.token}`}
-                });
-                var answer = await search.json();
-                
-                const options = {
-                    method:'PUT',
-                    headers: { 'Content-Type': 'application/json', "Authorization": `Bearer ${cookies.token}` },
-                    body:JSON.stringify({
-                        Title: titleModify,
-                        Description:descriptionModify,
-                        ClosingTime: closingTimeModify,
-                        Active: active,
-                        UserId: answer
-                    })
-                }
-
-                search = await fetch("https://localhost:44371/api/AuctionItems/"+selectedRowValue.id, options);
-                answer = await search.json();
-                if(answer.status == "Ok"){
-                    await fetchAuctionItems();
-                    resetValues();
-                }
-            }
+    const deleteSelectedImage = async(imageUrl)=>{
+        const options = {
+            method: 'DELETE',
+            headers: {"Authorization": `Bearer ${cookies.token}`}
         }
-        catch(e){
-            console.log(e);
+        var search = await fetch("https://localhost:44371/api/Images/?ImageUrl="+imageUrl,options);
+        var result = await search.json();
+        if(result?.status == "Ok"){
+            await fetchImages();
         }
     }
-    const onSelectionChange = useCallback((e) => {
-        setTitleModify(e.data?.title);
-        setDescriptionModify(e.data?.description);
-        setActive(e.data.active);
-        setClosingTimeModify(e.data.closingTime);
-        setSelectedRowValue(e.data);
-        setSelectedRow(false);
-    }, [])
 
-    const handleFormSubmit = e =>{
-       
-        
-    }
     
-    const setFileFromInput = e =>{
-        if(e.target.files && e.target.files[0]){
-            setImageName(e.target.value);
+    useEffect(()=>{
+        if(auctionItemModifyModal == true){
+            fetchImages();
+        }
+    },[auctionItemModifyModal]);
 
-            let imageFile = e.target.files[0];
-            const reader = new FileReader();
-            
-            reader.onload = x=>{
-                setFile(imageFile);
-            }
-            reader.readAsDataURL(imageFile);
-        }
-        else{
-            setFile(null);
-        }
-    }
-    const applyErrorClass= field =>((field in errors && errors[field]===false)?' invalid-field':'')
-    
     useEffect(()=>{
         checkLoginStatus();
         fetchAuctionItems();
     },[]);
+
+    const renderImages = selecetdImages.map((e)=>{
+        return(<div>
+            <img className='renderedImage' src={e}/>
+            <CloseButton onClick={()=>{deleteSelectedImage(e);}}></CloseButton>
+        </div>)
+    });
 
     return(
     <div className='AuctionControlleMainDiv'>
@@ -309,17 +383,16 @@ const AuctionController = ()=>{
                     <div>
                         <Modal show={auctionItemDeleteModal} >
 
-                            <Modal.Header closeButton>
-                                <Modal.Title>Are you sure you want to delete the auction item</Modal.Title>
+                            <Modal.Header CloseButton>
+                                <Modal.Title>Are you sure you want to delete the auctionitem</Modal.Title>
                             </Modal.Header>
 
                             <Modal.Body>
-                                <p>This will delete the auction item, photos and auctioneers linked to this post permanently.</p>
-
+                                <h3>This will delete the auctionitem, photos and auctioneers linked to this post <b>permanently.</b></h3>
                             </Modal.Body>
                             
                             <Modal.Footer>
-                            <p className='errorMessage'>{message}</p>
+                                <p className='errorMessage'>{message}</p>
                                 <Button variant="secondary" onClick={()=>{setAuctionItemDeleteModal(false);}}>
                                     Cancel
                                 </Button>
@@ -332,10 +405,11 @@ const AuctionController = ()=>{
 
                     <div>
                         <Modal show={auctionItemPostModal} >
-                            <form onSubmit={handleFormSubmit}>
+                            <form>
 
-                                <Modal.Header closeButton>
-                                    <Modal.Title>Add auction item</Modal.Title>
+                                <Modal.Header >
+                                    <Modal.Title>Add auctionitem</Modal.Title>
+                                    <CloseButton className='modalCloseButton' onClick={()=>{setAuctionItemPostModal(false);}}></CloseButton>
                                 </Modal.Header>
 
                                 <Modal.Body>
@@ -348,9 +422,7 @@ const AuctionController = ()=>{
                                     <Form.Label>Description</Form.Label>
                                     <Form.Control placeholder='Description' onChange={(e)=>{setDescription(handleInputChange(e));}} />
                                 </div>
-                                <div>
-                                    <input onChange={(e)=>{setFileFromInput(e);}} type={"file"} accept={'image/*'} id={"image-uploader"} className={"form-control"+applyErrorClass("imageSource")}></input>
-                                </div>
+
 
                                 <div className='homeFormInputs'>
                                     <Form.Label>Closing time</Form.Label>
@@ -360,6 +432,10 @@ const AuctionController = ()=>{
                                     <Form.Text>
                                         Aika jolloin huutokauppaus suljetaan
                                     </Form.Text>
+                                </div>
+
+                                <div>
+                                    <input onChange={(e)=>{setFileFromInput(e);}} type={"file"} accept={'image/*'} id={"image-uploader"} className={"form-control"+applyErrorClass("imageSource")} multiple></input>
                                 </div>
 
                                 </Modal.Body>
@@ -381,8 +457,9 @@ const AuctionController = ()=>{
                     <div>
                         <Modal show={auctionItemModifyModal} >
 
-                            <Modal.Header closeButton>
-                                <Modal.Title>Add auction item</Modal.Title>
+                            <Modal.Header>
+                                <Modal.Title>Modify auctionitem</Modal.Title>
+                                <CloseButton className='modalCloseButton' onClick={()=>{setAuctionItemModifyModal(false);}}></CloseButton>
                             </Modal.Header>
 
                             <Modal.Body>
@@ -397,8 +474,8 @@ const AuctionController = ()=>{
                             </div>
 
                             <div className='homeFormInputs'>
-                                <Form.Label>Active</Form.Label>
-                                <Form.Select value={active} onChange={(e)=>{setActive(e.target.value);}} >
+                                <Form.Label>Visible</Form.Label>
+                                <Form.Select value={visible} onChange={(e)=>{setVisible(e.target.value);}} >
                                     <option value={1}>true</option>
                                     <option value={0}>false</option>
                                 </Form.Select>
@@ -415,6 +492,13 @@ const AuctionController = ()=>{
                                 </Form.Text>
                             </div>
 
+                            <div>
+                                <input onChange={(e)=>{setFileFromInput(e);}} type={"file"} accept={'image/*'} id={"image-uploader"} className={"form-control"+applyErrorClass("imageSource")} multiple></input>
+                            </div>
+
+                            <div>
+                                {renderImages}
+                            </div>
                             </Modal.Body>
                             
                             <Modal.Footer>
@@ -433,6 +517,7 @@ const AuctionController = ()=>{
                         <Modal show={auctionItemVisibilityModal}>
                             <Modal.Header>
                                 <Modal.Title>Change visibility</Modal.Title>
+                                <CloseButton className='modalCloseButton' onClick={()=>{setAuctionItemVisibilityModal(false);}}></CloseButton>
                             </Modal.Header>
                             <Modal.Body>
                                 <p>Are you sure you want to change the auctionitems visibility?</p>
@@ -451,14 +536,15 @@ const AuctionController = ()=>{
                 <p>You dont have authorization to be here</p>
                 <div>
                         <div>
-                            <Button variant="primary" onClick={()=>{setShow(true);}}>
+                            <Button variant="primary" onClick={()=>{setLoginVisibilityModal(true);}}>
                                 login
                             </Button>
 
-                            <Modal show={show} >
+                            <Modal show={loginVisibilityModal} >
 
-                                <Modal.Header closeButton>
+                                <Modal.Header >
                                     <Modal.Title>Login</Modal.Title>
+                                    <CloseButton className='modalCloseButton' onClick={()=>{setLoginVisibilityModal(false);}}></CloseButton>
                                 </Modal.Header>
 
                                 <Modal.Body>
@@ -481,7 +567,7 @@ const AuctionController = ()=>{
                                 </Modal.Body>
                                 
                                 <Modal.Footer>
-                                    <Button variant="secondary" onClick={()=>{setShow(false); }}>
+                                    <Button variant="secondary" onClick={()=>{setLoginVisibilityModal(false); }}>
                                         Close
                                     </Button>
                                     <Button variant="primary" onClick={()=>{handleLogin()}}>
