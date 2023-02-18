@@ -1,6 +1,7 @@
 import ReactDataGrid from '@inovua/reactdatagrid-community';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import CloseButton from 'react-bootstrap/CloseButton';
 import Carousel from 'react-bootstrap/Carousel';
 import Modal from 'react-bootstrap/Modal';
 import Spinner from 'react-bootstrap/Spinner';
@@ -53,6 +54,15 @@ const Auction = ()=>{
     ]
 //    headers: { "Authorization": `Bearer ${cookies.token}`}
 
+    const onSelectionChange = useCallback((e) => {
+        setUsernameModify(e.data.username);
+        setPriceModify(e.data.price);
+        setPhonenumberModify(e.data.phonenumber);
+        setIgTagModify(e.data.igTag);
+
+        setSelectedRow(false);
+    }, [])
+
     const postAuction = async ()=>{
         try{
             if(auctioneer?.igTag != "" &&  auctioneer?.price != 0){
@@ -103,17 +113,7 @@ const Auction = ()=>{
         }
     }
 
-    useEffect(()=>{
-        if(modifyAuctioneer != ""){
-            modifyAuction();
-        }
-    },[modifyAuctioneer]);
 
-    useEffect(()=>{
-        if(auctioneer != ""){
-           postAuction();
-        }
-    },[auctioneer]);
     
 
     const fetchData = async ()=>{
@@ -168,49 +168,38 @@ const Auction = ()=>{
         fetchData();
     },[]);
 
+    useEffect(()=>{
+        if(modifyAuctioneer != ""){
+            modifyAuction();
+        }
+    },[modifyAuctioneer]);
+
+    useEffect(()=>{
+        if(auctioneer != ""){
+           postAuction();
+        }
+    },[auctioneer]);
     
 
-    const onSelectionChange = useCallback((e) => {
-        setUsernameModify(e.data.username);
-        setPriceModify(e.data.price);
-        setPhonenumberModify(e.data.phonenumber);
-        setIgTagModify(e.data.igTag);
-
-        setSelectedRow(false);
-    }, [])
 
     const carouselImagesRender = carouselImages.map((e, i)=>{
-
-        if(i == 0){
-            return (
-                <Carousel.Item interval={12000}>
-                    
-                    <a href={e}>
-                        <img
-                        className="carouselImage"
-                        src={e}
-                        />
-                    </a>
-
-                    <Carousel.Caption>
-                        <h1 className='carouselTitle'>{currentAuctionItem?.title}</h1>
-                    </Carousel.Caption>
-                </Carousel.Item>
-            )
-        }
-        else{
-            return (
-                <Carousel.Item interval={6000}>
-                    <a href={e}>
-                        <img
-                        className="carouselImage"
-                        src={e}
-                        />
-                    </a>
-                </Carousel.Item>
-            )
-        }
-        
+        return (
+            <Carousel.Item className='carouselImageDiv' interval={12000}>
+                <a href={e}>
+                    <img
+                    className="carouselImage"
+                    src={e}
+                    />
+                </a>
+                {i == 0 ? 
+                <Carousel.Caption>
+                    <h1 className='carouselTitle'>{currentAuctionItem?.title}</h1>
+                </Carousel.Caption>
+                :
+                null}
+                
+            </Carousel.Item>
+        )
     });
     
     return(
@@ -218,8 +207,8 @@ const Auction = ()=>{
     { auctionVisible == 1 ?  
         <div className='homeMainDiv'> 
             <div>
-                <div className='homeCarouselDiv'>
-                    <Carousel>
+                <div className='carouselMainDiv'>
+                    <Carousel className='carouselMainDiv'>
                         {carouselImagesRender}
                     </Carousel>
                 </div>
@@ -286,6 +275,7 @@ const Auction = ()=>{
                             {/* closeButton ei jostaion syystä toimi */}
                                 <Modal.Header >
                                     <Modal.Title>Bid on the auction</Modal.Title>
+                                    <CloseButton className='modalCloseButton' onClick={()=>{setAuctioneerParticipateModal(false);}}></CloseButton>
                                 </Modal.Header>
 
                                 <Modal.Body>
@@ -364,7 +354,6 @@ const Auction = ()=>{
                             defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
                             sortable={false}
                             onSelectionChange={onSelectionChange}
-                            
                             />
                         </div>
                     </div>

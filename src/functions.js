@@ -71,7 +71,7 @@ const MakeStoreCell = (d)=>{
         return (
         <div className={isDanger ? 'countdown danger' : 'countdown'}>
             <p>{value}</p>
-            <span>{type}</span>
+            <p>{type}</p>
         </div>
         );
     };

@@ -38,14 +38,8 @@
     font-size: large;
 }
 
-.carouselImage{
-    max-height: 63rem;
-}
-.homeCarouselDiv{
-}
-.carouselTitle{
-    font-size: 52px;
-}
+
+
 
 .homeDescriptionDiv{
     text-align: center;
@@ -65,7 +59,7 @@
 }
 
 .auctionReactDataGrid{
-    min-width: 50rem;
+    min-width: 40rem;
     
 }
 
@@ -75,4 +69,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.carouselImage{
+    width: 100%;
+    
+    max-height: 63rem;
+}
+.carouselImageDiv{
+    width: 100%;
+}
+.carouselMainDiv{
+    width: 100%;
+}
+.carouselTitle{
+    font-size: 52px;
 }

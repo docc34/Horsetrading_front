@@ -383,8 +383,9 @@ const AuctionController = ()=>{
                     <div>
                         <Modal show={auctionItemDeleteModal} >
 
-                            <Modal.Header CloseButton>
+                            <Modal.Header >
                                 <Modal.Title>Are you sure you want to delete the auctionitem</Modal.Title>
+                                <CloseButton className='modalCloseButton' onClick={()=>{setAuctionItemDeleteModal(false);}}></CloseButton>
                             </Modal.Header>
 
                             <Modal.Body>
