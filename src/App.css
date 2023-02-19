@@ -58,4 +58,17 @@ p{
 .modalCloseButton{
 
 }
+
+.modal-title{
+  color:rgb(231, 231, 231);
+}
+.ModalHeader{
+  background-color: #1a1818;
+}
+.ModalBody{
+  background-color: #1b1e24;
+}
+#ModalFooter{ /*Jostain syystä modalin footterille on määritetty backgroundcolor joten class taso ei toimi ja pitää käyttää id:tä*/
+  background-color: #111111;
+}
 /* #282c34 */

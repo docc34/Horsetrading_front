@@ -318,21 +318,31 @@ const Auction = ()=>{
                                 <Button onClick={()=>{setAuctioneerParticipateModal(true);}}>Participate</Button>
                             </div>
                             
-                            <Modal show={auctioneerParticipateModal} >
+                            <Modal 
+                                show={auctioneerParticipateModal}
+                            >
 
-                            {/* closeButton ei jostaion syystä toimi */}
-                                <Modal.Header >
+                            
+                                <Modal.Header className="ModalHeader">
                                     <Modal.Title>Make an offer</Modal.Title>
-                                    <CloseButton className='modalCloseButton' onClick={()=>{resetValues();}}></CloseButton>
+                                    <CloseButton variant="white" className='modalCloseButton' onClick={()=>{resetValues();}} />
                                 </Modal.Header>
 
-                                <Modal.Body>
+                                <Modal.Body className="ModalBody">
                                     <div className='auctionFormInputs'>
                                         <Form.Label>Instagram tag</Form.Label>
-                                        <Form.Control onBlur={(e)=>{handleInputChange(e);}} className='Input' placeholder='@ExampleInstagramAccount' value={igTag} onChange={(e)=>{ 
-                                            if(username == "")
-                                                setSuggestionUsername(handleInputChange(e)); 
-                                            setIgTag(handleInputChange(e));}} />
+                                        <Form.Control 
+                                            autoFocus
+                                            onBlur={(e)=>{handleInputChange(e);}} 
+                                            className='Input' 
+                                            placeholder='@ExampleInstagramAccount' 
+                                            value={igTag} 
+                                            onChange={(e)=>{ 
+                                                if(username == "")
+                                                    setSuggestionUsername(handleInputChange(e)); 
+                                                setIgTag(handleInputChange(e));}
+                                                } 
+                                        />
                                     </div>
                                     <div className='auctionFormInputs'>
                                         <Form.Label>Phonenumber</Form.Label>
@@ -360,7 +370,7 @@ const Auction = ()=>{
                                         </Form.Text>
                                     </div>
                                 </Modal.Body>
-                                <Modal.Footer>
+                                <Modal.Footer id="ModalFooter">
                                     <p className='errorMessage'>{message}</p>
                                     <Button variant="secondary" onClick={()=>{resetValues();}}>
                                         Close
@@ -407,7 +417,7 @@ const Auction = ()=>{
     </div>
       : auctionVisible == 0 ?
         <div className='AuctionItemSpinnerDiv'>
-            <Spinner  animation="border" />
+            <Spinner  animation="border" variant="light"/>
         </div> 
     :
         <div>

@@ -1,5 +1,4 @@
 import './functions.css';
-import Spinner from 'react-bootstrap/Spinner';
 import { relativeTimeRounding } from 'moment';
 import { useEffect, useState } from 'react';
 

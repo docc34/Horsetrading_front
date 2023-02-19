@@ -27,7 +27,7 @@ const Home = ()=>{
             { 
                 data == null || data?.length == 0 ? 
                     <div className='HomeSpinnerDiv'>
-                        <Spinner  animation="border" />
+                        <Spinner variant="light" animation="border" />
                     </div> 
                 :
                    renderCells

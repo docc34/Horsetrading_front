@@ -357,7 +357,7 @@ const AuctionController = ()=>{
     const renderImages = selecetdImages.map((e)=>{
         return(<div>
             <img className='renderedImage' src={e}/>
-            <CloseButton onClick={()=>{deleteSelectedImage(e);}}></CloseButton>
+            <CloseButton variant="white" onClick={()=>{deleteSelectedImage(e);}}></CloseButton>
         </div>)
     });
 
@@ -366,7 +366,7 @@ const AuctionController = ()=>{
         {loggedIn == true ? 
             <div>
                 <h1>Auction controller</h1>
-                <a href="/">Home</a>
+                <a href="/">controller</a>
         
                 <div>
                     <ReactDataGrid
@@ -390,16 +390,16 @@ const AuctionController = ()=>{
                     <div>
                         <Modal show={auctionItemDeleteModal} >
 
-                            <Modal.Header >
+                            <Modal.Header className="ModalHeader" >
                                 <Modal.Title>Are you sure you want to delete the auctionitem</Modal.Title>
-                                <CloseButton className='modalCloseButton' onClick={()=>{setAuctionItemDeleteModal(false);}}></CloseButton>
+                                <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemDeleteModal(false);}}></CloseButton>
                             </Modal.Header>
 
-                            <Modal.Body>
+                            <Modal.Body className="ModalBody">
                                 <h3>This will delete the auctionitem, photos and auctioneers linked to this post <b>permanently.</b></h3>
                             </Modal.Body>
                             
-                            <Modal.Footer>
+                            <Modal.Footer id="ModalFooter">
                                 <p className='errorMessage'>{message}</p>
                                 <Button variant="secondary" onClick={()=>{setAuctionItemDeleteModal(false);}}>
                                     Cancel
@@ -415,24 +415,24 @@ const AuctionController = ()=>{
                         <Modal show={auctionItemPostModal} >
                             <form>
 
-                                <Modal.Header >
+                                <Modal.Header className="ModalHeader" >
                                     <Modal.Title>Add auctionitem</Modal.Title>
-                                    <CloseButton className='modalCloseButton' onClick={()=>{setAuctionItemPostModal(false);}}></CloseButton>
+                                    <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemPostModal(false);}}></CloseButton>
                                 </Modal.Header>
 
-                                <Modal.Body>
-                                <div className='homeFormInputs'>
+                                <Modal.Body className="ModalBody">
+                                <div className='controllerFormInputs'>
                                     <Form.Label>Title</Form.Label>
                                     <Form.Control placeholder='Title' onChange={(e)=>{setTitle(handleInputChange(e));}} />
                                 </div>
 
-                                <div className='homeFormInputs'>
+                                <div className='controllerFormInputs'>
                                     <Form.Label>Description</Form.Label>
                                     <Form.Control placeholder='Description' onChange={(e)=>{setDescription(handleInputChange(e));}} />
                                 </div>
 
 
-                                <div className='homeFormInputs'>
+                                <div className='controllerFormInputs'>
                                     <Form.Label>Closing time</Form.Label>
                                     <Datetime 
                                         onChange={(e)=>{setClosingTime(e._d);}}
@@ -448,7 +448,7 @@ const AuctionController = ()=>{
 
                                 </Modal.Body>
                                 
-                                <Modal.Footer>
+                                <Modal.Footer id="ModalFooter">
                                 <p className='errorMessage'>{message}</p>
                                     <Button variant="secondary" onClick={()=>{resetValues()}}>
                                         Close
@@ -465,23 +465,23 @@ const AuctionController = ()=>{
                     <div>
                         <Modal show={auctionItemModifyModal} >
 
-                            <Modal.Header>
+                            <Modal.Header className="ModalHeader">
                                 <Modal.Title>Modify auctionitem</Modal.Title>
-                                <CloseButton className='modalCloseButton' onClick={()=>{setAuctionItemModifyModal(false);}}></CloseButton>
+                                <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemModifyModal(false);}}></CloseButton>
                             </Modal.Header>
 
-                            <Modal.Body>
-                            <div className='homeFormInputs'>
+                            <Modal.Body className="ModalBody">
+                            <div className='controllerFormInputs'>
                                 <Form.Label>Title</Form.Label>
                                 <Form.Control value={titleModify} placeholder='Title' onChange={(e)=>{setTitleModify(handleInputChange(e));}} />
                             </div>
 
-                            <div className='homeFormInputs'>
+                            <div className='controllerFormInputs'>
                                 <Form.Label>Description</Form.Label>
                                 <Form.Control value={descriptionModify} placeholder='Description' onChange={(e)=>{setDescriptionModify(handleInputChange(e));}} />
                             </div>
 
-                            <div className='homeFormInputs'>
+                            <div className='controllerFormInputs'>
                                 <Form.Label >Visible</Form.Label>
                                 <Form.Select value={visible} onChange={(e)=>{setVisible(e.target.value);}} >
                                     <option value={1}>true</option>
@@ -489,7 +489,7 @@ const AuctionController = ()=>{
                                 </Form.Select>
                             </div>
 
-                            <div className='homeFormInputs'>
+                            <div className='controllerFormInputs'>
                                 <Form.Label >Closing time</Form.Label>
                                 <Datetime 
                                     value={closingTimeModify}
@@ -504,12 +504,12 @@ const AuctionController = ()=>{
                                 <input onChange={(e)=>{setFileFromInput(e);}} type={"file"} accept={'image/*'} id={"image-uploader"} className={"form-control"+applyErrorClass("imageSource")} multiple></input>
                             </div>
 
-                            <div>
+                            <div className='auctionControllerModifyImagesDiv'>
                                 {renderImages}
                             </div>
                             </Modal.Body>
                             
-                            <Modal.Footer>
+                            <Modal.Footer id="ModalFooter">
                             <p className='errorMessage'>{message}</p>
                                 <Button variant="secondary" onClick={()=>{resetValues()}}>
                                     Close
@@ -523,15 +523,15 @@ const AuctionController = ()=>{
                 
                     <div>
                         <Modal show={auctionItemVisibilityModal}>
-                            <Modal.Header>
+                            <Modal.Header className="ModalHeader">
                                 <Modal.Title>Change visibility</Modal.Title>
-                                <CloseButton className='modalCloseButton' onClick={()=>{setAuctionItemVisibilityModal(false);}}></CloseButton>
+                                <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemVisibilityModal(false);}}></CloseButton>
                             </Modal.Header>
-                            <Modal.Body >
-                                <p className='auctionControllerModalText'>Are you sure you want to change the auctionitems visibility?</p>
-                                <p className='auctionControllerModalText'>If the auctionitem is not visible it cannot be accessed by customers, or seen on the platform.</p>
+                            <Modal.Body className="ModalBody" >
+                                <p>Are you sure you want to change the auctionitems visibility?</p>
+                                <p>If the auctionitem is not visible it cannot be accessed by customers, or seen on the platform.</p>
                             </Modal.Body>
-                            <Modal.Footer>
+                            <Modal.Footer id="ModalFooter">
                                 <Button onClick={()=>{resetValues();}}>Close</Button>
                                 <Button onClick={()=>{changeAuctionItemVisibility();}}>Save</Button>
                             </Modal.Footer>
@@ -550,18 +550,18 @@ const AuctionController = ()=>{
 
                             <Modal show={loginVisibilityModal} >
 
-                                <Modal.Header >
+                                <Modal.Header className="ModalHeader" >
                                     <Modal.Title>Login</Modal.Title>
-                                    <CloseButton className='modalCloseButton' onClick={()=>{setLoginVisibilityModal(false);}}></CloseButton>
+                                    <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setLoginVisibilityModal(false);}}></CloseButton>
                                 </Modal.Header>
 
-                                <Modal.Body>
-                                <div className='homeFormInputs'>
+                                <Modal.Body className="ModalBody">
+                                <div className='controllerFormInputs'>
                                     <Form.Label>Username</Form.Label>
                                     <Form.Control type="username" placeholder='Username' onChange={(e)=>{setUsername(handleInputChange(e));}} />
                                 </div>
 
-                                <div className='homeFormInputs'>
+                                <div className='controllerFormInputs'>
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control type="password" placeholder='Password' onChange={(e)=>{setPassword(handleInputChange(e));}} />
                                     <Form.Text className="text-muted">
@@ -574,7 +574,7 @@ const AuctionController = ()=>{
 
                                 </Modal.Body>
                                 
-                                <Modal.Footer>
+                                <Modal.Footer id="ModalFooter">
                                     <Button variant="secondary" onClick={()=>{setLoginVisibilityModal(false); }}>
                                         Close
                                     </Button>
