@@ -16,12 +16,15 @@ import { handleInputChange, CountdownTimer} from  '../functions';
 const Auction = ()=>{
     const search = useLocation().search;
     const auctionId = new URLSearchParams(search).get('auctionId');
-    const [cookies] = useCookies(['token']);
+    const [cookies, setCookie, removeCookie] = useCookies(['token', "auctioneerId","auctioneerDefaultPrice", "auctioneerDefaultIgTag", "auctioneerDefaultUsername"]);
 
     const [selectedRow, setSelectedRow] = useState(true);
+    const [selectedRowId, setSelectedRowId] = useState(0);
+    
     const [auctioneers, setAuctioneers] = useState([]);
     const [carouselImages, setCarouselImages] = useState([]);
     const [currentAuctionItem, setCurrentAuctionItem] = useState({});
+
     const [username, setUsername] = useState("");
     const [suggestionUsername, setSuggestionUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -32,79 +35,166 @@ const Auction = ()=>{
     const [usernameModify, setUsernameModify] = useState("");
     const [passwordModify, setPasswordModify] = useState("");
     const [priceModify, setPriceModify] = useState(0);
-    const [phonenumberModify, setPhonenumberModify] = useState(0);
     const [igTagModify, setIgTagModify] = useState("");
     
-    const [auctioneer, setAuctioneer] = useState("");
-    const [modifyAuctioneer, setModifyAuctioneer] = useState("");
-
     const [message, setMessage] = useState("");
 
     const [auctioneerParticipateModal, setAuctioneerParticipateModal] = useState(false);
     const [auctionVisible, setAuctionVisible] = useState(0);
     
+    const [datagridColumnVisiblility, setDatagridColumnVisiblility] = useState(false);
+    const [datagridDefaultSelected, setDatagridDefaultSelected] = useState(cookies.auctioneerId);
     
     
     const columns = [
         {name:"id", header: "Id",  defaultVisible: false},
         {name:"igTag" , header:"Instagram tag",  defaultFlex:2},
-        {name:"phonenumber" , header:"Phonenumber", defaultFlex:2},
+        {name:"phonenumber" , header:"Phonenumber", defaultVisible: datagridColumnVisiblility, defaultFlex:2},
         {name:"username" , header:"Username", defaultFlex:2},
         {name:"price" , header:"Price", type: "number", defaultFlex:1}
     ]
 //    headers: { "Authorization": `Bearer ${cookies.token}`}
-
-    const onSelectionChange = useCallback((e) => {
-        setUsernameModify(e.data.username);
-        setPriceModify(e.data.price);
-        setPhonenumberModify(e.data.phonenumber);
-        setIgTagModify(e.data.igTag);
-
+    
+    const onSelectionChange = useCallback((selected) => {
+        console.log(selected);
+        setUsernameModify(selected?.data.username);
+        setPriceModify(selected?.data.price);
+        setIgTagModify(selected?.data.igTag);
+        setSelectedRowId(selected?.data.id);
         setSelectedRow(false);
     }, [])
 
+    const resetValues = ()=>{
+
+        setAuctioneerParticipateModal(false);
+        setPassword("");
+        setUsername("");
+        setSuggestionUsername("");
+        setPrice(0);
+        setPhonenumber(0);
+        setIgTag("@");
+
+        setUsernameModify("");
+        setPasswordModify("");
+        setIgTagModify("");
+        setPriceModify(0);
+
+        setSelectedRowId(0);
+        setMessage("");
+    }
+
+    const setCookies = (result)=>{
+        setCookie('auctioneerId', result.id, { path: '/Auction' });
+        setCookie('auctioneerDefaultPrice', result.price, { path: '/Auction' });
+        setCookie('auctioneerDefaultIgTag', result.igTag, { path: '/Auction' });
+        setCookie('auctioneerDefaultUsername', result.username, { path: '/Auction' });
+        //window.location.reload(); // HUONO PITÄIS SAAHA PÄIVITTYMÄÄN PAREMMIN
+        fetchAuctioneers();
+        resetValues();
+    }
+
     const postAuction = async ()=>{
         try{
-            if(auctioneer?.igTag != "" &&  auctioneer?.price != 0){
+            if(igTag != "" &&  price != 0){
                 const options = {
                     method:'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body:JSON.stringify(auctioneer)
+                    body:JSON.stringify({
+                        Username: username == "" ? suggestionUsername :username, 
+                        IgTag: igTag,
+                        Price: price,
+                        Password: password,
+                        Phonenumber:phonenumber == "" ? 0 : phonenumber,
+                        AuctionItemId: currentAuctionItem.id
+                    })
                 }
 
-                var search = await fetch("https://localhost:44371/api/Auctioneers",options);
-                var auctioneers = await search.json();
-                if(auctioneers?.status == "Ok"){
-                    window.location.reload();
-                    setMessage(auctioneers?.message);
+                var search = await fetch("https://localhost:44371/api/Auctioneers/"+auctionId,options);
+                var result = await search.json();
+                if(result?.status != "Error" && result != null){
+                    setCookies(result);
                 }
                 else{
-                    setMessage(auctioneers?.message);
+                    setMessage(result?.message);
                 }
             }
         }
         catch(e){
             console.log(e);
+        }
+    }
+
+    const fetchAuctioneers = async()=>{
+        const options = {
+            method: 'GET',
+            headers: {"Authorization": `Bearer ${cookies.token}`}
+        }
+        var result = null;
+        if(cookies.token == undefined){
+            var search = await fetch("https://localhost:44371/api/Auctioneers/"+auctionId);
+            result = await search.json();
+        }
+        else{
+            var search = await fetch("https://localhost:44371/api/Auctioneers/Creator/"+auctionId, options);
+            result = await search.json();
+            if(result?.length > 0){
+                setDatagridColumnVisiblility(true);
+                result.map((e)=>{
+                    if(e.phonenumber == 0){
+                        e.phonenumber = "";
+                    }
+                })
+            }
+        }
+
+        if(cookies?.auctioneerId != null && cookies?.auctioneerId != undefined && cookies?.auctioneerId != 0){
+            //Tarkistetaan jos selaimessa olevat cookiet liittyvät eri auctionitemiin ne poistetaan.
+            var cookieExistOutsideAuction = true;
+            result.map((e)=>{
+                    if(e.id == cookies.auctioneerId){
+                        cookieExistOutsideAuction = false;
+                    }
+            });
+
+            if(cookieExistOutsideAuction == false){
+                setDatagridDefaultSelected(cookies.auctioneerId);
+                setSelectedRow(false);
+            }
+            else{
+                removeCookie('auctioneerId',{ path: '/Auction' });
+                removeCookie('auctioneerDefaultPrice',{ path: '/Auction' });
+                removeCookie('auctioneerDefaultIgTag',{ path: '/Auction' });
+                removeCookie('auctioneerDefaultUsername',{ path: '/Auction' });
+            }
+        }
+        
+        
+        if(result != null && result != undefined && result?.status != "Error"){
+            setAuctioneers(await result);
         }
     }
 
     const modifyAuction = async ()=>{
         try{
-            if(modifyAuctioneer.igTag != "" &&  modifyAuctioneer.price != 0){
+            if(passwordModify != "" &&  priceModify != 0 || passwordModify != "" && cookies.auctioneerDefaultPrice != null){
                 const options = {
                     method:'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body:JSON.stringify(modifyAuctioneer)
+                    body:JSON.stringify({
+                        Username: usernameModify == "" ? cookies.auctioneerDefaultUsername : usernameModify, 
+                        IgTag: igTagModify == "" ? cookies.auctioneerDefaultIgTag : igTagModify,
+                        Price: priceModify == 0 ? cookies.auctioneerDefaultPrice : priceModify,
+                        Password: passwordModify,
+                    })
                 }
     
                 var search = await fetch("https://localhost:44371/api/Auctioneers/"+auctionId,options);
-                var auctioneers = await search.json();
-                if(auctioneers?.status == "Ok"){
-                    window.location.reload();
-                    setMessage(auctioneers?.message);
+                var result = await search.json();
+                if(result?.status != "Error" && result != null){
+                    setCookies(result);
                 }
                 else{
-                    setMessage(auctioneers?.message);
+                    setMessage(result?.message);
                 }
             }
         }
@@ -114,39 +204,6 @@ const Auction = ()=>{
     }
 
 
-    
-
-    const fetchData = async ()=>{
-        const options = {
-            method: 'GET',
-            headers: {"Authorization": `Bearer ${cookies.token}`}
-        }
-
-        if(cookies.token == undefined){
-            var search = await fetch("https://localhost:44371/api/Auctioneers/"+auctionId);
-            var auctioneers = await search.json();
-        }
-        else{
-            var search = await fetch("https://localhost:44371/api/Auctioneers/Creator/"+auctionId, options);
-            var auctioneers = await search.json();
-        }
-
-        search = await fetch("https://localhost:44371/api/Images/public/"+auctionId);
-        var images = await search.json();
-
-        if(images != null && images != undefined && images.status != "Error")
-            setCarouselImages(await images);
-
-        if(auctioneers != null && auctioneers != undefined && auctioneers.status != "Error"){
-            
-            auctioneers.map((e)=>{
-                if(e.phonenumber == 0){
-                    e.phonenumber = "";
-                }
-            })
-            setAuctioneers(await auctioneers);
-        }
-    }
 
     const fetchAuctionItem = async ()=>{
 
@@ -163,41 +220,42 @@ const Auction = ()=>{
         }
     }
 
+
+    const fetchImages = async ()=>{
+        if(auctionId != null && auctionId != ""){
+            var search = await fetch("https://localhost:44371/api/Images/public/"+auctionId);
+            var images = await search.json();
+    
+            if(images != null && images != undefined && images?.status != "Error")
+                setCarouselImages(await images);
+        }
+    }
+
+
     useEffect(()=>{
         fetchAuctionItem();
-        fetchData();
+        fetchAuctioneers();
+        fetchImages();
     },[]);
-
-    useEffect(()=>{
-        if(modifyAuctioneer != ""){
-            modifyAuction();
-        }
-    },[modifyAuctioneer]);
-
-    useEffect(()=>{
-        if(auctioneer != ""){
-           postAuction();
-        }
-    },[auctioneer]);
-    
-
 
     const carouselImagesRender = carouselImages.map((e, i)=>{
         return (
-            <Carousel.Item className='carouselImageDiv' interval={12000}>
-                <a href={e}>
+            <Carousel.Item interval={12000}>
+
+                <a className='auctionCarouselImgDiv' href={e}>
                     <img
-                    className="carouselImage"
+                    className="carouselImage d-block"
                     src={e}
                     />
                 </a>
+
+
                 {i == 0 ? 
                 <Carousel.Caption>
                     <h1 className='carouselTitle'>{currentAuctionItem?.title}</h1>
                 </Carousel.Caption>
                 :
                 null}
-                
             </Carousel.Item>
         )
     });
@@ -205,17 +263,17 @@ const Auction = ()=>{
     return(
 <div >
     { auctionVisible == 1 ?  
-        <div className='homeMainDiv'> 
+        <div className='auctionMainDiv'> 
             <div>
                 <div className='carouselMainDiv'>
-                    <Carousel className='carouselMainDiv'>
+                    <Carousel  className='auctionCarousel'>
                         {carouselImagesRender}
                     </Carousel>
                 </div>
-                <div className='homeDescriptionDiv square rounded'>
-                    <p className='homeDescription'>{currentAuctionItem?.description}</p>
+                <div className='auctionDescriptionDiv square rounded'>
+                    <p className='auctionDescription'>{currentAuctionItem?.description}</p>
                 </div>
-                <div className='homeInputDiv'>
+                <div className='auctionInputDiv'>
                     <div className='modifyInputDiv'>
                         <div>
                             <h4>Modify offer</h4>
@@ -226,39 +284,29 @@ const Auction = ()=>{
                         </div>
                         <div >
 
-                            <div className='homeFormInputs'>
+                            <div className='auctionFormInputs'>
                                 <Form.Label>Price</Form.Label>
-                                <Form.Control disabled={selectedRow} type="number" placeholder='Price' value={priceModify} onChange={(e)=>{setPriceModify(handleInputChange(e));}} />
+                                <Form.Control disabled={selectedRow} type="number" placeholder='Price' value={priceModify != 0 ? priceModify : cookies.auctioneerDefaultPrice} onChange={(e)=>{setPriceModify(handleInputChange(e));}} />
                             </div>
 
-                            <div className='homeFormInputs'>
+                            <div className='auctionFormInputs'>
                                 <Form.Label>Password</Form.Label>
-                                <Form.Control disabled={selectedRow} type="password" placeholder='Password' onChange={(e)=>{setPasswordModify(handleInputChange(e));}} />
+                                <Form.Control disabled={selectedRow} type="password" placeholder='Password' value={passwordModify} onChange={(e)=>{setPasswordModify(handleInputChange(e));}} />
                                 <Form.Text className="text-muted">
                                     Use your password to modify the post.
                                 </Form.Text>
                             </div>
 
-                            <div className='homeFormInputs'>
+                            <div className='auctionFormInputs'>
                                 <p className='errorMessage'>{message}</p>
-                                <Button disabled={selectedRow} onClick={()=>{
-                                    setModifyAuctioneer({
-                                        Username: usernameModify, 
-                                        IgTag: igTagModify,
-                                        Price: priceModify,
-                                        Password: passwordModify,
-                                        Phonenumber:phonenumberModify  == "" ? 0 : phonenumberModify,
-                                        AuctionItemId: currentAuctionItem.id
-                                    });
-                                }}>
+                                <Button disabled={selectedRow} onClick={()=>{modifyAuction();}}>
                                     Save
                                 </Button>
                                 
                             </div>
-                            <a href="/">Home</a>
                         </div>
                     </div>
-                    <div className='homeParticipateDiv'>
+                    <div className='auctionParticipateDiv'>
                         <div>
                             <div>
                                 <h4>Participate!</h4>
@@ -274,19 +322,19 @@ const Auction = ()=>{
 
                             {/* closeButton ei jostaion syystä toimi */}
                                 <Modal.Header >
-                                    <Modal.Title>Bid on the auction</Modal.Title>
-                                    <CloseButton className='modalCloseButton' onClick={()=>{setAuctioneerParticipateModal(false);}}></CloseButton>
+                                    <Modal.Title>Make an offer</Modal.Title>
+                                    <CloseButton className='modalCloseButton' onClick={()=>{resetValues();}}></CloseButton>
                                 </Modal.Header>
 
                                 <Modal.Body>
-                                    <div className='homeFormInputs'>
+                                    <div className='auctionFormInputs'>
                                         <Form.Label>Instagram tag</Form.Label>
                                         <Form.Control onBlur={(e)=>{handleInputChange(e);}} className='Input' placeholder='@ExampleInstagramAccount' value={igTag} onChange={(e)=>{ 
                                             if(username == "")
                                                 setSuggestionUsername(handleInputChange(e)); 
                                             setIgTag(handleInputChange(e));}} />
                                     </div>
-                                    <div className='homeFormInputs'>
+                                    <div className='auctionFormInputs'>
                                         <Form.Label>Phonenumber</Form.Label>
                                         <Form.Control className='Input' placeholder='Phonenumber' onChange={(e)=>{setPhonenumber(e.target.value);}} />
                                         <Form.Text className="text-muted" id="phonenumberText">
@@ -294,17 +342,17 @@ const Auction = ()=>{
                                         </Form.Text>
                                     </div>
 
-                                    <div className='homeFormInputs'>
+                                    <div className='auctionFormInputs'>
                                         <Form.Label>Price</Form.Label>
                                         <Form.Control type="number" placeholder='Price' onChange={(e)=>{setPrice(handleInputChange(e));}} />
                                     </div>
 
-                                    <div className='homeFormInputs'>
+                                    <div className='auctionFormInputs'>
                                         <Form.Label>Username</Form.Label>
                                         <Form.Control type="username" placeholder='Username' value={suggestionUsername} onChange={(e)=>{setUsername(handleInputChange(e)); setSuggestionUsername(handleInputChange(e));}} />
                                     </div>
 
-                                    <div className='homeFormInputs'>
+                                    <div className='auctionFormInputs'>
                                         <Form.Label>Password</Form.Label>
                                         <Form.Control type="password" placeholder='Password' onChange={(e)=>{setPassword(handleInputChange(e));}} />
                                         <Form.Text className="text-muted">
@@ -314,17 +362,10 @@ const Auction = ()=>{
                                 </Modal.Body>
                                 <Modal.Footer>
                                     <p className='errorMessage'>{message}</p>
-                                    <Button variant="secondary" onClick={()=>{setAuctioneerParticipateModal(false);}}>
+                                    <Button variant="secondary" onClick={()=>{resetValues();}}>
                                         Close
                                     </Button>
-                                    <Button onClick={()=>{setAuctioneer({
-                                        Username: username, 
-                                        IgTag: igTag,
-                                        Price: price,
-                                        Password: password,
-                                        Phonenumber:phonenumber == "" ? 0 : phonenumber,
-                                        AuctionItemId: currentAuctionItem.id
-                                    });}}>Save</Button>
+                                    <Button onClick={()=>{postAuction();}}>Save</Button>
                                 </Modal.Footer>
                             </Modal>
                         </div>
@@ -333,27 +374,29 @@ const Auction = ()=>{
             </div>
 
             <div >
-                <div className='homeDataGridDiv'>
+                <div className='auctionDataGridDiv'>
                     <div>
-                        
                         <div>
                             <h1>Auction!</h1>
-                            
                         </div>
-                        <div>
+                        <div className='auctionCountdownDiv'>
                             <CountdownTimer targetDate={currentAuctionItem?.closingTime} />
                         </div>
                         <div>
                             <ReactDataGrid
-                            idProperty="id"
-                            className='auctionReactDataGrid'
-                            style={{minHeight: 1300}}
-                            columns={columns}
-                            dataSource={auctioneers}
-                            enableSelection={true}
-                            defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
-                            sortable={false}
-                            onSelectionChange={onSelectionChange}
+                                idProperty="id"
+                                className='auctionReactDataGrid'
+                                style={{height: 1000, maxHeight: 1000}}
+                                columns={columns}
+                                dataSource={auctioneers}
+                                enableSelection={true}
+                                defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
+                                sortable={false}
+                                onSelectionChange={onSelectionChange}
+                                enableKeyboardNavigation={false}
+                                toggleRowSelectOnClick={true}
+                                defaultSelected={ datagridDefaultSelected}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
+                                selected={selectedRowId == 0 ? cookies.auctioneerId : selectedRowId}
                             />
                         </div>
                     </div>

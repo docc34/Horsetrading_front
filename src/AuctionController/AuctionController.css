@@ -1,6 +1,12 @@
-.AuctionControlleMainDiv{
+.auctionControllerMainDiv{
     margin:4%;
 }
 .renderedImage{
     max-width: 100px;
+}
+.auctionControllerLoginMainDiv{
+    min-height: 45rem;
+}
+.auctionControllerModalText{
+    color: black;
 }

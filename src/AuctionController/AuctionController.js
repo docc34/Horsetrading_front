@@ -130,38 +130,43 @@ const AuctionController = ()=>{
 
     //login
     const checkLoginStatus = async()=>{
-        const options = {
-            method: 'GET',
-            headers: { "Authorization": `Bearer ${cookies.token}`}
-        }
-        let data = await fetch("https://localhost:44371/api/Login", options);
-        let loggedIn = await data.json();
-        if(loggedIn == true){
-            setLoggedIn(loggedIn);
+        if(cookies.token != null){
+            const options = {
+                method: 'GET',
+                headers: { "Authorization": `Bearer ${cookies.token}`}
+            }
+            let data = await fetch("https://localhost:44371/api/Login", options);
+            let loggedIn = await data.json();
+            if(loggedIn == true){
+                setLoggedIn(loggedIn);
+            }
         }
     }
 
     const handleLogin = async() => {
         if(username != "" && password != ""){
             try{
+                console.log("login ");
                 let data = await fetch("https://localhost:44371/api/Login",{
-                    method:'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body:JSON.stringify({username: username, password: password})
+                        method:'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body:JSON.stringify({username: username, password: password})
                     });
     
-                    let result = await data.json();
-                    
-                    if (result?.status == "Error") {
-                        setMessage(result.message);
-                        resetValues();
-                    }
-                    else if(result?.status == "Ok"){
-                        resetValues();
-                        setCookie('token', result.token, { path: '/' })
-                        window.location.reload();
-                    }
-                resetValues();
+                let result = await data.json();
+                
+                if (result?.status == "Error") {
+                    setMessage(result.message);
+                    setUsername("");
+                    setPassword("");
+                    removeCookie('token',{ path: '/' });
+                }
+                else if(result?.status == "Ok"){
+                    console.log("login onnistu");
+                    resetValues();
+                    setCookie('token', result.token, { path: '/' })
+                    window.location.reload();
+                }
             }
             catch{
                 setMessage("Error");
@@ -192,14 +197,16 @@ const AuctionController = ()=>{
     }
 
     const fetchAuctionItems = async ()=>{
-        const options = {
-            method: 'GET',
-            headers: {"Authorization": `Bearer ${cookies.token}`}
-        }
-        var search = await fetch("https://localhost:44371/api/AuctionItems/User",options);
-        var auctionItems = await search.json();
-        if(auctionItems != null || auctionItems != undefined){
-            setAuctionItems(await auctionItems);
+        if(cookies.token != null){
+            const options = {
+                method: 'GET',
+                headers: {"Authorization": `Bearer ${cookies.token}`}
+            }
+            var search = await fetch("https://localhost:44371/api/AuctionItems/User",options);
+            var auctionItems = await search.json();
+            if(auctionItems != null || auctionItems != undefined){
+                setAuctionItems(await auctionItems);
+            }
         }
     }
 
@@ -355,7 +362,7 @@ const AuctionController = ()=>{
     });
 
     return(
-    <div className='AuctionControlleMainDiv'>
+    <div className='auctionControllerMainDiv'>
         {loggedIn == true ? 
             <div>
                 <h1>Auction controller</h1>
@@ -475,7 +482,7 @@ const AuctionController = ()=>{
                             </div>
 
                             <div className='homeFormInputs'>
-                                <Form.Label>Visible</Form.Label>
+                                <Form.Label >Visible</Form.Label>
                                 <Form.Select value={visible} onChange={(e)=>{setVisible(e.target.value);}} >
                                     <option value={1}>true</option>
                                     <option value={0}>false</option>
@@ -483,7 +490,7 @@ const AuctionController = ()=>{
                             </div>
 
                             <div className='homeFormInputs'>
-                                <Form.Label>Closing time</Form.Label>
+                                <Form.Label >Closing time</Form.Label>
                                 <Datetime 
                                     value={closingTimeModify}
                                     onChange={(e)=>{setClosingTimeModify(e._d);}}
@@ -520,9 +527,9 @@ const AuctionController = ()=>{
                                 <Modal.Title>Change visibility</Modal.Title>
                                 <CloseButton className='modalCloseButton' onClick={()=>{setAuctionItemVisibilityModal(false);}}></CloseButton>
                             </Modal.Header>
-                            <Modal.Body>
-                                <p>Are you sure you want to change the auctionitems visibility?</p>
-                                <p>If the auctionitem is not visible it cannot be accessed by customers, or seen on the platform.</p>
+                            <Modal.Body >
+                                <p className='auctionControllerModalText'>Are you sure you want to change the auctionitems visibility?</p>
+                                <p className='auctionControllerModalText'>If the auctionitem is not visible it cannot be accessed by customers, or seen on the platform.</p>
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button onClick={()=>{resetValues();}}>Close</Button>
@@ -533,7 +540,7 @@ const AuctionController = ()=>{
                 </div>
             </div>
             :
-            <div>
+            <div className='auctionControllerLoginMainDiv'>
                 <p>You dont have authorization to be here</p>
                 <div>
                         <div>
