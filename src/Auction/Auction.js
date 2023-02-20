@@ -12,11 +12,14 @@ import { useCookies } from 'react-cookie';
 import './Auction.css';
 import { useLocation } from "react-router-dom";
 import { handleInputChange, CountdownTimer} from  '../functions';
+import { propTypes } from 'react-bootstrap/esm/Image';
+import '@inovua/reactdatagrid-community/index.css'
 
 const Auction = ()=>{
     const search = useLocation().search;
     const auctionId = new URLSearchParams(search).get('auctionId');
     const [cookies, setCookie, removeCookie] = useCookies(['token', "auctioneerId","auctioneerDefaultPrice", "auctioneerDefaultIgTag", "auctioneerDefaultUsername"]);
+
 
     const [selectedRow, setSelectedRow] = useState(true);
     const [selectedRowId, setSelectedRowId] = useState(0);
@@ -45,11 +48,20 @@ const Auction = ()=>{
     const [datagridColumnVisiblility, setDatagridColumnVisiblility] = useState(false);
     const [datagridDefaultSelected, setDatagridDefaultSelected] = useState(cookies.auctioneerId);
     
+    const [currentAuctioneer, setCurrentAuctioneer] = useState([]);
     
-    const columns = [
+    const auctioneerColumns = [
         {name:"id", header: "Id",  defaultVisible: false},
         {name:"igTag" , header:"Instagram tag",  defaultFlex:2},
         {name:"phonenumber" , header:"Phonenumber", defaultVisible: datagridColumnVisiblility, defaultFlex:2},
+        {name:"username" , header:"Username", defaultFlex:2},
+        {name:"price" , header:"Price", type: "number", defaultFlex:1}
+    ]
+
+    const currentAuctioneerColumns = [
+        {name:"id", header: "Id",  defaultVisible: false},
+        {name:"igTag" , header:"Instagram tag",  defaultFlex:2},
+        {name:"phonenumber" , header:"Phonenumber",  defaultVisible: false, defaultFlex:2},
         {name:"username" , header:"Username", defaultFlex:2},
         {name:"price" , header:"Price", type: "number", defaultFlex:1}
     ]
@@ -90,6 +102,7 @@ const Auction = ()=>{
         setCookie('auctioneerDefaultUsername', result.username, { path: '/Auction' });
         //window.location.reload(); // HUONO PITÄIS SAAHA PÄIVITTYMÄÄN PAREMMIN
         fetchAuctioneers();
+        fetchCurrentAuctioneer();
         resetValues();
     }
 
@@ -159,6 +172,7 @@ const Auction = ()=>{
             if(cookieExistOutsideAuction == false){
                 setDatagridDefaultSelected(cookies.auctioneerId);
                 setSelectedRow(false);
+                fetchCurrentAuctioneer();
             }
             else{
                 removeCookie('auctioneerId',{ path: '/Auction' });
@@ -172,6 +186,18 @@ const Auction = ()=>{
         if(result != null && result != undefined && result?.status != "Error"){
             setAuctioneers(await result);
         }
+    }
+
+    const fetchCurrentAuctioneer = async ()=>{
+        var search = await fetch("https://localhost:44371/api/Auctioneers/Current/?auctionItemId="+auctionId+"&auctioneerId="+cookies.auctioneerId);
+        var result = await search.json();
+        if(result?.status != "Error" && result != null){
+            setCurrentAuctioneer(result);
+        }
+        else{
+            setMessage(result?.message);
+        }
+
     }
 
     const modifyAuction = async ()=>{
@@ -396,8 +422,8 @@ const Auction = ()=>{
                             <ReactDataGrid
                                 idProperty="id"
                                 className='auctionReactDataGrid'
-                                style={{height: 1000, maxHeight: 1000}}
-                                columns={columns}
+                                style={cookies?.token?.length > 6 ? {height: 1000} : {height: 240, maxHeight: 240}}
+                                columns={auctioneerColumns}
                                 dataSource={auctioneers}
                                 enableSelection={true}
                                 defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
@@ -405,6 +431,24 @@ const Auction = ()=>{
                                 onSelectionChange={onSelectionChange}
                                 enableKeyboardNavigation={false}
                                 toggleRowSelectOnClick={true}
+                                defaultSelected={ datagridDefaultSelected}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
+                                selected={selectedRowId == 0 ? cookies.auctioneerId : selectedRowId}
+                                rowClassName="auctionReactDataGridRows"
+                            />
+                        </div>
+                        <div>
+                            {/* //currentAuctioneerColumns */}
+                            <ReactDataGrid
+                                idProperty="id"
+                                style={{height: 60, maxHeight: 50,minHeight: 100}}
+                                columns={currentAuctioneerColumns}
+                                dataSource={currentAuctioneer}
+                                enableSelection={true}
+                                //defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
+                                sortable={false}
+                                //onSelectionChange={onSelectionChange}
+                                enableKeyboardNavigation={false}
+                                toggleRowSelectOnClick={false}
                                 defaultSelected={ datagridDefaultSelected}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
                                 selected={selectedRowId == 0 ? cookies.auctioneerId : selectedRowId}
                             />

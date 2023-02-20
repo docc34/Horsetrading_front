@@ -61,7 +61,14 @@
 }
 .auctionReactDataGrid{
     min-width: 40rem;
-    
+    /* background-color: #1b1e24 !important; */
+    color:#1b1e24 !important;
+    /* border-color: #1b1e24  !important; */
+}
+.auctionReactDataGridRows{
+    /* background-color: #1b1e24 !important; */
+    /* color:white;s */
+
 }
 
 .AuctionItemSpinnerDiv{

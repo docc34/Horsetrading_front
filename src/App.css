@@ -51,10 +51,6 @@ p{
 #root{
   background-color: #1b1e24;
 }
-
-.modal-content{
-  background-color: #141e31;
-}
 .modalCloseButton{
 
 }
@@ -70,5 +66,9 @@ p{
 }
 #ModalFooter{ /*Jostain syystä modalin footterille on määritetty backgroundcolor joten class taso ei toimi ja pitää käyttää id:tä*/
   background-color: #111111;
+}
+
+.InovuaReactDataGrid {
+  min-height: 100px;
 }
 /* #282c34 */
