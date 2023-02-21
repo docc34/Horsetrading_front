@@ -19,6 +19,8 @@
     /* width: 80%; */
 }
 
+.show-counter{}
+
 /* #region 
 Timers css*/
 
@@ -43,7 +45,11 @@ Timers css*/
   .show-counter {
     padding: 0.5rem;
   }
-  
+
+  /* .show-counter p{
+  color: #03060c;
+  } */
+
   .show-counter {
     display: flex;
     flex-direction: row;
@@ -53,7 +59,7 @@ Timers css*/
     font-size: 1.25rem;
     line-height: 1.75rem;
     padding: 0.5rem;
-    border: 1px solid #ebebeb;
+    border: 2px solid black ;
     border-radius: 0.25rem;
     text-decoration: none;
     color: #000;

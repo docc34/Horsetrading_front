@@ -192,7 +192,7 @@ const Auction = ()=>{
         var search = await fetch("https://localhost:44371/api/Auctioneers/Current/?auctionItemId="+auctionId+"&auctioneerId="+cookies.auctioneerId);
         var result = await search.json();
         if(result?.status != "Error" && result != null){
-            setCurrentAuctioneer(result);
+            setCurrentAuctioneer([result]);
         }
         else{
             setMessage(result?.message);
@@ -290,8 +290,9 @@ const Auction = ()=>{
 <div >
     { auctionVisible == 1 ?  
         <div className='auctionMainDiv'> 
-            <div>
-                <div className='carouselMainDiv'>
+
+            <div className='auctionCarouselMainDiv'>
+                <div className='carouselDiv'>
                     <Carousel  className='auctionCarousel'>
                         {carouselImagesRender}
                     </Carousel>
@@ -299,126 +300,20 @@ const Auction = ()=>{
                 <div className='auctionDescriptionDiv square rounded'>
                     <p className='auctionDescription'>{currentAuctionItem?.description}</p>
                 </div>
-                <div className='auctionInputDiv'>
-                    <div className='modifyInputDiv'>
-                        <div>
-                            <h4>Modify offer</h4>
-                            <p>
-                                You can modify your auction by selecting it in the menu and giving the correct password
-                                The minimum raise is 5€
-                            </p>
-                        </div>
-                        <div >
-
-                            <div className='auctionFormInputs'>
-                                <Form.Label>Price</Form.Label>
-                                <Form.Control disabled={selectedRow} type="number" placeholder='Price' value={priceModify != 0 ? priceModify : cookies.auctioneerDefaultPrice} onChange={(e)=>{setPriceModify(handleInputChange(e));}} />
-                            </div>
-
-                            <div className='auctionFormInputs'>
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control disabled={selectedRow} type="password" placeholder='Password' value={passwordModify} onChange={(e)=>{setPasswordModify(handleInputChange(e));}} />
-                                <Form.Text className="text-muted">
-                                    Use your password to modify the post.
-                                </Form.Text>
-                            </div>
-
-                            <div className='auctionFormInputs'>
-                                <p className='errorMessage'>{message}</p>
-                                <Button disabled={selectedRow} onClick={()=>{modifyAuction();}}>
-                                    Save
-                                </Button>
-                                
-                            </div>
-                        </div>
-                    </div>
-                    <div className='auctionParticipateDiv'>
-                        <div>
-                            <div>
-                                <h4>Participate!</h4>
-                                <p>
-                                    You can participate by making an offer below. 
-                                    The minimum raise is 5€
-                                    The password is used to modify the offer later
-                                </p>
-                                <Button onClick={()=>{setAuctioneerParticipateModal(true);}}>Participate</Button>
-                            </div>
-                            
-                            <Modal 
-                                show={auctioneerParticipateModal}
-                            >
-
-                            
-                                <Modal.Header className="ModalHeader">
-                                    <Modal.Title>Make an offer</Modal.Title>
-                                    <CloseButton variant="white" className='modalCloseButton' onClick={()=>{resetValues();}} />
-                                </Modal.Header>
-
-                                <Modal.Body className="ModalBody">
-                                    <div className='auctionFormInputs'>
-                                        <Form.Label>Instagram tag</Form.Label>
-                                        <Form.Control 
-                                            autoFocus
-                                            onBlur={(e)=>{handleInputChange(e);}} 
-                                            className='Input' 
-                                            placeholder='@ExampleInstagramAccount' 
-                                            value={igTag} 
-                                            onChange={(e)=>{ 
-                                                if(username == "")
-                                                    setSuggestionUsername(handleInputChange(e)); 
-                                                setIgTag(handleInputChange(e));}
-                                                } 
-                                        />
-                                    </div>
-                                    <div className='auctionFormInputs'>
-                                        <Form.Label>Phonenumber</Form.Label>
-                                        <Form.Control className='Input' placeholder='Phonenumber' onChange={(e)=>{setPhonenumber(e.target.value);}} />
-                                        <Form.Text className="text-muted" id="phonenumberText">
-                                            Phonenumber is optional
-                                        </Form.Text>
-                                    </div>
-
-                                    <div className='auctionFormInputs'>
-                                        <Form.Label>Price</Form.Label>
-                                        <Form.Control type="number" placeholder='Price' onChange={(e)=>{setPrice(handleInputChange(e));}} />
-                                    </div>
-
-                                    <div className='auctionFormInputs'>
-                                        <Form.Label>Username</Form.Label>
-                                        <Form.Control type="username" placeholder='Username' value={suggestionUsername} onChange={(e)=>{setUsername(handleInputChange(e)); setSuggestionUsername(handleInputChange(e));}} />
-                                    </div>
-
-                                    <div className='auctionFormInputs'>
-                                        <Form.Label>Password</Form.Label>
-                                        <Form.Control type="password" placeholder='Password' onChange={(e)=>{setPassword(handleInputChange(e));}} />
-                                        <Form.Text className="text-muted">
-                                            Your offer needs a password so you can modify it later.
-                                        </Form.Text>
-                                    </div>
-                                </Modal.Body>
-                                <Modal.Footer id="ModalFooter">
-                                    <p className='errorMessage'>{message}</p>
-                                    <Button variant="secondary" onClick={()=>{resetValues();}}>
-                                        Close
-                                    </Button>
-                                    <Button onClick={()=>{postAuction();}}>Save</Button>
-                                </Modal.Footer>
-                            </Modal>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
 
-            <div >
+            <div className='auctionContentMainDiv'>
                 <div className='auctionDataGridDiv'>
                     <div>
-                        <div>
-                            <h1>Auction!</h1>
+                        <div className='auctionTitleDiv'>
+                            <h1 className='auctionTitle'>Auction!</h1>
                         </div>
                         <div className='auctionCountdownDiv'>
                             <CountdownTimer targetDate={currentAuctionItem?.closingTime} />
                         </div>
                         <div>
+                            <h3>Top 5 highest offers</h3>
                             <ReactDataGrid
                                 idProperty="id"
                                 className='auctionReactDataGrid'
@@ -434,27 +329,146 @@ const Auction = ()=>{
                                 defaultSelected={ datagridDefaultSelected}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
                                 selected={selectedRowId == 0 ? cookies.auctioneerId : selectedRowId}
                                 rowClassName="auctionReactDataGridRows"
+                                showColumnMenuTool={false}
+
+
                             />
                         </div>
-                        <div>
-                            {/* //currentAuctioneerColumns */}
-                            <ReactDataGrid
-                                idProperty="id"
-                                style={{height: 60, maxHeight: 50,minHeight: 100}}
-                                columns={currentAuctioneerColumns}
-                                dataSource={currentAuctioneer}
-                                enableSelection={true}
-                                //defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
-                                sortable={false}
-                                //onSelectionChange={onSelectionChange}
-                                enableKeyboardNavigation={false}
-                                toggleRowSelectOnClick={false}
-                                defaultSelected={ datagridDefaultSelected}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
-                                selected={selectedRowId == 0 ? cookies.auctioneerId : selectedRowId}
-                            />
+                        <div className='auctionReactDataGridSingle'>
+                            {cookies.auctioneerId != null && currentAuctioneer != [] && currentAuctioneer?.length != 0 ? 
+                                <div>
+                                    <h3>Your offer</h3>
+                                {/* //currentAuctioneerColumns */}
+                                    <ReactDataGrid
+                                        idProperty="id"
+                                        style={{minHeight: 42}}
+                                        columns={currentAuctioneerColumns}
+                                        dataSource={currentAuctioneer}
+                                        enableSelection={true}
+                                        //defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
+                                        sortable={false}
+                                        //onSelectionChange={onSelectionChange}
+                                        enableKeyboardNavigation={false}
+                                        toggleRowSelectOnClick={false}
+                                        defaultSelected={ datagridDefaultSelected}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
+                                        selected={selectedRowId == 0 ? cookies.auctioneerId : selectedRowId}
+                                        showHeader={false}
+                                    />
+                                </div>
+                                :
+                                null
+                            } 
                         </div>
-                    </div>
-                <div >
+                        
+                    <div className='auctionInputDiv'>
+                        <div className='modifyInputDiv'>
+                            <div>
+                                <h4>Modify offer</h4>
+                                <p>
+                                    You can raise your offer by giving the password you created
+                                    The minimum raise is 5€
+                                </p>
+                            </div>
+                            <div >
+
+                                <div className='auctionFormInputs'>
+                                    <Form.Label>Price</Form.Label>
+                                    <Form.Control disabled={selectedRow} type="number" placeholder='Price' value={priceModify != 0 ? priceModify : cookies.auctioneerDefaultPrice} onChange={(e)=>{setPriceModify(handleInputChange(e));}} />
+                                </div>
+
+                                <div className='auctionFormInputs'>
+                                    <Form.Label>Password</Form.Label>
+                                    <Form.Control disabled={selectedRow} type="password" placeholder='Password' value={passwordModify} onChange={(e)=>{setPasswordModify(handleInputChange(e));}} />
+                                    <Form.Text className="text-muted">
+                                        Use your password to modify the post.
+                                    </Form.Text>
+                                </div>
+
+                                <div className='auctionFormInputs'>
+                                    <p className='errorMessage'>{message}</p>
+                                    <Button disabled={selectedRow} onClick={()=>{modifyAuction();}}>
+                                        Save
+                                    </Button>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className='auctionParticipateDiv'>
+                            <div>
+                                <div>
+                                    <h4>Participate!</h4>
+                                    <p>
+                                        You can participate by creating an offer below. 
+                                        Minimum raise is 5€
+                                        The password is used to modify the offer later
+                                    </p>
+                                    <Button onClick={()=>{setAuctioneerParticipateModal(true);}}>Participate</Button>
+                                </div>
+                                
+                                <Modal 
+                                    show={auctioneerParticipateModal}
+                                >
+
+                                
+                                    <Modal.Header className="ModalHeader">
+                                        <Modal.Title>Make an offer</Modal.Title>
+                                        <CloseButton variant="white" className='modalCloseButton' onClick={()=>{resetValues();}} />
+                                    </Modal.Header>
+
+                                    <Modal.Body className="ModalBody">
+                                        <div className='auctionFormInputs'>
+                                            <Form.Label>Instagram tag</Form.Label>
+                                            <Form.Control 
+                                                autoFocus
+                                                onBlur={(e)=>{handleInputChange(e);}} 
+                                                className='Input' 
+                                                placeholder='@ExampleInstagramAccount' 
+                                                value={igTag} 
+                                                onChange={(e)=>{ 
+                                                    if(username == "")
+                                                        setSuggestionUsername(handleInputChange(e)); 
+                                                    setIgTag(handleInputChange(e));}
+                                                    } 
+                                            />
+                                        </div>
+                                        <div className='auctionFormInputs'>
+                                            <Form.Label>Phonenumber</Form.Label>
+                                            <Form.Control className='Input' placeholder='Phonenumber' onChange={(e)=>{setPhonenumber(e.target.value);}} />
+                                            <Form.Text className="text-muted" id="phonenumberText">
+                                                Phonenumber is optional
+                                            </Form.Text>
+                                        </div>
+
+                                        <div className='auctionFormInputs'>
+                                            <Form.Label>Price</Form.Label>
+                                            <Form.Control type="number" placeholder='Price' onChange={(e)=>{setPrice(handleInputChange(e));}} />
+                                        </div>
+
+                                        <div className='auctionFormInputs'>
+                                            <Form.Label>Username</Form.Label>
+                                            <Form.Control type="username" placeholder='Username' value={suggestionUsername} onChange={(e)=>{setUsername(handleInputChange(e)); setSuggestionUsername(handleInputChange(e));}} />
+                                        </div>
+
+                                        <div className='auctionFormInputs'>
+                                            <Form.Label>Password</Form.Label>
+                                            <Form.Control type="password" placeholder='Password' onChange={(e)=>{setPassword(handleInputChange(e));}} />
+                                            <Form.Text className="text-muted">
+                                                Your offer needs a password so you can modify it later.
+                                            </Form.Text>
+                                        </div>
+                                    </Modal.Body>
+                                    <Modal.Footer id="ModalFooter">
+                                        <p className='errorMessage'>{message}</p>
+                                        <Button variant="secondary" onClick={()=>{resetValues();}}>
+                                            Close
+                                        </Button>
+                                        <Button onClick={()=>{postAuction();}}>Save</Button>
+                                    </Modal.Footer>
+                                </Modal>
+                            </div>
+                        </div>
+                    </div>    
                 </div>
             </div>
         </div>

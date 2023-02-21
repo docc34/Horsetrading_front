@@ -88,7 +88,7 @@ const MakeStoreCell = (d)=>{
             );
         } else {
             return (
-                <div className="show-counter">
+                <div className="show-counter rounded">
 
                     <DateTimeDisplay value={days} type={'Days'} isDanger={days <= 3} />
                     <p>:</p>
