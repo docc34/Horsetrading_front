@@ -1,4 +1,5 @@
 import './Footer.css';
+import Nav from 'react-bootstrap/Nav'
 const Footer = ()=>{
     return(
     <div className="footerMainDiv">
@@ -12,11 +13,13 @@ const Footer = ()=>{
                 <p>email: Eemeli.Antikainen@gmail.com</p>
             </div>
             <div className='footerLinksDiv'>
-                <h4>Links</h4>
-                <a href="/AuctionController">Control page</a>
-                <a href="/Auction?auctionId=1">Example transaction</a>
-                <a href="/">Home</a>
+                <h4 className='footerLinksTitle'>Links</h4>
+                <Nav  className="flex-column">
 
+                    <Nav.Link href="/">Home</Nav.Link>
+                    <Nav.Link href="/AuctionController">Control page</Nav.Link>
+                    <Nav.Link href="/Auction?auctionId=1">Example transaction</Nav.Link>
+                </Nav>
             </div>
         </div>
         

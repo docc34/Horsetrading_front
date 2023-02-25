@@ -1,3 +1,14 @@
+@media (max-width: 1000px) { 
+
+    .auctionMainDiv{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 5%;
+        margin-top: 2%;
+    }
+}
+/* ei toimi jostain syystä */
 .auctionMainDiv{
     display: flex;
     flex-direction: row-reverse;
@@ -5,7 +16,6 @@
     margin: 5%;
     margin-top: 2%;
 }
-
 .auctionCarouselMainDiv{
     flex: 2;
     max-width: 800px;

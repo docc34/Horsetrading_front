@@ -34,6 +34,7 @@ const Auction = ()=>{
     const [price, setPrice] = useState(0);
     const [phonenumber, setPhonenumber] = useState(0);
     const [igTag, setIgTag] = useState("@");
+    const [validated, setValidated] = useState(false);
 
     const [usernameModify, setUsernameModify] = useState("");
     const [passwordModify, setPasswordModify] = useState("");
@@ -49,6 +50,8 @@ const Auction = ()=>{
     const [datagridDefaultSelected, setDatagridDefaultSelected] = useState(cookies.auctioneerId);
     
     const [currentAuctioneer, setCurrentAuctioneer] = useState([]);
+
+    const [highestOffer, setHighestOffer] = useState([]);
     
     const auctioneerColumns = [
         {name:"id", header: "Id",  defaultVisible: false},
@@ -96,19 +99,39 @@ const Auction = ()=>{
     }
 
     const setCookies = (result)=>{
-        setCookie('auctioneerId', result.id, { path: '/Auction' });
-        setCookie('auctioneerDefaultPrice', result.price, { path: '/Auction' });
-        setCookie('auctioneerDefaultIgTag', result.igTag, { path: '/Auction' });
-        setCookie('auctioneerDefaultUsername', result.username, { path: '/Auction' });
-        //window.location.reload(); // HUONO PITÄIS SAAHA PÄIVITTYMÄÄN PAREMMIN
-        fetchAuctioneers();
-        fetchCurrentAuctioneer();
-        resetValues();
+        if(result.status < 210){
+            setCookie('auctioneerId', result.id, { path: '/Auction' });
+            setCookie('auctioneerDefaultPrice', result.price, { path: '/Auction' });
+            setCookie('auctioneerDefaultIgTag', result.igTag, { path: '/Auction' });
+            setCookie('auctioneerDefaultUsername', result.username, { path: '/Auction' });
+            //window.location.reload(); // HUONO PITÄIS SAAHA PÄIVITTYMÄÄN PAREMMIN
+            fetchAuctioneers();
+            fetchCurrentAuctioneer();
+            resetValues();
+        }
+        else{
+            setMessage("Error");
+        }
+        
     }
+
+    //https://react-bootstrap.github.io/forms/validation/
+    // const handleSubmit = (event) => {
+    //     const form = event.currentTarget;
+    //     if (form.checkValidity() === false) {
+    //       event.preventDefault();
+    //       event.stopPropagation();
+    //     }
+    //     else{
+    //         setValidated(true);
+    //         postAuction();
+    //     }
+    
+    //   };
 
     const postAuction = async ()=>{
         try{
-            if(igTag != "" &&  price != 0){
+            if(igTag != "@" && igTag != "" &&  price != 0 &&  price != ""&&  password != ""){
                 const options = {
                     method:'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -143,8 +166,10 @@ const Auction = ()=>{
             headers: {"Authorization": `Bearer ${cookies.token}`}
         }
         var result = null;
+        var url = "";
+
         if(cookies.token == undefined){
-            var search = await fetch("https://localhost:44371/api/Auctioneers/"+auctionId);
+            var search = await fetch("https://localhost:44371/api/Auctioneers/"+auctionId+"?Amount=5");
             result = await search.json();
         }
         else{
@@ -185,6 +210,7 @@ const Auction = ()=>{
         
         if(result != null && result != undefined && result?.status != "Error"){
             setAuctioneers(await result);
+            setHighestOffer(result[0].highestOffer);
         }
     }
 
@@ -317,7 +343,7 @@ const Auction = ()=>{
                             <ReactDataGrid
                                 idProperty="id"
                                 className='auctionReactDataGrid'
-                                style={cookies?.token?.length > 6 ? {height: 1000} : {height: 240, maxHeight: 240}}
+                                style={cookies?.token?.length > 6 ? {height: 1000} : {minHeight: 243}}
                                 columns={auctioneerColumns}
                                 dataSource={auctioneers}
                                 enableSelection={true}
@@ -410,16 +436,20 @@ const Auction = ()=>{
                                     show={auctioneerParticipateModal}
                                 >
 
-                                
+                                {/* <form noValidate validated={validated} onSubmit={handleSubmit}> */}
                                     <Modal.Header className="ModalHeader">
                                         <Modal.Title>Make an offer</Modal.Title>
                                         <CloseButton variant="white" className='modalCloseButton' onClick={()=>{resetValues();}} />
                                     </Modal.Header>
 
                                     <Modal.Body className="ModalBody">
+                                        <div>
+                                            <h3>The current highest offer is {highestOffer}€</h3>
+                                        </div>
                                         <div className='auctionFormInputs'>
                                             <Form.Label>Instagram tag</Form.Label>
                                             <Form.Control 
+                                                required
                                                 autoFocus
                                                 onBlur={(e)=>{handleInputChange(e);}} 
                                                 className='Input' 
@@ -432,27 +462,31 @@ const Auction = ()=>{
                                                     } 
                                             />
                                         </div>
-                                        <div className='auctionFormInputs'>
+                                        {/* Tälle pitää löytää oma dropdown text elementti */}
+                                        {/* <div className='auctionFormInputs'>
                                             <Form.Label>Phonenumber</Form.Label>
                                             <Form.Control className='Input' placeholder='Phonenumber' onChange={(e)=>{setPhonenumber(e.target.value);}} />
                                             <Form.Text className="text-muted" id="phonenumberText">
                                                 Phonenumber is optional
                                             </Form.Text>
-                                        </div>
+                                        </div> */}
 
                                         <div className='auctionFormInputs'>
                                             <Form.Label>Price</Form.Label>
-                                            <Form.Control type="number" placeholder='Price' onChange={(e)=>{setPrice(handleInputChange(e));}} />
+                                            <Form.Control required type="number" placeholder='Price' onChange={(e)=>{setPrice(handleInputChange(e));}} />
+                                            <Form.Text >
+                                            The current highest offer is {highestOffer}€
+                                            </Form.Text>
                                         </div>
 
                                         <div className='auctionFormInputs'>
                                             <Form.Label>Username</Form.Label>
-                                            <Form.Control type="username" placeholder='Username' value={suggestionUsername} onChange={(e)=>{setUsername(handleInputChange(e)); setSuggestionUsername(handleInputChange(e));}} />
+                                            <Form.Control required type="username" placeholder='Username' value={suggestionUsername} onChange={(e)=>{setUsername(handleInputChange(e)); setSuggestionUsername(handleInputChange(e));}} />
                                         </div>
 
                                         <div className='auctionFormInputs'>
                                             <Form.Label>Password</Form.Label>
-                                            <Form.Control type="password" placeholder='Password' onChange={(e)=>{setPassword(handleInputChange(e));}} />
+                                            <Form.Control required type="password" placeholder='Password' onChange={(e)=>{setPassword(handleInputChange(e));}} />
                                             <Form.Text className="text-muted">
                                                 Your offer needs a password so you can modify it later.
                                             </Form.Text>
@@ -464,7 +498,9 @@ const Auction = ()=>{
                                             Close
                                         </Button>
                                         <Button onClick={()=>{postAuction();}}>Save</Button>
+                                        {/* type='submit' */}
                                     </Modal.Footer>
+                                {/* </form> */}
                                 </Modal>
                             </div>
                         </div>
