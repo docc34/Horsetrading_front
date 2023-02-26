@@ -1,6 +1,6 @@
 import './functions.css';
 import { relativeTimeRounding } from 'moment';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 const handleInputChange = (o)=>{
     if(o.target.value == null  || o.target.value == ""|| o.target.value == 0){
@@ -32,6 +32,27 @@ const MakeStoreCell = (d)=>{
         </div>
     )
 }
+
+//Käytetään kutsumaan apia refreshaamaan auctionitem pöytä
+const useInterval = (callback, delay) => {
+
+    const savedCallback = useRef();
+  
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+  
+  
+    useEffect(() => {
+      function tick() {
+        savedCallback.current();
+      }
+      if (delay !== null) {
+        const id = setInterval(tick, delay);
+        return () => clearInterval(id);
+      }
+    }, [delay]);
+  }
 
 //#region
 //Timer functions
@@ -104,4 +125,4 @@ const MakeStoreCell = (d)=>{
     };
 //#endregion
 
-export {handleInputChange, MakeStoreCell, CountdownTimer}
+export {handleInputChange, MakeStoreCell, CountdownTimer, useInterval}

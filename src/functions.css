@@ -3,6 +3,7 @@
     display: flex;
     margin: 1rem;
     width: 30rem;
+    min-width: 300px;
     border: 2px solid black ;
     text-align: center;
 }
@@ -59,7 +60,7 @@ Timers css*/
     font-size: 1.25rem;
     line-height: 1.75rem;
     padding: 0.5rem;
-    border: 2px solid black ;
+    /* border: 2px solid black ; */
     border-radius: 0.25rem;
     text-decoration: none;
     color: #000;
