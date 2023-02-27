@@ -74,8 +74,13 @@
 .auctionDescriptionDiv{
     text-align: center;
     min-height: 7rem;
-    margin-top: 1rem;
-    border: 2px solid black ;
+    margin-top: 1.5rem;
+}
+.auctionDescriptionDiv hr {
+    background-color: black;
+    height: 1.5px;
+    width: 100%;
+    color:black;
 }
 .auctionDescription{
     margin-top: 0.5rem;

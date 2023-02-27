@@ -58,7 +58,8 @@ const Auction = ()=>{
 
     //Dont Delete
     const [phonenumberCollapse, setPhonenumberCollapse] = useState(false);
-    const [validated, setValidated] = useState(false);
+    const [participateValidated, setParticipateValidated] = useState(false);
+    const [modifyValidated, setModifyValidated] = useState(false);
     
     const auctioneerColumns = [
         {name:"id", header: "Id",  defaultVisible: false},
@@ -103,6 +104,9 @@ const Auction = ()=>{
 
         setSelectedRowId(0);
         setMessage("");
+
+        setModifyValidated(false);
+        setParticipateValidated(false);
     }
 
     const setCookies = (result)=>{
@@ -125,7 +129,7 @@ const Auction = ()=>{
 
     useInterval(()=>{
         fetchAuctioneers(0);//TODO:Ota käyttöön haku kun saat toimimaan
-    },15000);
+    },60000);
     //https://react-bootstrap.github.io/forms/validation/
     // const handleSubmit = (event) => {
     //     const form = event.currentTarget;
@@ -139,6 +143,43 @@ const Auction = ()=>{
     //     }
     
     //   };
+    const handleParticipateSubmit = (event) => {
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+            setParticipateValidated(true);
+        }
+        // if(price - highestOffer < 5){
+        //     event.preventDefault();
+        //     event.stopPropagation();
+        // }
+        else{
+            event.preventDefault();
+            postAuctioneer();
+            setParticipateValidated(false);
+        }
+
+    };
+
+    const handleModifySubmit = (event) => {
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+            setModifyValidated(true);
+        }
+        // if(price - highestOffer < 5){
+        //     event.preventDefault();
+        //     event.stopPropagation();
+        // }
+        else{
+            event.preventDefault();
+            modifyAuction();
+            setModifyValidated(false);
+        }
+
+    };
 
     const postAuctioneer = async ()=>{
         try{
@@ -347,6 +388,7 @@ const Auction = ()=>{
                     </Carousel>
                 </div>
                 <div className='auctionDescriptionDiv square rounded'>
+                    <hr />
                     <p className='auctionDescription'>{currentAuctionItem?.description}</p>
                 </div>
                 
@@ -440,97 +482,98 @@ const Auction = ()=>{
                         
                     <div className='auctionInputDiv'>
                         <div className='auctionParticipateDiv'>
-                            <div>
                                 <div>
-                                    <h4>Participate!</h4>
-                                    <p>
-                                        You can participate by creating an offer below.
-                                    </p>
-                                    <Button onClick={()=>{setAuctioneerParticipateModal(true);}}>Participate</Button>
+                                    <div>
+                                        <h4>Participate!</h4>
+                                        <p>
+                                            You can participate by creating an offer below.
+                                        </p>
+                                        <Button onClick={()=>{setAuctioneerParticipateModal(true);}}>Participate</Button>
+                                    </div>
+                                    
+                                    <Modal 
+                                        show={auctioneerParticipateModal}
+                                    >
+                                    <Form noValidate validated={participateValidated} onSubmit={handleParticipateSubmit} >
+                                    {/* <form noValidate validated={validated} onSubmit={handleSubmit}> */}
+                                        <Modal.Header className="ModalHeader">
+                                            <Modal.Title>Make an offer</Modal.Title>
+                                            <CloseButton variant="white" className='modalCloseButton' onClick={()=>{resetValues();}} />
+                                        </Modal.Header>
+
+                                        <Modal.Body className="ModalBody">
+                                            <div>
+                                                <h3>The current highest offer is {highestOffer}€</h3>
+                                                <p>Your offer must be atleast 5€ higher than the current highest offer.</p>
+                                            </div>
+                                            <div className='auctionFormInputs'>
+                                                <Form.Label>Instagram tag</Form.Label>
+                                                <Form.Control 
+                                                    required
+                                                    autoFocus
+                                                    onBlur={(e)=>{handleInputChange(e);}} 
+                                                    className='Input' 
+                                                    placeholder='@ExampleInstagramAccount' 
+                                                    value={igTag} 
+                                                    onChange={(e)=>{ 
+                                                        if(username == "")
+                                                            setSuggestionUsername(handleInputChange(e)); 
+                                                        setIgTag(handleInputChange(e));}
+                                                    } 
+                                                />
+                                            </div>
+                                            
+                                            {/* <a className='phonenumberCollapseTitle' onClick={()=>{setPhonenumberCollapse(!phonenumberCollapse)}} href="#">
+                                                You can also sing up with your phonenumber!
+                                            </a>
+
+                                            <div className='auctionFormInputs'>
+
+                                                <Collapse in={phonenumberCollapse}>
+                                                    <div className='auctionFormInputs'>
+                                                        <Form.Label>Phonenumber</Form.Label>
+                                                        <Form.Control className='Input' placeholder='Phonenumber' onChange={(e)=>{setPhonenumber(e.target.value);}} />
+                                                        <Form.Text className="text-muted" id="phonenumberText">
+                                                            Phonenumber is optional
+                                                        </Form.Text>
+                                                    </div>
+                                                </Collapse>
+                                            </div> */}
+
+
+                                            <div className='auctionFormInputs'>
+                                                <Form.Label>Offer</Form.Label>
+                                                <Form.Control required type="number" placeholder='Offer' onChange={(e)=>{setPrice(handleInputChange(e));}} />
+                                                {/* <Form.Text >
+                                                The current highest offer is {highestOffer}€
+                                                </Form.Text> */}
+                                            </div>
+
+                                            <div className='auctionFormInputs'>
+                                                <Form.Label>Username</Form.Label>
+                                                <Form.Control required type="username" placeholder='Username' value={suggestionUsername} onChange={(e)=>{setUsername(handleInputChange(e)); setSuggestionUsername(handleInputChange(e));}} />
+                                            </div>
+
+                                            <div className='auctionFormInputs'>
+                                                <Form.Label>Password</Form.Label>
+                                                <Form.Control required type="password" placeholder='Password' onChange={(e)=>{setPassword(handleInputChange(e));}} />
+                                                <Form.Text className="text-muted">
+                                                    With this password you can raise your offer later on.
+                                                </Form.Text>
+                                            </div>
+                                        </Modal.Body>
+                                        <Modal.Footer id="ModalFooter">
+                                            <p className='errorMessage'>{message}</p>
+                                            <Button variant="secondary" onClick={()=>{resetValues();}}>
+                                                Close
+                                            </Button>
+                                            <Button type='submit'>Save</Button>
+                                            {/* type='submit' */}
+                                        </Modal.Footer>
+                                    </Form>
+                                    {/* </form> */}
+                                    </Modal>
                                 </div>
-                                
-                                <Modal 
-                                    show={auctioneerParticipateModal}
-                                >
-
-                                {/* <form noValidate validated={validated} onSubmit={handleSubmit}> */}
-                                    <Modal.Header className="ModalHeader">
-                                        <Modal.Title>Make an offer</Modal.Title>
-                                        <CloseButton variant="white" className='modalCloseButton' onClick={()=>{resetValues();}} />
-                                    </Modal.Header>
-
-                                    <Modal.Body className="ModalBody">
-                                        <div>
-                                            <h3>The current highest offer is {highestOffer}€</h3>
-                                            <p>Your offer must be atleast 5€ higher than the current highest offer.</p>
-                                        </div>
-                                        <div className='auctionFormInputs'>
-                                            <Form.Label>Instagram tag</Form.Label>
-                                            <Form.Control 
-                                                required
-                                                autoFocus
-                                                onBlur={(e)=>{handleInputChange(e);}} 
-                                                className='Input' 
-                                                placeholder='@ExampleInstagramAccount' 
-                                                value={igTag} 
-                                                onChange={(e)=>{ 
-                                                    if(username == "")
-                                                        setSuggestionUsername(handleInputChange(e)); 
-                                                    setIgTag(handleInputChange(e));}
-                                                } 
-                                            />
-                                        </div>
-                                        
-                                        {/* <a className='phonenumberCollapseTitle' onClick={()=>{setPhonenumberCollapse(!phonenumberCollapse)}} href="#">
-                                            You can also sing up with your phonenumber!
-                                        </a>
-
-                                        <div className='auctionFormInputs'>
-
-                                            <Collapse in={phonenumberCollapse}>
-                                                <div className='auctionFormInputs'>
-                                                    <Form.Label>Phonenumber</Form.Label>
-                                                    <Form.Control className='Input' placeholder='Phonenumber' onChange={(e)=>{setPhonenumber(e.target.value);}} />
-                                                    <Form.Text className="text-muted" id="phonenumberText">
-                                                        Phonenumber is optional
-                                                    </Form.Text>
-                                                </div>
-                                            </Collapse>
-                                        </div> */}
-
-
-                                        <div className='auctionFormInputs'>
-                                            <Form.Label>Offer</Form.Label>
-                                            <Form.Control required type="number" placeholder='Offer' onChange={(e)=>{setPrice(handleInputChange(e));}} />
-                                            {/* <Form.Text >
-                                            The current highest offer is {highestOffer}€
-                                            </Form.Text> */}
-                                        </div>
-
-                                        <div className='auctionFormInputs'>
-                                            <Form.Label>Username</Form.Label>
-                                            <Form.Control required type="username" placeholder='Username' value={suggestionUsername} onChange={(e)=>{setUsername(handleInputChange(e)); setSuggestionUsername(handleInputChange(e));}} />
-                                        </div>
-
-                                        <div className='auctionFormInputs'>
-                                            <Form.Label>Password</Form.Label>
-                                            <Form.Control required type="password" placeholder='Password' onChange={(e)=>{setPassword(handleInputChange(e));}} />
-                                            <Form.Text className="text-muted">
-                                                With this password you can raise your offer later on.
-                                            </Form.Text>
-                                        </div>
-                                    </Modal.Body>
-                                    <Modal.Footer id="ModalFooter">
-                                        <p className='errorMessage'>{message}</p>
-                                        <Button variant="secondary" onClick={()=>{resetValues();}}>
-                                            Close
-                                        </Button>
-                                        <Button onClick={()=>{postAuctioneer();}}>Save</Button>
-                                        {/* type='submit' */}
-                                    </Modal.Footer>
-                                {/* </form> */}
-                                </Modal>
-                            </div>
                         </div>
                         
                         <div className='auctionModifyInputDiv'>
@@ -541,27 +584,35 @@ const Auction = ()=>{
                                 </p>
                             </div>
                             <div >
+                                <Form noValidate validated={modifyValidated} onSubmit={handleModifySubmit} >
+                                    <div className='auctionFormInputs'>
+                                        <Form.Label>Offer</Form.Label>
+                                        <Form.Control required disabled={selectedRow} type="number" placeholder='Offer' value={priceModify != 0 ? priceModify : cookies.auctioneerDefaultPrice} onChange={(e)=>{setPriceModify(e.target.value);}} />
+                                        <Form.Control.Feedback type="invalid">
+                                            Please type in an offer.
+                                        </Form.Control.Feedback>
+                                    </div>
 
-                                <div className='auctionFormInputs'>
-                                    <Form.Label>Offer</Form.Label>
-                                    <Form.Control disabled={selectedRow} type="number" placeholder='Offer' value={priceModify != 0 ? priceModify : cookies.auctioneerDefaultPrice} onChange={(e)=>{setPriceModify(handleInputChange(e));}} />
-                                </div>
+                                    <div className='auctionFormInputs'>
+                                        <Form.Label>Password</Form.Label>
+                                        <Form.Control required disabled={selectedRow} type="password" placeholder='Password' value={passwordModify} onChange={(e)=>{setPasswordModify(e.target.value);}} />
+                                        <Form.Control.Feedback type="invalid">
+                                            Please type in an password.
+                                        </Form.Control.Feedback>
 
-                                <div className='auctionFormInputs'>
-                                    <Form.Label>Password</Form.Label>
-                                    <Form.Control disabled={selectedRow} type="password" placeholder='Password' value={passwordModify} onChange={(e)=>{setPasswordModify(handleInputChange(e));}} />
-                                    <Form.Text className="text-muted">
-                                        Use your password to modify the post.
-                                    </Form.Text>
-                                </div>
+                                        <Form.Text className="text-muted">
+                                            Use your password to modify the post.
+                                        </Form.Text>
+                                    </div>
 
-                                <div className='auctionFormInputs'>
-                                    <p className='errorMessage'>{message}</p>
-                                    <Button disabled={selectedRow} onClick={()=>{modifyAuction();}}>
-                                        Save
-                                    </Button>
-                                    
-                                </div>
+                                    <div className='auctionFormInputs'>
+                                        <p className='errorMessage'>{message}</p>
+                                        <Button disabled={selectedRow} type="submit" > {/*onClick={()=>{modifyAuction();}}*/}
+                                            Save
+                                        </Button>
+                                        
+                                    </div>
+                                </Form>
                             </div>
                         </div>
                     </div>    
