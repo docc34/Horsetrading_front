@@ -1,20 +1,64 @@
-@media (max-width: 1000px) { 
+@media (max-width: 1399.98px) { 
+    .carouselImage{
+        max-height: 40rem;
+    }
+ }
+ @media (min-width: 1400px) { 
+    .carouselImage{
+        max-height: 50rem;
+    }
+ }
 
+@media (max-width: 1199.98px) { 
     .auctionMainDiv{
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        margin: 5%;
+        margin-top: 5%;
+    }
+
+
+    .auctionContentMainDiv{
+        margin-left: 8%;
+
+    }
+
+    .auctionCarouselMainDiv{
+        margin-left: 8%;
+    }
+
+    .auctionDataGridTitleDiv{
+        flex-direction: column;
+    }
+ }
+ @media (min-width: 1200px) { 
+    .auctionMainDiv{
+        flex-direction: row-reverse; 
         margin-top: 2%;
     }
-}
-/* ei toimi jostain syystä */
+ }
+
+ @media (max-width: 991.98px) {
+    .carouselImage{
+        max-height: 40rem;
+    }
+ }
+ @media (min-width: 992px) {
+ }
+
+@media (max-width: 767.98px) {
+    .auctionReactDataGrid{
+    }
+ }
+ @media (min-width: 768px) {
+    .auctionReactDataGrid{
+    }
+ }
+
+
 .auctionMainDiv{
     display: flex;
-    flex-direction: row-reverse;
-    justify-content: center;
     margin: 5%;
-    margin-top: 2%;
+    justify-content: center;
 }
 .auctionCarouselMainDiv{
     flex: 2;
@@ -97,7 +141,7 @@
     margin-right: 1.5rem;
 }
 .auctionReactDataGrid{
-    min-width: 40rem;
+    min-width: 25rem;
     /* background-color: #1b1e24 !important; */
     color:#1b1e24 !important;
     /* border-color: #1b1e24  !important; */
@@ -110,6 +154,8 @@
     margin-top: 1rem;
 }
 
+
+
 .AuctionItemSpinnerDiv{
     width: 100%;
     height: 80rem;
@@ -118,9 +164,7 @@
     justify-content: center;
 }
 
-.carouselImage{
-    max-height: 50rem;
-}
+
 .carouselTitle{
     font-size: 52px;
 }
@@ -160,4 +204,18 @@
 
 .nav-tabs{
     border-width: 0px !important; 
+}
+
+
+.auctionOfferFormPasswordText{
+    margin-top: 3%;
+}
+.auctionOfferFormPasswordDiv{
+    display: flex;
+}
+
+
+.auctionDataGridTitleDiv{
+    display: flex;
+    justify-content: space-between;
 }

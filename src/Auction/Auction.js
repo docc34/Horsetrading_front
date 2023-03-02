@@ -60,6 +60,8 @@ const Auction = ()=>{
     const [phonenumberCollapse, setPhonenumberCollapse] = useState(false);
     const [participateValidated, setParticipateValidated] = useState(false);
     const [modifyValidated, setModifyValidated] = useState(false);
+
+    const [passwordVisibility, setPasswordVisibility] = useState("password");
     
     const auctioneerColumns = [
         {name:"id", header: "Id",  defaultVisible: false},
@@ -78,13 +80,21 @@ const Auction = ()=>{
     ]
 //    headers: { "Authorization": `Bearer ${cookies.token}`}
     
+    const togglePasswordVisibility = () => {
+        if (passwordVisibility === "password") {
+        setPasswordVisibility("text");
+        return;
+        }
+        setPasswordVisibility("password");
+    };
+
     const onSelectionChange = useCallback((selected) => {
-        console.log(selected);
         setUsernameModify(selected?.data.username);
         setPriceModify(selected?.data.price);
         setIgTagModify(selected?.data.igTag);
         setSelectedRowId(selected?.data.id);
         setSelectedRow(false);
+        console.log("aa");
     }, [])
 
     const resetValues = ()=>{
@@ -107,6 +117,8 @@ const Auction = ()=>{
 
         setModifyValidated(false);
         setParticipateValidated(false);
+
+        setPasswordVisibility("password");
     }
 
     const setCookies = (result)=>{
@@ -114,7 +126,7 @@ const Auction = ()=>{
             setMessage("Error");
         }
         else{
-            console.log(result);
+
             setCookie('auctioneerId', result.id, { path: '/Auction' });
             setCookie('auctioneerDefaultPrice', result.price, { path: '/Auction' });
             setCookie('auctioneerDefaultIgTag', result.igTag, { path: '/Auction' });
@@ -129,7 +141,7 @@ const Auction = ()=>{
 
     useInterval(()=>{
         fetchAuctioneers(0);//TODO:Ota käyttöön haku kun saat toimimaan
-    },60000);
+    },15000);
     //https://react-bootstrap.github.io/forms/validation/
     // const handleSubmit = (event) => {
     //     const form = event.currentTarget;
@@ -224,7 +236,7 @@ const Auction = ()=>{
             result = await search.json();
         }
         else{
-            var search = await fetch("https://localhost:44371/api/Auctioneers/Creator/"+auctionId, options);
+            var search = await fetch("https://localhost:44371/api/Auctioneers/Creator/"+auctionId+"?Amount="+ amount, options);
             result = await search.json();
             if(result?.length > 0){
                 setDatagridColumnVisiblility(true);
@@ -266,8 +278,15 @@ const Auction = ()=>{
         
         
         if(result != null && result != undefined && result?.status != "Error"){
-            setAuctioneers(await result);
-            setHighestOffer(result[0].highestOffer);
+            var i = await result;
+            if(JSON.stringify(i) !== JSON.stringify(auctioneers)){
+                console.log(i);
+                console.log(auctioneers);
+                setAuctioneers(i);
+                setHighestOffer(result[0].highestOffer);
+                console.log("hae");
+            }
+
         }
     }
 
@@ -278,9 +297,11 @@ const Auction = ()=>{
             var search = await fetch("https://localhost:44371/api/Auctioneers/Current/?auctionItemId="+auctionId+"&auctioneerId="+id);
             var result = await search.json();
             if(result?.status != "Error" && result != null){
-                setCurrentAuctioneer([result]);
-                setDatagridDefaultSelected(id);
-                setSelectedRow(false);
+                if( JSON.stringify(currentAuctioneer) !== JSON.stringify([result])){
+                    setCurrentAuctioneer([result]);
+                    setDatagridDefaultSelected(id);
+                    setSelectedRow(false);
+                }
             }
             else{
                 setMessage(result?.message);
@@ -380,7 +401,6 @@ const Auction = ()=>{
 <div >
     { auctionVisible == 1 ?  
         <div className='auctionMainDiv'> 
-
             <div className='auctionCarouselMainDiv'>
                 <div className='carouselDiv'>
                     <Carousel  className='auctionCarousel'>
@@ -411,8 +431,10 @@ const Auction = ()=>{
                             fill
                         >
                             <Tab eventKey="Top5" title="Top 5 highest offers" onClick={()=>{fetchAuctioneers(5);}}>
-                                
-                                <h3>Top 5 highest offers</h3>
+                                <div className='auctionDataGridTitleDiv'>
+                                    <h3>Top 5 highest offers</h3>
+                                    <p className="text-muted">Offers are updated every 15 seconds</p>
+                                </div>
                                 <ReactDataGrid
                                     idProperty="id"
                                     className='auctionReactDataGrid'
@@ -425,14 +447,17 @@ const Auction = ()=>{
                                     onSelectionChange={onSelectionChange}
                                     enableKeyboardNavigation={false}
                                     toggleRowSelectOnClick={true}
-                                    defaultSelected={ datagridDefaultSelected}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
+                                    defaultSelected={datagridDefaultSelected != undefined && datagridDefaultSelected != 0 ? datagridDefaultSelected : null}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
                                     selected={selectedRowId == 0 ? cookies.auctioneerId : selectedRowId}
                                     rowClassName="auctionReactDataGridRows"
                                     showColumnMenuTool={false}
                                 />
                             </Tab>
                             <Tab eventKey="allOffers" title="All offers" onClick={()=>{fetchAuctioneers(0)}} href="#">
-                                <h3>All offers</h3>
+                                <div className='auctionDataGridTitleDiv'>
+                                    <h3>All offers</h3>
+                                    <p className="text-muted">Offers are updated every 15 seconds</p>
+                                </div>
                                 <ReactDataGrid
                                     idProperty="id"
                                     className='auctionReactDataGrid'
@@ -445,7 +470,7 @@ const Auction = ()=>{
                                     onSelectionChange={onSelectionChange}
                                     enableKeyboardNavigation={false}
                                     toggleRowSelectOnClick={true}
-                                    defaultSelected={ datagridDefaultSelected}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
+                                    defaultSelected={datagridDefaultSelected != undefined && datagridDefaultSelected != 0 ? datagridDefaultSelected : null}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
                                     selected={selectedRowId == 0 ? cookies.auctioneerId : selectedRowId}
                                     rowClassName="auctionReactDataGridRows"
                                     showColumnMenuTool={false}
@@ -470,7 +495,7 @@ const Auction = ()=>{
                                         //onSelectionChange={onSelectionChange}
                                         enableKeyboardNavigation={false}
                                         toggleRowSelectOnClick={false}
-                                        defaultSelected={ datagridDefaultSelected}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
+                                        defaultSelected={datagridDefaultSelected != undefined && datagridDefaultSelected != 0 ? datagridDefaultSelected : null}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
                                         selected={selectedRowId == 0 ? cookies.auctioneerId : selectedRowId}
                                         showHeader={false}
                                     />
@@ -508,17 +533,11 @@ const Auction = ()=>{
                                             </div>
                                             <div className='auctionFormInputs'>
                                                 <Form.Label>Instagram tag</Form.Label>
-                                                <Form.Control 
-                                                    required
-                                                    autoFocus
-                                                    onBlur={(e)=>{handleInputChange(e);}} 
-                                                    className='Input' 
-                                                    placeholder='@ExampleInstagramAccount' 
-                                                    value={igTag} 
-                                                    onChange={(e)=>{ 
+                                                <Form.Control required autoFocus className='Input' placeholder='@ExampleInstagramAccount' defaultValue={igTag} 
+                                                    onBlur={(e)=>{ 
                                                         if(username == "")
-                                                            setSuggestionUsername(handleInputChange(e)); 
-                                                        setIgTag(handleInputChange(e));}
+                                                            setSuggestionUsername(e.target.value); 
+                                                        setIgTag(e.target.value);}
                                                     } 
                                                 />
                                             </div>
@@ -543,7 +562,7 @@ const Auction = ()=>{
 
                                             <div className='auctionFormInputs'>
                                                 <Form.Label>Offer</Form.Label>
-                                                <Form.Control required type="number" placeholder='Offer' onChange={(e)=>{setPrice(handleInputChange(e));}} />
+                                                <Form.Control required type="number" placeholder='Offer' onBlur={(e)=>{setPrice(e.target.value);}} />
                                                 {/* <Form.Text >
                                                 The current highest offer is {highestOffer}€
                                                 </Form.Text> */}
@@ -551,15 +570,43 @@ const Auction = ()=>{
 
                                             <div className='auctionFormInputs'>
                                                 <Form.Label>Username</Form.Label>
-                                                <Form.Control required type="username" placeholder='Username' value={suggestionUsername} onChange={(e)=>{setUsername(handleInputChange(e)); setSuggestionUsername(handleInputChange(e));}} />
+                                                <Form.Control required type="username" placeholder='Username' value={suggestionUsername} onChange={(e)=>{setUsername(e.target.value); setSuggestionUsername(e.target.value);}} />
                                             </div>
 
                                             <div className='auctionFormInputs'>
                                                 <Form.Label>Password</Form.Label>
-                                                <Form.Control required type="password" placeholder='Password' onChange={(e)=>{setPassword(handleInputChange(e));}} />
-                                                <Form.Text className="text-muted">
-                                                    With this password you can raise your offer later on.
-                                                </Form.Text>
+                                                <div className='auctionOfferFormPasswordDiv'>
+                                                    <Form.Control required type={passwordVisibility} placeholder='Password' onBlur={(e)=>{setPassword(e.target.value);}} />
+                                                    <button type='button' className="btn btn-primary" onClick={()=>{togglePasswordVisibility();}}>
+                                                        {passwordVisibility === "password" ? (
+                                                            <svg
+                                                            width="20"
+                                                            height="17"
+                                                            fill="currentColor"
+                                                            className="bi bi-eye-slash-fill"
+                                                            viewBox="0 0 16 16"
+                                                            >
+                                                            <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z" />
+                                                            <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z" />
+                                                            </svg>
+                                                        ) : (
+                                                            <svg
+                                                            width="20"
+                                                            height="17"
+                                                            fill="currentColor"
+                                                            className="bi bi-eye-fill"
+                                                            viewBox="0 0 16 16"
+                                                            >
+                                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
+                                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+                                                            </svg>
+                                                        )}
+                                                    </button>
+                                                </div>
+                                                <Form.Label className='auctionOfferFormPasswordText'>
+                                                    With this password you can raise your offer later on. <br/> We recommend you store this password for the duration of the auction.
+                                                </Form.Label>
+                                                
                                             </div>
                                         </Modal.Body>
                                         <Modal.Footer id="ModalFooter">
@@ -578,9 +625,9 @@ const Auction = ()=>{
                         
                         <div className='auctionModifyInputDiv'>
                             <div>
-                                <h4>Modify offer</h4>
+                                <h4>Raise offer</h4>
                                 <p>
-                                    Here you can raise your offer by selecting yourself in the menu and giving the password you created
+                                    Select yourself in the table and raise your offer here.
                                 </p>
                             </div>
                             <div >
@@ -595,13 +642,40 @@ const Auction = ()=>{
 
                                     <div className='auctionFormInputs'>
                                         <Form.Label>Password</Form.Label>
-                                        <Form.Control required disabled={selectedRow} type="password" placeholder='Password' value={passwordModify} onChange={(e)=>{setPasswordModify(e.target.value);}} />
+                                        <div className='auctionOfferFormPasswordDiv'>
+                                                <Form.Control required disabled={selectedRow} type={passwordVisibility} placeholder='Password' onBlur={(e)=>{setPasswordModify(e.target.value);}} />
+                                                    <button type='button' className="btn btn-primary" onClick={()=>{togglePasswordVisibility();}}>
+                                                        {passwordVisibility === "password" ? (
+                                                            <svg
+                                                            width="20"
+                                                            height="17"
+                                                            fill="currentColor"
+                                                            className="bi bi-eye-slash-fill"
+                                                            viewBox="0 0 16 16"
+                                                            >
+                                                            <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z" />
+                                                            <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z" />
+                                                            </svg>
+                                                        ) : (
+                                                            <svg
+                                                            width="20"
+                                                            height="17"
+                                                            fill="currentColor"
+                                                            className="bi bi-eye-fill"
+                                                            viewBox="0 0 16 16"
+                                                            >
+                                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
+                                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+                                                            </svg>
+                                                        )}
+                                                    </button>
+                                                </div>
                                         <Form.Control.Feedback type="invalid">
                                             Please type in an password.
                                         </Form.Control.Feedback>
 
                                         <Form.Text className="text-muted">
-                                            Use your password to modify the post.
+                                            Use the password you created
                                         </Form.Text>
                                     </div>
 

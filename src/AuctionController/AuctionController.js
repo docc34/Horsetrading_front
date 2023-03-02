@@ -428,7 +428,7 @@ const AuctionController = ()=>{
 
                                 <div className='controllerFormInputs'>
                                     <Form.Label>Description</Form.Label>
-                                    <Form.Control placeholder='Description' onChange={(e)=>{setDescription(handleInputChange(e));}} />
+                                    <Form.Control as="textarea" placeholder='Description' onChange={(e)=>{setDescription(handleInputChange(e));}} />
                                 </div>
 
 
@@ -438,7 +438,7 @@ const AuctionController = ()=>{
                                         onChange={(e)=>{setClosingTime(e._d);}}
                                     />
                                     <Form.Text>
-                                        Aika jolloin huutokauppaus suljetaan
+                                        Set when the auction bidding will close.
                                     </Form.Text>
                                 </div>
 
@@ -478,7 +478,7 @@ const AuctionController = ()=>{
 
                             <div className='controllerFormInputs'>
                                 <Form.Label>Description</Form.Label>
-                                <Form.Control value={descriptionModify} placeholder='Description' onChange={(e)=>{setDescriptionModify(handleInputChange(e));}} />
+                                <Form.Control as="textarea" value={descriptionModify} placeholder='Description' onChange={(e)=>{setDescriptionModify(handleInputChange(e));}} />
                             </div>
 
                             <div className='controllerFormInputs'>
@@ -496,7 +496,7 @@ const AuctionController = ()=>{
                                     onChange={(e)=>{setClosingTimeModify(e._d);}}
                                 />
                                 <Form.Text>
-                                    Aika jolloin huutokauppaus suljetaan
+                                Set when the auction bidding will close.
                                 </Form.Text>
                             </div>
 
