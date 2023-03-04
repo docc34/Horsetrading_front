@@ -1,27 +1,57 @@
+
+@media (max-width: 991.98px) { 
+  .storeCellMainDiv{
+    max-width: 350px;
+  }
+}
+@media (min-width: 992px) { 
+  .storeCellMainDiv{
+    max-width: 400px;
+  }
+}
+
 .storeCellMainDiv{
-    flex-direction: column;
-    display: flex;
-    margin: 1rem;
-    width: 30rem;
-    min-width: 300px;
-    border: 2px solid black ;
-    text-align: center;
+  flex-direction: column;
+  display: flex;
+  margin: 1rem;
+  width: 100%;
+  height: min-content;
+  border: 2px solid black ;
+  text-align: center;
 }
 
 .storeCellImgDiv{
-    flex:2;
+  flex:2;
 }
 
 .storeCellImg{
-    width: 100%;
-}
-
-.storeCellLine{
-    /* width: 80%; */
+  width: 100%;
 }
 
 .show-counter{}
 
+.fade-out {
+  position: relative;
+  max-height: 210px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+}
+.fade-out hr{
+  color:rgba(26, 24, 24, 1);
+
+}
+.fade-out-apply:after {
+  content: '';
+  position: absolute;
+  text-overflow: ellipsis;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-image: linear-gradient(  rgba(26, 24, 24, 0) 60%, rgba(26, 24, 24, 1) 100% );
+}
+/* 231, 231, 231 */
 /* #region 
 Timers css*/
 

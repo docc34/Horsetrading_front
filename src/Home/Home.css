@@ -1,10 +1,30 @@
-.homeCellsDiv{
-    display: flex;
-    flex-direction: row;
-}
+@media (max-width: 1699.98px) { 
+    .homeCellsDiv{
+        max-width: 1300px;
+    }
+ }
+ @media (min-width: 1700px) { 
+    .homeCellsDiv{
+        max-width: 1750px;
+    }
+ }
+ @media (max-width: 1299.98px) { 
+    .homeCellsDiv{
+        max-width: 880px;
+    }
+ }
+ @media (min-width: 1300px) { 
 
+ }
+ @media (max-width: 767.98px) { 
+    .homeCellsDiv{
+        max-width: 400px;
+    }
+  }
 .HomeMainDiv{
     min-height: 1000px;   
+    display: flex;
+    justify-content: center;
 }
 
 .HomeSpinnerDiv{

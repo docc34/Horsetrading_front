@@ -2,6 +2,7 @@ import './Home.css';
 import {MakeStoreCell} from '../functions';
 import { useEffect, useState } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
+import CardGroup from 'react-bootstrap/CardGroup';
 
 const Home = ()=>{
     const[data,setData] = useState([]);
@@ -19,7 +20,17 @@ const Home = ()=>{
     },[]);
 
     const renderCells = data.map((x)=>{
-        return<MakeStoreCell data={x}/>
+        
+        if(x?.description?.length > 380){
+            return(
+                <MakeStoreCell data={x} fade={true}/>
+            )
+        }
+        else{
+            return(
+                <MakeStoreCell data={x} fade={false}/>
+            )
+        }
     });
     return(
     <div className='HomeMainDiv'>
@@ -30,7 +41,9 @@ const Home = ()=>{
                         <Spinner variant="light" animation="border" />
                     </div> 
                 :
-                   renderCells
+                <CardGroup>
+                   {renderCells}
+                </CardGroup>
                     
             }
         </div>

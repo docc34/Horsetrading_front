@@ -15,7 +15,10 @@ const handleInputChange = (o)=>{
 
 const MakeStoreCell = (d)=>{
     var url = "/Auction?auctionId="+d.data?.id
-
+    var storeCellContentClassName = "fade-out "
+    if(d?.fade == true){
+        storeCellContentClassName = storeCellContentClassName + "fade-out-apply";
+    }
     return(
         <div className="storeCellMainDiv square rounded">
             <a href={url}> 
@@ -23,12 +26,14 @@ const MakeStoreCell = (d)=>{
                     <img className="storeCellImg" src={d.data?.imageLink}/>
                 </div>
             </a>
-            
-            <div>
-                <h2>{d.data?.title}</h2>
-                <hr className='storeCellLine'/>
-                <p>{d.data?.description}</p>
-            </div>
+            <a href={url} className={storeCellContentClassName}>
+                <div>
+                    <h2>{d.data?.title}</h2>
+                    <hr className='storeCellLine'/>
+                    <p >{d.data?.description}</p>
+                </div>
+            </a>
+           
         </div>
     )
 }

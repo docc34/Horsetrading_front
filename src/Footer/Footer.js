@@ -15,10 +15,8 @@ const Footer = ()=>{
             <div className='footerLinksDiv'>
                 <h3 className='footerLinksTitle'>Links</h3>
                 <Nav  className="flex-column">
-
                     <Nav.Link href="/">Home</Nav.Link>
                     <Nav.Link href="/AuctionController">Control page</Nav.Link>
-                    <Nav.Link href="/Auction?auctionId=1">Example transaction</Nav.Link>
                 </Nav>
             </div>
             <div>
