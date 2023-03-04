@@ -399,7 +399,7 @@ const AuctionController = ()=>{
                                 <h3>This will delete the auctionitem, photos and auctioneers linked to this post <b>permanently.</b></h3>
                             </Modal.Body>
                             
-                            <Modal.Footer id="ModalFooter">
+                            <Modal.Footer className="ModalFooter">
                                 <p className='errorMessage'>{message}</p>
                                 <Button variant="secondary" onClick={()=>{setAuctionItemDeleteModal(false);}}>
                                     Cancel
@@ -448,7 +448,7 @@ const AuctionController = ()=>{
 
                                 </Modal.Body>
                                 
-                                <Modal.Footer id="ModalFooter">
+                                <Modal.Footer className="ModalFooter">
                                 <p className='errorMessage'>{message}</p>
                                     <Button variant="secondary" onClick={()=>{resetValues()}}>
                                         Close
@@ -509,7 +509,7 @@ const AuctionController = ()=>{
                             </div>
                             </Modal.Body>
                             
-                            <Modal.Footer id="ModalFooter">
+                            <Modal.Footer className="ModalFooter">
                             <p className='errorMessage'>{message}</p>
                                 <Button variant="secondary" onClick={()=>{resetValues()}}>
                                     Close
@@ -531,7 +531,7 @@ const AuctionController = ()=>{
                                 <p>Are you sure you want to change the auctionitems visibility?</p>
                                 <p>If the auctionitem is not visible it cannot be accessed by customers, or seen on the platform.</p>
                             </Modal.Body>
-                            <Modal.Footer id="ModalFooter">
+                            <Modal.Footer className="ModalFooter">
                                 <Button onClick={()=>{resetValues();}}>Close</Button>
                                 <Button onClick={()=>{changeAuctionItemVisibility();}}>Save</Button>
                             </Modal.Footer>
@@ -574,7 +574,7 @@ const AuctionController = ()=>{
 
                                 </Modal.Body>
                                 
-                                <Modal.Footer id="ModalFooter">
+                                <Modal.Footer className="ModalFooter">
                                     <Button variant="secondary" onClick={()=>{setLoginVisibilityModal(false); }}>
                                         Close
                                     </Button>

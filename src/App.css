@@ -41,7 +41,8 @@ h1{
   color: white;
 }
 h2 ,h3 ,h4{
-  color:rgb(69, 79, 191);
+  color:rgb(114, 137, 218);
+  /* color:rgb(69, 79, 191); */
 /* color: hsl(0, 0%, 50%); */
 }
 p{
@@ -69,11 +70,16 @@ p{
 .ModalBody{
   background-color: #1b1e24;
 }
-#ModalFooter{ /*Jostain syystä modalin footterille on määritetty backgroundcolor joten class taso ei toimi ja pitää käyttää id:tä*/
-  background-color: #111111;
+.ModalFooter{ /*Jostain syystä modalin footterille on määritetty backgroundcolor joten class taso ei toimi ja pitää käyttää id:tä*/
+  background-color: #111111!important;
 }
 
 .InovuaReactDataGrid {
   min-height: 100px;
+}
+
+
+.offerInput{
+  width:80px !important;
 }
 /* #282c34 */
