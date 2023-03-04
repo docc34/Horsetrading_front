@@ -8,9 +8,9 @@ const Footer = ()=>{
         <div className="footerContentMainDiv">
             <div >
                 <h3>Contacts</h3>
-                <p >Creator: Eemeli Antikainen</p>
-                <p >Phonenumber: +358409606973</p>
-                <p>Email: Eemeli.Antikainen@gmail.com</p>
+                <p>Creator: Eemeli Antikainen</p>
+                <p>Phonenumber: +358409606973</p>
+                <p>Email: antitechofficial@gmail.com</p>
             </div>
             <div className='footerLinksDiv'>
                 <h3 className='footerLinksTitle'>Links</h3>
