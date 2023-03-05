@@ -1,3 +1,20 @@
+@media (max-width: 549.98px){
+    .footerContactsDiv{
+        width: 125px ;
+    }
+    .footerLinksDiv{
+        margin-left: 0rem;
+        margin-right: 10px;
+    }
+}
+@media (min-width: 550px){
+    .footerContactsDiv{
+        
+    }
+    .footerLinksDiv{
+        margin-left: 2rem;
+    }
+}
 .footerMainDiv{
     margin-top: auto;
     display: flex;
@@ -34,7 +51,6 @@
 .footerLinksDiv{
     display: flex;
     flex-direction: column;
-    margin-left: 2rem;
 }
 .footerLinksTitle{
     margin-bottom: 0.5rem;

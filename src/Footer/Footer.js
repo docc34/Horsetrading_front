@@ -6,7 +6,7 @@ const Footer = ()=>{
         <a href='/' className='footerTitle'>Antitech</a>
 
         <div className="footerContentMainDiv">
-            <div >
+            <div className='footerContactsDiv'>
                 <h3>Contacts</h3>
                 <p>Creator: Eemeli Antikainen</p>
                 <p>Phonenumber: +358409606973</p>

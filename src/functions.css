@@ -9,7 +9,26 @@
     max-width: 400px;
   }
 }
+@media (max-width: 399.98px) {
 
+  .storeCellMainDiv{
+    max-width: 250px;
+  }
+  .show-counter {
+    padding: 0rem;
+    font-size: 1.05rem;
+    line-height: 1rem;
+  }
+}
+@media (min-width: 400px) {
+  .show-counter {
+    padding: 0.5rem;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    padding: 0.5rem;
+  }
+
+}
 .storeCellMainDiv{
   flex-direction: column;
   display: flex;
@@ -73,9 +92,7 @@ Timers css*/
     font-size: 1.5rem;
   }
   
-  .show-counter {
-    padding: 0.5rem;
-  }
+
 
   /* .show-counter p{
   color: #03060c;
@@ -87,11 +104,8 @@ Timers css*/
     justify-content: center;
     align-items: center;
     font-weight: 700;
-    font-size: 1.25rem;
-    line-height: 1.75rem;
-    padding: 0.5rem;
     /* border: 2px solid black ; */
-    border-radius: 0.25rem;
+    /* border-radius: 0.25rem; */
     text-decoration: none;
     color: #000;
   }

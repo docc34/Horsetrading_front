@@ -548,7 +548,7 @@ const AuctionController = ()=>{
                                 login
                             </Button>
 
-                            <Modal show={loginVisibilityModal} >
+                            <Modal className='auctionControllerLoginModal' show={loginVisibilityModal} >
 
                                 <Modal.Header className="ModalHeader" >
                                     <Modal.Title>Login</Modal.Title>

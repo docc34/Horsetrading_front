@@ -14,13 +14,7 @@
         display: flex;
         flex-direction: column;
         margin-top: 5%;
-    }
-
-    .auctionContentMainDiv{
-        margin-left: 8%;
-    }
-    .auctionCarouselMainDiv{
-        margin-left: 8%;
+        align-items: center;
     }
 
     .auctionDataGridTitleDiv{
@@ -31,12 +25,16 @@
     .auctionMainDiv{
         flex-direction: row-reverse; 
         margin-top: 2%;
+        justify-content: center;
+    }
+    .auctionContentMainDiv{
+        margin-right: 0rem;
     }
  }
 
  @media (max-width: 991.98px) {
     .carouselImage{
-        max-height: 40rem;
+        max-height: 30rem;
     }
 
  }
@@ -44,23 +42,12 @@
  }
 
 @media (max-width: 767.98px) {
-    .auctionContentMainDiv{
-        margin-left: 4%;
-    }
-    .auctionCarouselMainDiv{
-        margin-left: 4%;
-    }
-
-
 
     .auctionDataGridTitleDiv{
         font-size: smaller;
     }
 
 
-    .auctionInputDiv{
-        flex-direction: row;
-    }
     .auctionModifyInputMainDiv{
         width: 100%;
         max-width:768px;
@@ -80,29 +67,38 @@
     .auctionModifyInputDivVariant1{
         visibility: hidden;
     }
-
+    .auctionMainDiv{
+        margin: 2%;
+    }
 
  }
  @media (min-width: 768px) {
     .auctionModifyInputDivVariant2{
         visibility: hidden;
     }
-    .auctionInputDiv{
-        flex-direction: row;
-    }
-    .auctionReactDataGrid{
-    }
+
     .auctionModifyInputMainDiv{
         /* flex:2; */
         max-width: 350px;
     }
+    .auctionMainDiv{
+        margin: 5%;
+    }
  }
+ @media (max-width: 399.98px) {
+    .auctionMainDiv{
+        margin: 0px;
+    }
+ }
+ @media (min-width: 400px) {
 
+ }
 
 .auctionMainDiv{
     display: flex;
-    margin: 5%;
-    justify-content: center;
+    padding: 5%;
+    margin: 0px;
+    width: 100%;
 }
 .auctionCarouselMainDiv{
     flex: 2;
@@ -111,8 +107,8 @@
 
 .auctionContentMainDiv{
     flex:2;
+
     max-width:52rem;
-    margin-right: 1rem;
 }
 
 
@@ -129,7 +125,15 @@
 
 .auctionParticipateDiv{
     margin-right: 4rem;
+    height: min-content;
     /* flex:2; */
+}
+.auctionModifyInputMainDiv{
+    height: min-content;
+}
+.auctionModifyInputDiv{
+    height: min-content;
+
 }
 
 .auctionInputDiv{
@@ -137,6 +141,7 @@
     display: flex;
     margin-top: 1rem;
     justify-content: center;
+    flex-direction: row;
 }
 
 .auctionFormInputs{
@@ -175,13 +180,18 @@
 }
 
 
-.auctionDataGridDiv{
+.auctionReactDataGridDiv{
+    width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     margin-right: 1.5rem;
 }
+.auctionReactDataGridTabsDiv{
+    width: 100%;
+}
 .auctionReactDataGrid{
-    min-width: 25rem;
     /* background-color: #1b1e24 !important; */
     color:#1b1e24 !important;
     /* border-color: #1b1e24  !important; */
