@@ -24,7 +24,6 @@ const Auction = ()=>{
     const auctionId = new URLSearchParams(search).get('auctionId');
     const [cookies, setCookie, removeCookie] = useCookies(['token', "auctioneerId","auctioneerDefaultPrice", "auctioneerDefaultIgTag", "auctioneerDefaultUsername"]);
 
-
     const [selectedRow, setSelectedRow] = useState(true);
     const [selectedRowId, setSelectedRowId] = useState(0);
     
@@ -339,7 +338,29 @@ const Auction = ()=>{
             console.log(e);
         }
     }
+    const deleteSelectedAuctioneer = async()=>{
+        try{
+            if(cookies.token != undefined && selectedRow == false){
+                const options = {
+                    method:'DELETE',
+                    headers: { "Authorization": `Bearer ${cookies.token}`}  
+                }
 
+                var search = await fetch("https://localhost:44371/api/Auctioneers/"+selectedRowId+"?auctionItemId="+auctionId,options);
+                var result = await search.json();
+                if(result?.status != "Error" && result != null){
+                    setMessage(result?.message);
+                    fetchAuctioneers();
+                }
+                else{
+                    setMessage(result?.message);
+                }
+            }
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
 
 
     const fetchAuctionItem = async (i)=>{
@@ -516,6 +537,9 @@ const Auction = ()=>{
                                 You can participate by creating an offer below.
                             </p>
                             <Button onClick={()=>{setAuctioneerParticipateModal(true);}}>Participate</Button>
+                            {cookies.token != undefined && cookies.token.length > 6 ? <Button disabled={selectedRow} onClick={()=>{deleteSelectedAuctioneer();}}>Delete selected Auctioneer</Button>
+                            :
+                            null}
                         </div>
                         
                         <Modal 
