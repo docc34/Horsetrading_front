@@ -188,6 +188,7 @@ const Auction = ()=>{
         // }
         else{
             event.preventDefault();
+            event.target.reset(); 
             modifyAuction();
             setModifyValidated(false);
         }
@@ -281,11 +282,8 @@ const Auction = ()=>{
         if(result != null && result != undefined && result?.status != "Error"){
             var i = await result;
             if(JSON.stringify(i) !== JSON.stringify(auctioneers)){
-                console.log(i);
-                console.log(auctioneers);
                 setAuctioneers(i);
                 setHighestOffer(result[0].highestOffer);
-                console.log("hae");
             }
 
         }
@@ -326,8 +324,10 @@ const Auction = ()=>{
     
                 var search = await fetch("https://localhost:44371/api/Auctioneers/"+auctionId,options);
                 var result = await search.json();
-                if(result?.status != "Error" && result != null){
+                if(await result?.id > 0){
+                    console.log("eee");
                     setCookies(result);
+
                 }
                 else{
                     setMessage(result?.message);
@@ -663,7 +663,7 @@ const Auction = ()=>{
                                 <div className='auctionModifyFormInputs'>
                                     <div className='auctionFormInputs'>
                                         <Form.Label>Offer</Form.Label>
-                                        <Form.Control required disabled={selectedRow} type="number" placeholder='€' value={priceModify != 0 ? priceModify : cookies.auctioneerDefaultPrice} onChange={(e)=>{setPriceModify(e.target.value);}} />
+                                        <Form.Control required disabled={selectedRow} type="number" placeholder={cookies.auctioneerDefaultPrice != undefined || cookies.auctioneerDefaultPrice != 0 ? cookies.auctioneerDefaultPrice + '€': 0 + '€'} onBlur={(e)=>{setPriceModify(e.target.value);}} />
                                         <Form.Control.Feedback type="invalid">
                                             Please type in an offer.
                                         </Form.Control.Feedback>

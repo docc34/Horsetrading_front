@@ -100,7 +100,6 @@ const AuctionController = ()=>{
 
         setAuctionItemVisibilityModal(false);
 
-        console.log("Reset");
     }
 
     const onSelectionChange = useCallback((e) => {
