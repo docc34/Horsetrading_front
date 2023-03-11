@@ -1,6 +1,21 @@
+@media (max-width: 767.98px){
+    .auctionControllerLoginModal{
+        width: fit-content !important;
+    }
+}
+
 .auctionControllerMainDiv{
     margin:4%;
 }
+
+.auctionControllerContentMainDiv{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+
 .renderedImage{
     max-width: 100px;
 }
@@ -13,8 +28,10 @@
     display: flex;
     flex-direction: row;
 }
-@media (max-width: 767.98px){
-    .auctionControllerLoginModal{
-        width: fit-content !important;
-    }
+
+.auctionControllerBillsReactDataGridDiv{
+    width: 100%;
+}
+.auctionControllerBillsReactDataGrid{
+    width: 100%;
 }

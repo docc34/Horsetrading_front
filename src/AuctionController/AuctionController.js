@@ -47,7 +47,11 @@ const AuctionController = ()=>{
     const [selecetdImages, setSelectedImages] = useState([]);
     
     const [auctionItemVisibilityModal, setAuctionItemVisibilityModal] = useState(false);
-    const columns = [
+
+    const [usersBills, setUsersBills] = useState([]);
+    const [billsMessage, setBillsMessage] = useState("");
+    
+    const auctionItemsColumns = [
         {name:"id", header: "Id",  defaultVisible: false},
         {name:"title" , header:"Title",  defaultFlex:2},
         {name:"description" , header:"Description", defaultFlex:2},
@@ -57,6 +61,22 @@ const AuctionController = ()=>{
             return <a href={value}>Auction</a>
         }}
     ]
+    const billsColumns = [
+        {name:"id", header: "Id",  defaultVisible: false},
+        {name:"companyName" , header:"CompanyName",  defaultFlex:2},
+        {name:"winner" , header:"Auction winner", defaultFlex:2},
+        {name:"winnerOffer" , header:"Winning offer", defaultFlex:1},
+        {name:"amount" , header:"Amount",  defaultFlex:1},
+        {name:"billDue" , header:"Bill Due", defaultFlex:2},
+        {name:"destinationIban",header: "Destination IBAN", defaultFlex:3},
+        {name:"paid" , header:"Is the bill paid", defaultFlex:1},
+        {name:"billDate" , header:"Bill date", defaultFlex:2},
+        // {name:"url" , header:"Url", defaultFlex:2, render: ({value}) => {
+        //     return <a href={value}>Auction</a>
+        // }}
+    ]
+
+
     // {
     //     name: 'created',header: 'Created',defaultWidth: 150,
     //     // need to specify dateFormat
@@ -145,7 +165,6 @@ const AuctionController = ()=>{
     const handleLogin = async() => {
         if(username != "" && password != ""){
             try{
-                console.log("login ");
                 let data = await fetch("https://localhost:44371/api/Login",{
                         method:'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -171,6 +190,45 @@ const AuctionController = ()=>{
                 setMessage("Error");
             }
         }  
+    }
+
+//Bills CR
+    const fetchUsersBills = async()=>{
+        if(usersBills?.length == 0 ){
+            const options = {
+                method: 'GET',
+                headers: {"Authorization": `Bearer ${cookies.token}`}
+            }
+
+            var search = await fetch("https://localhost:44371/api/Bills/User",options);
+            var result = await search.json();
+            if(result?.status != "Error" && result != null){
+                setUsersBills(result);
+            }
+            else{
+                
+                setBillsMessage(result?.message);
+            }
+        }
+    }
+
+    const postUsersBills = async()=>{
+        if(usersBills?.length == 0 ){
+            const options = {
+                method: 'POST',
+                headers: {"Authorization": `Bearer ${cookies.token}`}
+            }
+
+            var search = await fetch("https://localhost:44371/api/Bills/CheckUsersBills",options);
+            var result = await search.json();
+            if(result?.status == "Ok" && result != null){
+                setBillsMessage(result?.message);
+                await fetchUsersBills();
+            }
+            else{
+                await fetchUsersBills();
+            }
+        }
     }
 
 
@@ -351,6 +409,7 @@ const AuctionController = ()=>{
     useEffect(()=>{
         checkLoginStatus();
         fetchAuctionItems();
+        postUsersBills();
     },[]);
 
     const renderImages = selecetdImages.map((e)=>{
@@ -363,178 +422,195 @@ const AuctionController = ()=>{
     return(
     <div className='auctionControllerMainDiv'>
         {loggedIn == true ? 
-            <div>
+            <div >
                 <h1>Auction controller</h1>
                 <a href="/">controller</a>
-        
-                <div>
-                    <ReactDataGrid
-                        idProperty="id"
-                        style={{ minHeight: 450, minWidth: 500 }}
-                        columns={columns}
-                        dataSource={auctionItems}
-                        enableSelection={true}
-                        defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
-                        sortable={false}
-                        onSelectionChange={onSelectionChange}
-                        />
-                </div>
-                <div>
-                    <Button variant="primary" onClick={()=>{removeCookie('token',{ path: '/' }); window.location.reload();}}>logout</Button>
-                    <Button variant="primary" onClick={()=>{setAuctionItemPostModal(true);}}>Add auctionitem</Button>
-                    <Button disabled={selectedRow} onClick={()=>{setAuctionItemDeleteModal(true);}}>Delete auctionitem</Button>
-                    <Button disabled={selectedRow} onClick={()=>{setAuctionItemModifyModal(true);}}>Modify auctionitem</Button>
-                    <Button disabled={selectedRow} onClick={()=>{setAuctionItemVisibilityModal(true);}}>Change auctionitem visibility</Button>
-                    
+                <div className='auctionControllerContentMainDiv'>
                     <div>
-                        <Modal show={auctionItemDeleteModal} >
-
-                            <Modal.Header className="ModalHeader" >
-                                <Modal.Title>Are you sure you want to delete the auctionitem</Modal.Title>
-                                <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemDeleteModal(false);}}></CloseButton>
-                            </Modal.Header>
-
-                            <Modal.Body className="ModalBody">
-                                <h3>This will delete the auctionitem, photos and auctioneers linked to this post <b>permanently.</b></h3>
-                            </Modal.Body>
-                            
-                            <Modal.Footer className="ModalFooter">
-                                <p className='errorMessage'>{message}</p>
-                                <Button variant="secondary" onClick={()=>{setAuctionItemDeleteModal(false);}}>
-                                    Cancel
-                                </Button>
-                                <Button variant="primary" onClick={()=>{deleteAuctionItem()}}>
-                                    Delete
-                                </Button>
-                            </Modal.Footer>
-                        </Modal>
-                    </div>
-
-                    <div>
-                        <Modal show={auctionItemPostModal} >
-                            <form>
-
-                                <Modal.Header className="ModalHeader" >
-                                    <Modal.Title>Add auctionitem</Modal.Title>
-                                    <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemPostModal(false);}}></CloseButton>
-                                </Modal.Header>
-
-                                <Modal.Body className="ModalBody">
-                                <div className='controllerFormInputs'>
-                                    <Form.Label>Title</Form.Label>
-                                    <Form.Control placeholder='Title' onChange={(e)=>{setTitle(handleInputChange(e));}} />
-                                </div>
-
-                                <div className='controllerFormInputs'>
-                                    <Form.Label>Description</Form.Label>
-                                    <Form.Control as="textarea" placeholder='Description' onChange={(e)=>{setDescription(handleInputChange(e));}} />
-                                </div>
-
-
-                                <div className='controllerFormInputs'>
-                                    <Form.Label>Closing time</Form.Label>
-                                    <Datetime 
-                                        onChange={(e)=>{setClosingTime(e._d);}}
-                                    />
-                                    <Form.Text>
-                                        Set when the auction bidding will close.
-                                    </Form.Text>
-                                </div>
-
-                                <div>
-                                    <input onChange={(e)=>{setFileFromInput(e);}} type={"file"} accept={'image/*'} id={"image-uploader"} className={"form-control"+applyErrorClass("imageSource")} multiple></input>
-                                </div>
-
-                                </Modal.Body>
-                                
-                                <Modal.Footer className="ModalFooter">
-                                <p className='errorMessage'>{message}</p>
-                                    <Button variant="secondary" onClick={()=>{resetValues()}}>
-                                        Close
-                                    </Button>
-                                    <Button variant="primary" onClick={()=>{postAuctionItem()}}  >  
-                                    {/*  */}
-                                        Save
-                                    </Button>
-                                </Modal.Footer>
-                            </form>
-                        </Modal>
-                    </div>
-
-                    <div>
-                        <Modal show={auctionItemModifyModal} >
-
-                            <Modal.Header className="ModalHeader">
-                                <Modal.Title>Modify auctionitem</Modal.Title>
-                                <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemModifyModal(false);}}></CloseButton>
-                            </Modal.Header>
-
-                            <Modal.Body className="ModalBody">
-                            <div className='controllerFormInputs'>
-                                <Form.Label>Title</Form.Label>
-                                <Form.Control value={titleModify} placeholder='Title' onChange={(e)=>{setTitleModify(handleInputChange(e));}} />
-                            </div>
-
-                            <div className='controllerFormInputs'>
-                                <Form.Label>Description</Form.Label>
-                                <Form.Control as="textarea" value={descriptionModify} placeholder='Description' onChange={(e)=>{setDescriptionModify(handleInputChange(e));}} />
-                            </div>
-
-                            <div className='controllerFormInputs'>
-                                <Form.Label >Visible</Form.Label>
-                                <Form.Select value={visible} onChange={(e)=>{setVisible(e.target.value);}} >
-                                    <option value={1}>true</option>
-                                    <option value={0}>false</option>
-                                </Form.Select>
-                            </div>
-
-                            <div className='controllerFormInputs'>
-                                <Form.Label >Closing time</Form.Label>
-                                <Datetime 
-                                    value={closingTimeModify}
-                                    onChange={(e)=>{setClosingTimeModify(e._d);}}
+                        <div>
+                            <ReactDataGrid
+                                idProperty="id"
+                                style={{ minHeight: 450, minWidth: 500 }}
+                                columns={auctionItemsColumns}
+                                dataSource={auctionItems}
+                                enableSelection={true}
+                                defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
+                                sortable={false}
+                                onSelectionChange={onSelectionChange}
                                 />
-                                <Form.Text>
-                                Set when the auction bidding will close.
-                                </Form.Text>
+                        </div>
+                        <div>
+                            <Button variant="primary" onClick={()=>{removeCookie('token',{ path: '/' }); window.location.reload();}}>logout</Button>
+                            <Button variant="primary" onClick={()=>{setAuctionItemPostModal(true);}}>Add auctionitem</Button>
+                            <Button disabled={selectedRow} onClick={()=>{setAuctionItemDeleteModal(true);}}>Delete auctionitem</Button>
+                            <Button disabled={selectedRow} onClick={()=>{setAuctionItemModifyModal(true);}}>Modify auctionitem</Button>
+                            <Button disabled={selectedRow} onClick={()=>{setAuctionItemVisibilityModal(true);}}>Change auctionitem visibility</Button>
+                            
+                            <div>
+                                <Modal show={auctionItemDeleteModal} >
+
+                                    <Modal.Header className="ModalHeader" >
+                                        <Modal.Title>Are you sure you want to delete the auctionitem</Modal.Title>
+                                        <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemDeleteModal(false);}}></CloseButton>
+                                    </Modal.Header>
+
+                                    <Modal.Body className="ModalBody">
+                                        <h3>This will delete the auctionitem, photos and auctioneers linked to this post <b>permanently.</b></h3>
+                                    </Modal.Body>
+                                    
+                                    <Modal.Footer className="ModalFooter">
+                                        <p className='errorMessage'>{message}</p>
+                                        <Button variant="secondary" onClick={()=>{setAuctionItemDeleteModal(false);}}>
+                                            Cancel
+                                        </Button>
+                                        <Button variant="primary" onClick={()=>{deleteAuctionItem()}}>
+                                            Delete
+                                        </Button>
+                                    </Modal.Footer>
+                                </Modal>
                             </div>
 
                             <div>
-                                <input onChange={(e)=>{setFileFromInput(e);}} type={"file"} accept={'image/*'} id={"image-uploader"} className={"form-control"+applyErrorClass("imageSource")} multiple></input>
+                                <Modal show={auctionItemPostModal} >
+                                    <form>
+
+                                        <Modal.Header className="ModalHeader" >
+                                            <Modal.Title>Add auctionitem</Modal.Title>
+                                            <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemPostModal(false);}}></CloseButton>
+                                        </Modal.Header>
+
+                                        <Modal.Body className="ModalBody">
+                                        <div className='controllerFormInputs'>
+                                            <Form.Label>Title</Form.Label>
+                                            <Form.Control placeholder='Title' onChange={(e)=>{setTitle(handleInputChange(e));}} />
+                                        </div>
+
+                                        <div className='controllerFormInputs'>
+                                            <Form.Label>Description</Form.Label>
+                                            <Form.Control as="textarea" placeholder='Description' onChange={(e)=>{setDescription(handleInputChange(e));}} />
+                                        </div>
+
+
+                                        <div className='controllerFormInputs'>
+                                            <Form.Label>Closing time</Form.Label>
+                                            <Datetime 
+                                                onChange={(e)=>{setClosingTime(e._d);}}
+                                            />
+                                            <Form.Text>
+                                                Set when the auction bidding will close.
+                                            </Form.Text>
+                                        </div>
+
+                                        <div>
+                                            <input onChange={(e)=>{setFileFromInput(e);}} type={"file"} accept={'image/*'} id={"image-uploader"} className={"form-control"+applyErrorClass("imageSource")} multiple></input>
+                                        </div>
+
+                                        </Modal.Body>
+                                        
+                                        <Modal.Footer className="ModalFooter">
+                                        <p className='errorMessage'>{message}</p>
+                                            <Button variant="secondary" onClick={()=>{resetValues()}}>
+                                                Close
+                                            </Button>
+                                            <Button variant="primary" onClick={()=>{postAuctionItem()}}  >  
+                                            {/*  */}
+                                                Save
+                                            </Button>
+                                        </Modal.Footer>
+                                    </form>
+                                </Modal>
                             </div>
 
-                            <div className='auctionControllerModifyImagesDiv'>
-                                {renderImages}
+                            <div>
+                                <Modal show={auctionItemModifyModal} >
+
+                                    <Modal.Header className="ModalHeader">
+                                        <Modal.Title>Modify auctionitem</Modal.Title>
+                                        <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemModifyModal(false);}}></CloseButton>
+                                    </Modal.Header>
+
+                                    <Modal.Body className="ModalBody">
+                                    <div className='controllerFormInputs'>
+                                        <Form.Label>Title</Form.Label>
+                                        <Form.Control value={titleModify} placeholder='Title' onChange={(e)=>{setTitleModify(handleInputChange(e));}} />
+                                    </div>
+
+                                    <div className='controllerFormInputs'>
+                                        <Form.Label>Description</Form.Label>
+                                        <Form.Control as="textarea" value={descriptionModify} placeholder='Description' onChange={(e)=>{setDescriptionModify(handleInputChange(e));}} />
+                                    </div>
+
+                                    <div className='controllerFormInputs'>
+                                        <Form.Label >Visible</Form.Label>
+                                        <Form.Select value={visible} onChange={(e)=>{setVisible(e.target.value);}} >
+                                            <option value={1}>true</option>
+                                            <option value={0}>false</option>
+                                        </Form.Select>
+                                    </div>
+
+                                    <div className='controllerFormInputs'>
+                                        <Form.Label >Closing time</Form.Label>
+                                        <Datetime 
+                                            value={closingTimeModify}
+                                            onChange={(e)=>{setClosingTimeModify(e._d);}}
+                                        />
+                                        <Form.Text>
+                                        Set when the auction bidding will close.
+                                        </Form.Text>
+                                    </div>
+
+                                    <div>
+                                        <input onChange={(e)=>{setFileFromInput(e);}} type={"file"} accept={'image/*'} id={"image-uploader"} className={"form-control"+applyErrorClass("imageSource")} multiple></input>
+                                    </div>
+
+                                    <div className='auctionControllerModifyImagesDiv'>
+                                        {renderImages}
+                                    </div>
+                                    </Modal.Body>
+                                    
+                                    <Modal.Footer className="ModalFooter">
+                                    <p className='errorMessage'>{message}</p>
+                                        <Button variant="secondary" onClick={()=>{resetValues()}}>
+                                            Close
+                                        </Button>
+                                        <Button variant="primary" onClick={()=>{modifyAuctionItem()}}>
+                                            Save
+                                        </Button>
+                                    </Modal.Footer>
+                                </Modal>
                             </div>
-                            </Modal.Body>
-                            
-                            <Modal.Footer className="ModalFooter">
-                            <p className='errorMessage'>{message}</p>
-                                <Button variant="secondary" onClick={()=>{resetValues()}}>
-                                    Close
-                                </Button>
-                                <Button variant="primary" onClick={()=>{modifyAuctionItem()}}>
-                                    Save
-                                </Button>
-                            </Modal.Footer>
-                        </Modal>
+                        
+                            <div>
+                                <Modal show={auctionItemVisibilityModal}>
+                                    <Modal.Header className="ModalHeader">
+                                        <Modal.Title>Change visibility</Modal.Title>
+                                        <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemVisibilityModal(false);}}></CloseButton>
+                                    </Modal.Header>
+                                    <Modal.Body className="ModalBody" >
+                                        <p>Are you sure you want to change the auctionitems visibility?</p>
+                                        <p>If the auctionitem is not visible it cannot be accessed by customers, or seen on the platform.</p>
+                                    </Modal.Body>
+                                    <Modal.Footer className="ModalFooter">
+                                        <Button onClick={()=>{resetValues();}}>Close</Button>
+                                        <Button onClick={()=>{changeAuctionItemVisibility();}}>Save</Button>
+                                    </Modal.Footer>
+                                </Modal>
+                            </div>
+                        </div>
                     </div>
-                
-                    <div>
-                        <Modal show={auctionItemVisibilityModal}>
-                            <Modal.Header className="ModalHeader">
-                                <Modal.Title>Change visibility</Modal.Title>
-                                <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemVisibilityModal(false);}}></CloseButton>
-                            </Modal.Header>
-                            <Modal.Body className="ModalBody" >
-                                <p>Are you sure you want to change the auctionitems visibility?</p>
-                                <p>If the auctionitem is not visible it cannot be accessed by customers, or seen on the platform.</p>
-                            </Modal.Body>
-                            <Modal.Footer className="ModalFooter">
-                                <Button onClick={()=>{resetValues();}}>Close</Button>
-                                <Button onClick={()=>{changeAuctionItemVisibility();}}>Save</Button>
-                            </Modal.Footer>
-                        </Modal>
+                    <div className='auctionControllerBillsReactDataGridDiv'>
+                        <ReactDataGrid
+                            idProperty="id"
+                            className='auctionControllerBillsReactDataGrid'
+                            style={{ minHeight: 43+ 40 * usersBills?.length }}
+                            columns={billsColumns}
+                            dataSource={usersBills}
+                            enableSelection={false}
+                            defaultSortInfo={{name: "billDate",  dir: -1, type: 'date'}}
+                            sortable={false}
+                            onSelectionChange={onSelectionChange}
+                            />
+                        <p>{billsMessage}</p>
                     </div>
                 </div>
             </div>

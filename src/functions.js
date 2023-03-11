@@ -105,8 +105,8 @@ const useInterval = (callback, delay) => {
         const [days, hours, minutes, seconds] = useCountdown(targetDate);
         
         if (days + hours + minutes + seconds <= 0) {
+            
             return (
-                // TODO: tähän vielä onnittelu voittajalle.
                 <div className="expired-notice">
                     <h4>Congratulations to the winner!</h4>
                     <p>Bidding on the auction has closed. Congratulations to the winner!</p>

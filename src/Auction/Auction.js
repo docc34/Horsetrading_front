@@ -142,7 +142,7 @@ const Auction = ()=>{
 
     useInterval(()=>{
         fetchAuctioneers(0);//TODO:Ota käyttöön haku kun saat toimimaan
-    },15000);
+    },60000);
     //https://react-bootstrap.github.io/forms/validation/
     // const handleSubmit = (event) => {
     //     const form = event.currentTarget;
@@ -456,7 +456,7 @@ const Auction = ()=>{
                         <Tab eventKey="Top5" title="Top 5 highest offers" onClick={()=>{fetchAuctioneers(5);}}>
                             <div className='auctionDataGridTitleDiv'>
                                 <h3>Top 5 highest offers</h3>
-                                <p className="text-muted">Offers are updated every 15 seconds</p>
+                                <p className="text-muted">Offers are updated every 60 seconds</p>
                             </div>
                             <ReactDataGrid
                                 idProperty="id"
@@ -479,7 +479,7 @@ const Auction = ()=>{
                         <Tab eventKey="allOffers" title="All offers" onClick={()=>{fetchAuctioneers(0)}} href="#">
                             <div className='auctionDataGridTitleDiv'>
                                 <h3>All offers</h3>
-                                <p className="text-muted">Offers are updated every 15 seconds</p>
+                                <p className="text-muted">Offers are updated every 60 seconds</p>
                             </div>
                             <ReactDataGrid
                                 idProperty="id"
@@ -547,7 +547,6 @@ const Auction = ()=>{
                             className="auctionParticipateModal"
                         >
                         <Form noValidate validated={participateValidated} onSubmit={handleParticipateSubmit} >
-                        {/* <form noValidate validated={validated} onSubmit={handleSubmit}> */}
                             <Modal.Header className="ModalHeader">
                                 <Modal.Title>Make an offer</Modal.Title>
                                 <CloseButton variant="white" className='modalCloseButton' onClick={()=>{resetValues();}} />
@@ -555,7 +554,7 @@ const Auction = ()=>{
 
                             <Modal.Body className="ModalBody">
                                 <div>
-                                    <h3>The current highest offer is {highestOffer}€</h3>
+                                    <h3>The current highest offer is {highestOffer != 0 ? highestOffer : 0}€</h3>
                                     <p>Your offer must be atleast 5€ higher than the current highest offer.</p>
                                 </div>
                                 <div className='auctionFormInputs'>
@@ -590,9 +589,9 @@ const Auction = ()=>{
                                 <div className='auctionFormInputs'>
                                     <Form.Label>Offer</Form.Label>
                                     <Form.Control required step={5} type="number" placeholder='Offer' onBlur={(e)=>{setPrice(e.target.value);}} />
-                                    {/* <Form.Text >
-                                    The current highest offer is {highestOffer}€
-                                    </Form.Text> */}
+                                    <Form.Text >
+                                        The current highest offer is {highestOffer != 0 ? highestOffer : 0}€
+                                    </Form.Text>
                                 </div>
 
                                 <div className='auctionFormInputs'>
@@ -663,7 +662,10 @@ const Auction = ()=>{
                                 <div className='auctionModifyFormInputs'>
                                     <div className='auctionFormInputs'>
                                         <Form.Label>Offer</Form.Label>
-                                        <Form.Control required disabled={selectedRow} type="number" placeholder={cookies.auctioneerDefaultPrice != undefined || cookies.auctioneerDefaultPrice != 0 ? cookies.auctioneerDefaultPrice + '€': 0 + '€'} onBlur={(e)=>{setPriceModify(e.target.value);}} />
+                                        <Form.Control required disabled={selectedRow} type="number" placeholder={cookies.auctioneerDefaultPrice != undefined && cookies.auctioneerDefaultPrice != 0 ? cookies.auctioneerDefaultPrice + '€': 0 + '€'} onBlur={(e)=>{setPriceModify(e.target.value);}} />
+                                        <Form.Text >
+                                            The current highest offer is {highestOffer != 0 ? highestOffer : 0}€
+                                        </Form.Text>
                                         <Form.Control.Feedback type="invalid">
                                             Please type in an offer.
                                         </Form.Control.Feedback>
