@@ -288,12 +288,6 @@ const AuctionController = ()=>{
         try{
             if(titleModify != "" && descriptionModify != "" && closingTimeModify != ""){
                 
-                var search = await fetch("https://localhost:44371/api/UserId", {
-                    method: 'GET',
-                    headers: {"Authorization": `Bearer ${cookies.token}`}
-                });
-                var answer = await search.json();
-                
                 const options = {
                     method:'PUT',
                     headers: { 'Content-Type': 'application/json', "Authorization": `Bearer ${cookies.token}` },
@@ -301,14 +295,13 @@ const AuctionController = ()=>{
                         Title: titleModify,
                         Description:descriptionModify,
                         ClosingTime: closingTimeModify,
-                        Visible: visible,
-                        UserId: answer
+                        Visible: visible
                     })
                 }
                 console.log("Visible" + visible);
 
-                search = await fetch("https://localhost:44371/api/AuctionItems/"+selectedRowValue.id, options);
-                answer = await search.json();
+                var search = await fetch("https://localhost:44371/api/AuctionItems/"+selectedRowValue.id, options);
+                var answer = await search.json();
                 if(answer?.status == "Ok" && imageFiles != null){
                     console.log(answer.message);
                     postImages(answer.message);
@@ -424,7 +417,6 @@ const AuctionController = ()=>{
         {loggedIn == true ? 
             <div >
                 <h1>Auction controller</h1>
-                <a href="/">controller</a>
                 <div className='auctionControllerContentMainDiv'>
                     <div>
                         <div>
@@ -440,12 +432,12 @@ const AuctionController = ()=>{
                                 />
                         </div>
                         <div>
-                            <Button variant="primary" onClick={()=>{removeCookie('token',{ path: '/' }); window.location.reload();}}>logout</Button>
-                            <Button variant="primary" onClick={()=>{setAuctionItemPostModal(true);}}>Add auctionitem</Button>
-                            <Button disabled={selectedRow} onClick={()=>{setAuctionItemDeleteModal(true);}}>Delete auctionitem</Button>
-                            <Button disabled={selectedRow} onClick={()=>{setAuctionItemModifyModal(true);}}>Modify auctionitem</Button>
-                            <Button disabled={selectedRow} onClick={()=>{setAuctionItemVisibilityModal(true);}}>Change auctionitem visibility</Button>
-                            
+                            <div className='auctionControllerButtonsDiv'>
+                                <Button variant="primary" onClick={()=>{setAuctionItemPostModal(true);}}>Add auctionitem</Button>
+                                <Button disabled={selectedRow} onClick={()=>{setAuctionItemDeleteModal(true);}}>Delete</Button>
+                                <Button disabled={selectedRow} onClick={()=>{setAuctionItemModifyModal(true);}}>Modify</Button>
+                                <Button disabled={selectedRow} onClick={()=>{setAuctionItemVisibilityModal(true);}}>Change visibility</Button>
+                            </div>
                             <div>
                                 <Modal show={auctionItemDeleteModal} >
 
@@ -482,12 +474,12 @@ const AuctionController = ()=>{
                                         <Modal.Body className="ModalBody">
                                         <div className='controllerFormInputs'>
                                             <Form.Label>Title</Form.Label>
-                                            <Form.Control placeholder='Title' onChange={(e)=>{setTitle(handleInputChange(e));}} />
+                                            <Form.Control placeholder='Title' onBlur={(e)=>{setTitle(handleInputChange(e));}} />
                                         </div>
 
                                         <div className='controllerFormInputs'>
                                             <Form.Label>Description</Form.Label>
-                                            <Form.Control as="textarea" placeholder='Description' onChange={(e)=>{setDescription(handleInputChange(e));}} />
+                                            <Form.Control as="textarea" placeholder='Description' onBlur={(e)=>{setDescription(handleInputChange(e));}} />
                                         </div>
 
 

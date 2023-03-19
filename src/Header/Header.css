@@ -5,6 +5,7 @@
     align-items: center;
     text-align: left;
     height: 65px;
+    justify-content: space-between;
 }
 
 .headerTitle{
@@ -16,5 +17,9 @@
 }
 .headerTitle:hover{
     color: rgb(255, 255, 255);
+}
 
+
+.headerLogoutButton{
+    margin-right: 1rem;
 }
