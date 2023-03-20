@@ -60,15 +60,17 @@ const Auction = ()=>{
     const [phonenumberCollapse, setPhonenumberCollapse] = useState(false);
     const [participateValidated, setParticipateValidated] = useState(false);
     const [modifyValidated, setModifyValidated] = useState(false);
-
+    
     const [passwordVisibility, setPasswordVisibility] = useState("password");
     
+    const [userOfferExists, setUserOfferExists] = useState(false);
+
     const auctioneerColumns = [
         {name:"id", header: "Id",  defaultVisible: false},
         {name:"igTag" , header:"Instagram tag",  defaultFlex:2},
         {name:"phonenumber" , header:"Phonenumber", defaultVisible: datagridColumnVisiblility, defaultFlex:2},
         {name:"username" , header:"Username", defaultFlex:2},
-        {name:"price" , header:"Price", type: "number", defaultFlex:1}
+        {name:"price" , header:"Offer", type: "number", defaultFlex:1}
     ]
 
     const currentAuctioneerColumns = [
@@ -76,7 +78,7 @@ const Auction = ()=>{
         {name:"igTag" , header:"Instagram tag",  defaultFlex:2},
         {name:"phonenumber" , header:"Phonenumber",  defaultVisible: false, defaultFlex:2},
         {name:"username" , header:"Username", defaultFlex:2},
-        {name:"price" , header:"Price", type: "number", defaultFlex:1}
+        {name:"price" , header:"Offer", type: "number", defaultFlex:1}
     ]
 //    headers: { "Authorization": `Bearer ${cookies.token}`}
     
@@ -300,6 +302,7 @@ const Auction = ()=>{
                     setCurrentAuctioneer([result]);
                     setDatagridDefaultSelected(id);
                     setSelectedRow(false);
+                    setUserOfferExists(true);
                 }
             }
             else{
@@ -400,7 +403,7 @@ const Auction = ()=>{
     const carouselImagesRender = carouselImages.map((e, i)=>{
         return (
             // interval={12000}
-            <Carousel.Item interval={null}>
+            <Carousel.Item >
 
                 <a className='auctionCarouselImgDiv' href={e}>
                     <img
@@ -426,7 +429,7 @@ const Auction = ()=>{
     <div className='auctionMainDiv'> 
         <div className='auctionCarouselMainDiv'>
             <div className='carouselDiv'>
-                <Carousel  className='auctionCarousel'>
+                <Carousel interval={null} className='auctionCarousel'>
                     {carouselImagesRender}
                 </Carousel>
             </div>
@@ -464,12 +467,12 @@ const Auction = ()=>{
                                 style={cookies?.token?.length > 6 ? {height: 1000} : {minHeight: 243}}
                                 columns={auctioneerColumns}
                                 dataSource={auctioneers?.slice(0, 5)}
-                                enableSelection={true}
+                                enableSelection={userOfferExists == true ? false : true}
                                 defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
                                 sortable={false}
                                 onSelectionChange={onSelectionChange}
                                 enableKeyboardNavigation={false}
-                                toggleRowSelectOnClick={true}
+                                toggleRowSelectOnClick={cookies?.auctioneerDefaultUsername?.length > 3 ? false : true}
                                 defaultSelected={datagridDefaultSelected != undefined && datagridDefaultSelected != 0 ? datagridDefaultSelected : null}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
                                 selected={selectedRowId == 0 ? cookies.auctioneerId : selectedRowId}
                                 rowClassName="auctionReactDataGridRows"
@@ -487,12 +490,12 @@ const Auction = ()=>{
                                 style={cookies?.token?.length > 6 ? {height: 1000} : {minHeight: 43+ 40 * auctioneers?.length}}
                                 columns={auctioneerColumns}
                                 dataSource={auctioneers}
-                                enableSelection={true}
+                                enableSelection={userOfferExists == true ? false : true}
                                 defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
                                 sortable={false}
                                 onSelectionChange={onSelectionChange}
                                 enableKeyboardNavigation={false}
-                                toggleRowSelectOnClick={true}
+                                toggleRowSelectOnClick={false}//
                                 defaultSelected={datagridDefaultSelected != undefined && datagridDefaultSelected != 0 ? datagridDefaultSelected : null}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
                                 selected={selectedRowId == 0 ? cookies.auctioneerId : selectedRowId}
                                 rowClassName="auctionReactDataGridRows"
@@ -513,11 +516,11 @@ const Auction = ()=>{
                                 columns={currentAuctioneerColumns}
                                 dataSource={currentAuctioneer}
                                 enableSelection={true}
-                                //defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
+                                // defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
                                 sortable={false}
-                                //onSelectionChange={onSelectionChange}
+                                // onSelectionChange={onSelectionChange}
                                 enableKeyboardNavigation={false}
-                                toggleRowSelectOnClick={false}
+                                toggleRowSelectOnClick={false}//userOfferExists == true ? false : true {userOfferExists == true ? false : true}
                                 defaultSelected={datagridDefaultSelected != undefined && datagridDefaultSelected != 0 ? datagridDefaultSelected : null}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
                                 selected={selectedRowId == 0 ? cookies.auctioneerId : selectedRowId}
                                 showHeader={false}
@@ -662,7 +665,8 @@ const Auction = ()=>{
                                 <div className='auctionModifyFormInputs'>
                                     <div className='auctionFormInputs'>
                                         <Form.Label>Offer</Form.Label>
-                                        <Form.Control required disabled={selectedRow} type="number" placeholder={cookies.auctioneerDefaultPrice != undefined && cookies.auctioneerDefaultPrice != 0 ? cookies.auctioneerDefaultPrice + '€': 0 + '€'} onBlur={(e)=>{setPriceModify(e.target.value);}} />
+                                        {/* cookies.auctioneerDefaultPrice != undefined && cookies.auctioneerDefaultPrice != 0 ? cookies.auctioneerDefaultPrice + '€': 0 + '€' */}
+                                        <Form.Control required disabled={selectedRow} type="number" placeholder={"Your offer €"} onBlur={(e)=>{setPriceModify(e.target.value);}} />
                                         <Form.Text >
                                             The current highest offer is {highestOffer != 0 ? highestOffer : 0}€
                                         </Form.Text>
