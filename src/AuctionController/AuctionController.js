@@ -222,11 +222,16 @@ const AuctionController = ()=>{
             var search = await fetch("https://localhost:44371/api/Bills/CheckUsersBills",options);
             var result = await search.json();
             if(result?.status == "Ok" && result != null){
+                setBillsMessage(result.message);
+                setUsersBills(result.object.value);
+                // await fetchUsersBills();
+            }
+            else if(result?.message == "No new billable items found"){
+                setUsersBills(result.object.value);
                 setBillsMessage(result?.message);
-                await fetchUsersBills();
             }
             else{
-                await fetchUsersBills();
+                setBillsMessage(result?.message);
             }
         }
     }
