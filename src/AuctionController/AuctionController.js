@@ -193,24 +193,6 @@ const AuctionController = ()=>{
     }
 
 //Bills CR
-    const fetchUsersBills = async()=>{
-        if(usersBills?.length == 0 ){
-            const options = {
-                method: 'GET',
-                headers: {"Authorization": `Bearer ${cookies.token}`}
-            }
-
-            var search = await fetch("https://localhost:44371/api/Bills/User",options);
-            var result = await search.json();
-            if(result?.status != "Error" && result != null){
-                setUsersBills(result);
-            }
-            else{
-                
-                setBillsMessage(result?.message);
-            }
-        }
-    }
 
     const postUsersBills = async()=>{
         if(usersBills?.length == 0 ){

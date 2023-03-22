@@ -96,7 +96,6 @@ const Auction = ()=>{
         setIgTagModify(selected?.data.igTag);
         setSelectedRowId(selected?.data.id);
         setSelectedRow(false);
-        console.log("aa");
     }, [])
 
     const resetValues = ()=>{
@@ -282,11 +281,17 @@ const Auction = ()=>{
         
         
         if(result != null && result != undefined && result?.status != "Error"){
-            var i = await result;
-            if(JSON.stringify(i) !== JSON.stringify(auctioneers)){
-                setAuctioneers(i);
-                setHighestOffer(result[0].highestOffer);
+            try{
+                var i = await result;
+                if(JSON.stringify(i) !== JSON.stringify(auctioneers)){
+                    setAuctioneers(i);
+                    setHighestOffer(result[0].highestOffer);
+                }
             }
+            catch(e){
+                console.log(e);
+            }
+
 
         }
     }
@@ -314,21 +319,36 @@ const Auction = ()=>{
     const modifyAuction = async ()=>{
         try{
             if(passwordModify != "" &&  priceModify != 0 || passwordModify != "" && cookies.auctioneerDefaultPrice != null){
-                const options = {
-                    method:'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body:JSON.stringify({
-                        Username: usernameModify == "" ? cookies.auctioneerDefaultUsername : usernameModify, 
-                        IgTag: igTagModify == "" ? cookies.auctioneerDefaultIgTag : igTagModify,
-                        Price: priceModify == 0 ? cookies.auctioneerDefaultPrice : priceModify,
-                        Password: passwordModify,
-                    })
+                var options = {}
+                if(selectedRow == true){
+                    options = {
+                        method:'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body:JSON.stringify({
+                            Username: usernameModify == "" ? cookies.auctioneerDefaultUsername : usernameModify, 
+                            IgTag: usernameModify == "" ? cookies.auctioneerDefaultUsername : usernameModify,
+                            Price: priceModify == 0 ? cookies.auctioneerDefaultPrice : priceModify,
+                            Password: passwordModify,
+                        })
+                    }
                 }
+                else{
+                    options = {
+                        method:'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body:JSON.stringify({
+                            Username: usernameModify == "" ? cookies.auctioneerDefaultUsername : usernameModify, 
+                            IgTag: igTagModify == "" ? cookies.auctioneerDefaultIgTag : igTagModify,
+                            Price: priceModify == 0 ? cookies.auctioneerDefaultPrice : priceModify,
+                            Password: passwordModify,
+                        })
+                    }
+                }
+
     
                 var search = await fetch("https://localhost:44371/api/Auctioneers/"+auctionId,options);
                 var result = await search.json();
                 if(await result?.id > 0){
-                    console.log("eee");
                     setCookies(result);
 
                 }
@@ -341,6 +361,7 @@ const Auction = ()=>{
             console.log(e);
         }
     }
+
     const deleteSelectedAuctioneer = async()=>{
         try{
             if(cookies.token != undefined && selectedRow == false){
@@ -534,16 +555,20 @@ const Auction = ()=>{
             <div className='auctionInputDiv'>
                 <div className='auctionParticipateDiv'>
                     <div>
-                        <div>
-                            <h4>Participate!</h4>
-                            <p>
-                                You can participate by creating an offer below.
-                            </p>
-                            <Button onClick={()=>{setAuctioneerParticipateModal(true);}}>Participate</Button>
-                            {cookies.token != undefined && cookies.token.length > 6 ? <Button disabled={selectedRow} onClick={()=>{deleteSelectedAuctioneer();}}>Delete selected Auctioneer</Button>
-                            :
-                            null}
-                        </div>
+                        {userOfferExists == false ? 
+                            <div>
+                                <h4>Participate!</h4>
+                                <p>
+                                    You can participate by creating an offer below.
+                                </p>
+                                <Button onClick={()=>{setAuctioneerParticipateModal(true);}}>Participate</Button>
+                                {cookies.token != undefined && cookies.token.length > 6 ? <Button disabled={selectedRow} onClick={()=>{deleteSelectedAuctioneer();}}>Delete selected Auctioneer</Button>
+                                :
+                                null}
+                            </div>
+                            :   
+                            null
+                        }
                         
                         <Modal 
                             show={auctioneerParticipateModal}
@@ -651,157 +676,173 @@ const Auction = ()=>{
                         </Modal>
                     </div>
                 </div>
+
+                    <div  className='auctionModifyInputMainDiv' style={userOfferExists == true ? {'max-width':"100%",'width':"100%",} : null}>
+                        <div>
+                            <h4>Raise offer</h4>
+                            <p>
+                                Select yourself in the table above and raise your offer here.
+                            </p>
+                        </div>
+
                 
-                <div className='auctionModifyInputMainDiv'>
-                    <div>
-                        <h4>Raise offer</h4>
-                        <p>
-                            Select yourself in the table above and raise your offer here.
-                        </p>
-                    </div>
-                    <div className='auctionModifyInputDiv'>
-                        <div className='auctionModifyInputDivVariant1'>
-                            <Form noValidate validated={modifyValidated} onSubmit={handleModifySubmit} >
-                                <div className='auctionModifyFormInputs'>
-                                    <div className='auctionFormInputs'>
-                                        <Form.Label>Offer</Form.Label>
-                                        {/* cookies.auctioneerDefaultPrice != undefined && cookies.auctioneerDefaultPrice != 0 ? cookies.auctioneerDefaultPrice + '€': 0 + '€' */}
-                                        <Form.Control required disabled={selectedRow} type="number" placeholder={"Your offer €"} onBlur={(e)=>{setPriceModify(e.target.value);}} />
-                                        <Form.Text >
-                                            The current highest offer is {highestOffer != 0 ? highestOffer : 0}€
-                                        </Form.Text>
-                                        <Form.Control.Feedback type="invalid">
-                                            Please type in an offer.
-                                        </Form.Control.Feedback>
-                                    </div>
-
-                                    <div className='auctionFormInputs'>
-                                        <Form.Label>Password</Form.Label>
-                                        <div className='auctionOfferFormPasswordDiv'>
-                                                <Form.Control required disabled={selectedRow} type={passwordVisibility} placeholder='Password' onBlur={(e)=>{setPasswordModify(e.target.value);}} />
-                                                    <button type='button' className="btn btn-primary" onClick={()=>{togglePasswordVisibility();}}>
-                                                        {passwordVisibility === "password" ? (
-                                                            <svg
-                                                            width="20"
-                                                            height="17"
-                                                            fill="currentColor"
-                                                            className="bi bi-eye-slash-fill"
-                                                            viewBox="0 0 16 16"
-                                                            >
-                                                            <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z" />
-                                                            <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z" />
-                                                            </svg>
-                                                        ) : (
-                                                            <svg
-                                                            width="20"
-                                                            height="17"
-                                                            fill="currentColor"
-                                                            className="bi bi-eye-fill"
-                                                            viewBox="0 0 16 16"
-                                                            >
-                                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
-                                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
-                                                            </svg>
-                                                        )}
-                                                    </button>
-                                                </div>
-                                        <Form.Control.Feedback type="invalid">
-                                            Please type in an password.
-                                        </Form.Control.Feedback>
-
-                                        <Form.Text className="text-muted">
-                                            Use the password you created
-                                        </Form.Text>
-                                    </div>
-                                </div>
-                                <div className='auctionFormInputs'>
-                                    <p className='errorMessage'>{message}</p>
-                                    <Button disabled={selectedRow} type="submit" > {/*onClick={()=>{modifyAuction();}}*/}
-                                        Save
-                                    </Button>
-                                    
-                                </div>
-                            </Form>
-                        </div>
-                        <div className='auctionModifyInputDivVariant2'>
-                            <Button disabled={selectedRow} onClick={()=>{setShowAuctionModifyModal(true);}}>Raise</Button>
-
-                            
-                            <Modal show={showAuctionModifyModal}>
-                                <Modal.Header className="ModalHeader">
-                                    <Modal.Title>Raise your offer</Modal.Title>
-                                    <CloseButton variant="white" className='modalCloseButton' onClick={()=>{resetValues();}} />
-                                </Modal.Header>
+                        <div className='auctionModifyInputDiv'>
+                            <div className='auctionModifyInputDivVariant1' >
                                 <Form noValidate validated={modifyValidated} onSubmit={handleModifySubmit} >
-                                
-                                <Modal.Body className="ModalBody">
-                                <div className='auctionModifyFormInputs'>
-                                    <div className='auctionFormInputs'>
-                                        <Form.Label>Offer</Form.Label>
-                                        <Form.Control required disabled={selectedRow} type="number" placeholder='Offer' value={priceModify != 0 ? priceModify : cookies.auctioneerDefaultPrice} onChange={(e)=>{setPriceModify(e.target.value);}} />
-                                        <Form.Control.Feedback type="invalid">
-                                            Please type in an offer.
-                                        </Form.Control.Feedback>
-                                    </div>
+                                    <div className='auctionModifyFormInputs' style={userOfferExists == true ? {"display":"flex","flex-direction":"row","width":"100%"} : null}>
+                                        <div className='auctionFormInputs' >
+                                            <Form.Label>Offer</Form.Label>
+                                            {/* cookies.auctioneerDefaultPrice != undefined && cookies.auctioneerDefaultPrice != 0 ? cookies.auctioneerDefaultPrice + '€': 0 + '€' */}
+                                            <Form.Control required  type="number" placeholder={"Your offer €"} onBlur={(e)=>{setPriceModify(e.target.value);}} />
+                                            <Form.Text >
+                                                The current highest offer is {highestOffer != 0 ? highestOffer : 0}€
+                                            </Form.Text>
+                                            <Form.Control.Feedback type="invalid">
+                                                Please type in an offer.
+                                            </Form.Control.Feedback>
+                                        </div>
+                                        {userOfferExists == false ? 
+                                            <div className='auctionFormInputs' >
+                                            <Form.Label>Username</Form.Label>
+                                            {/* cookies.auctioneerDefaultPrice != undefined && cookies.auctioneerDefaultPrice != 0 ? cookies.auctioneerDefaultPrice + '€': 0 + '€' */}
+                                            <Form.Control required  value={usernameModify} placeholder={"Username"} onChange={(e)=>{setUsernameModify(e.target.value);}} />
+                                            <Form.Text >
+                                                Use the username you joined with, or select yourself from the list above
+                                            </Form.Text>
+                                            <Form.Control.Feedback type="invalid">
+                                                Please type in your username.
+                                            </Form.Control.Feedback>
+                                        </div>
+                                        :null
+                                        }
 
-                                    <div className='auctionFormInputs'>
-                                        <Form.Label>Password</Form.Label>
-                                        <div className='auctionOfferFormPasswordDiv'>
-                                                <Form.Control required disabled={selectedRow} type={passwordVisibility} placeholder='Password' onBlur={(e)=>{setPasswordModify(e.target.value);}} />
-                                                    <button type='button' className="btn btn-primary" onClick={()=>{togglePasswordVisibility();}}>
-                                                        {passwordVisibility === "password" ? (
-                                                            <svg
-                                                            width="20"
-                                                            height="17"
-                                                            fill="currentColor"
-                                                            className="bi bi-eye-slash-fill"
-                                                            viewBox="0 0 16 16"
-                                                            >
-                                                            <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z" />
-                                                            <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z" />
-                                                            </svg>
-                                                        ) : (
-                                                            <svg
-                                                            width="20"
-                                                            height="17"
-                                                            fill="currentColor"
-                                                            className="bi bi-eye-fill"
-                                                            viewBox="0 0 16 16"
-                                                            >
-                                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
-                                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
-                                                            </svg>
-                                                        )}
-                                                    </button>
-                                                </div>
-                                        <Form.Control.Feedback type="invalid">
-                                            Please type in an password.
-                                        </Form.Control.Feedback>
+                                        <div className='auctionFormInputs'>
+                                            <Form.Label>Password</Form.Label>
+                                            <div className='auctionOfferFormPasswordDiv'>
+                                                    <Form.Control required  type={passwordVisibility} placeholder='Password' onBlur={(e)=>{setPasswordModify(e.target.value);}} />
+                                                        <button type='button' className="btn btn-primary" onClick={()=>{togglePasswordVisibility();}}>
+                                                            {passwordVisibility === "password" ? (
+                                                                <svg
+                                                                    width="20"
+                                                                    height="17"
+                                                                    fill="currentColor"
+                                                                    className="bi bi-eye-slash-fill"
+                                                                    viewBox="0 0 16 16"
+                                                                >
+                                                                    <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z" />
+                                                                    <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z" />
+                                                                </svg>
+                                                            ) : (
+                                                                <svg
+                                                                    width="20"
+                                                                    height="17"
+                                                                    fill="currentColor"
+                                                                    className="bi bi-eye-fill"
+                                                                    viewBox="0 0 16 16"
+                                                                >
+                                                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
+                                                                    <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+                                                                </svg>
+                                                            )}
+                                                        </button>
+                                                    </div>
+                                            <Form.Control.Feedback type="invalid">
+                                                Please type in an password.
+                                            </Form.Control.Feedback>
 
-                                        <Form.Text className="text-muted">
-                                            Use the password you created
-                                        </Form.Text>
+                                            <Form.Text className="text-muted">
+                                                Use the password you created
+                                            </Form.Text>
+                                        </div>
                                     </div>
-                                </div>
-                                </Modal.Body>
-                                <Modal.Footer className="ModalFooter">
-                                    <p className='errorMessage'>{message}</p>
-                                    <Button variant="secondary" onClick={()=>{resetValues();}}>
-                                        Close
-                                    </Button>
-                                    <Button disabled={selectedRow} type="submit" > {/*onClick={()=>{modifyAuction();}}*/}
-                                        Save
-                                    </Button>
-                                </Modal.Footer>
-                            </Form>
-                            </Modal>
-                            
+                                    <div className='auctionFormInputs'>
+                                        <p className='errorMessage'>{message}</p>
+                                        <Button  type="submit" > {/*onClick={()=>{modifyAuction();}}*/}
+                                            Save
+                                        </Button>
+                                        
+                                    </div>
+                                </Form>
+                            </div>
                         </div>
+                    </div>
+                    <div className='auctionModifyInputDivVariant2'>
+                        <Button disabled={selectedRow} onClick={()=>{setShowAuctionModifyModal(true);}}>Raise</Button>
+
+                        
+                        <Modal show={showAuctionModifyModal}>
+                            <Modal.Header className="ModalHeader">
+                                <Modal.Title>Raise your offer</Modal.Title>
+                                <CloseButton variant="white" className='modalCloseButton' onClick={()=>{resetValues();}} />
+                            </Modal.Header>
+                            <Form noValidate validated={modifyValidated} onSubmit={handleModifySubmit} >
+                            
+                            <Modal.Body className="ModalBody">
+                            <div className='auctionModifyFormInputs'>
+                                <div className='auctionFormInputs'>
+                                    <Form.Label>Offer</Form.Label>
+                                    <Form.Control required disabled={selectedRow} type="number" placeholder='Offer' value={priceModify != 0 ? priceModify : cookies.auctioneerDefaultPrice} onChange={(e)=>{setPriceModify(e.target.value);}} />
+                                    <Form.Control.Feedback type="invalid">
+                                        Please type in an offer.
+                                    </Form.Control.Feedback>
+                                </div>
+
+                                <div className='auctionFormInputs'>
+                                    <Form.Label>Password</Form.Label>
+                                    <div className='auctionOfferFormPasswordDiv'>
+                                            <Form.Control required disabled={selectedRow} type={passwordVisibility} placeholder='Password' onBlur={(e)=>{setPasswordModify(e.target.value);}} />
+                                                <button type='button' className="btn btn-primary" onClick={()=>{togglePasswordVisibility();}}>
+                                                    {passwordVisibility === "password" ? (
+                                                        <svg
+                                                        width="20"
+                                                        height="17"
+                                                        fill="currentColor"
+                                                        className="bi bi-eye-slash-fill"
+                                                        viewBox="0 0 16 16"
+                                                        >
+                                                        <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z" />
+                                                        <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z" />
+                                                        </svg>
+                                                    ) : (
+                                                        <svg
+                                                        width="20"
+                                                        height="17"
+                                                        fill="currentColor"
+                                                        className="bi bi-eye-fill"
+                                                        viewBox="0 0 16 16"
+                                                        >
+                                                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
+                                                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+                                                        </svg>
+                                                    )}
+                                                </button>
+                                            </div>
+                                    <Form.Control.Feedback type="invalid">
+                                        Please type in an password.
+                                    </Form.Control.Feedback>
+
+                                    <Form.Text className="text-muted">
+                                        Use the password you created
+                                    </Form.Text>
+                                </div>
+                            </div>
+                            </Modal.Body>
+                            <Modal.Footer className="ModalFooter">
+                                <p className='errorMessage'>{message}</p>
+                                <Button variant="secondary" onClick={()=>{resetValues();}}>
+                                    Close
+                                </Button>
+                                <Button disabled={selectedRow} type="submit" > {/*onClick={()=>{modifyAuction();}}*/}
+                                    Save
+                                </Button>
+                            </Modal.Footer>
+                        </Form>
+                        </Modal>
+                        
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     : auctionVisible == 0 ?
         <div className='AuctionItemSpinnerDiv'>
             <Spinner  animation="border" variant="light"/>
