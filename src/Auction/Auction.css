@@ -1,19 +1,25 @@
 @media (max-width: 1399.98px) { 
     .carouselImage{
         max-height: 40rem;
+        max-width: 40rem;
     }
  }
  @media (min-width: 1400px) { 
     .carouselImage{
         max-height: 50rem;
+        max-width: 50rem;
     }
  }
 
-@media (max-width: 1199.98px) { 
+@media (max-width: 999.98px) { 
     .auctionMainDiv{
         display: flex;
         flex-direction: column;
         margin-top: 5%;
+        padding-top: 5%;
+        padding-bottom: 2%;
+        padding-left: 2%;
+        padding-right: 2%;
         align-items: center;
     }
 
@@ -21,10 +27,11 @@
         flex-direction: column;
     }
  }
- @media (min-width: 1200px) { 
+ @media (min-width: 1000px) { 
     .auctionMainDiv{
         flex-direction: row-reverse; 
-        margin-top: 2%;
+        padding: 5%;
+        margin: 5%;
         justify-content: center;
     }
     .auctionContentMainDiv{
@@ -35,6 +42,7 @@
  @media (max-width: 991.98px) {
     .carouselImage{
         max-height: 30rem;
+        max-width: 20rem;
     }
 
  }
@@ -43,66 +51,98 @@
 
 @media (max-width: 767.98px) {
 
+    .auctionMainDiv{
+        margin: 2%;
+    }
     .auctionDataGridTitleDiv{
         font-size: smaller;
     }
 
-
+    .auctionCarouselMainDiv{
+        margin-left:2%;
+    }
     .auctionModifyInputMainDiv{
         width: 100%;
         max-width:768px;
     }
     .auctionModifyInputDiv{
-        display: flex;
-        flex-direction: column-reverse;
+        visibility: hidden;
+        height: 0px;
     }
     .auctionModifyFormInputs{
         display: flex;
         flex-direction: row;
     }
 
-    .auctionModifyInputDivVariant2{
+    .auctionModifyRaiseButton{
         visibility: visible;
     }
-    .auctionModifyInputDivVariant1{
-        visibility: hidden;
-    }
-    .auctionMainDiv{
-        margin: 2%;
-    }
-
+    .auctionModifyTitleDiv{
+        height: 160px;
+     }
  }
  @media (min-width: 768px) {
-    .auctionModifyInputDivVariant2{
+    .auctionModifyTitleDiv{
+        height: 82px;
+     }
+    .auctionModifyRaiseButton{
         visibility: hidden;
-    }
-
-    .auctionModifyInputMainDiv{
-        /* flex:2; */
-        max-width: 350px;
+        height: 0px;
+        width: 0px;
+        margin: 0px !important;
+        padding: 0px !important;
+        border: 0px !important;
     }
     .auctionMainDiv{
         margin: 5%;
     }
+    .auctionModifyInputDiv{
+        height: min-content;
+    }
+    .auctionModifyInputMainDiv{
+        /* flex:2; */
+        max-width: 350px;
+    }
+
  }
- @media (max-width: 399.98px) {
+ @media (max-width: 439.98px) {
     .auctionMainDiv{
         margin: 0px;
     }
+    .auctionReactDataGridDiv{
+        justify-content: center;
+    }
+    .auctionReactDataGrid{
+        max-width: 320px;
+        margin-left: 7%;
+    }
+    
+    .auctionParticipateDiv{
+        margin-right: 1rem;
+        height: min-content;
+        /* flex:2; */
+    }
  }
- @media (min-width: 400px) {
+ @media (min-width: 440px) {
+    
+    .auctionParticipateDiv{
+        margin-right: 4rem;
+        height: min-content;
+        /* flex:2; */
+    }
+ }
 
- }
+
 
 .auctionMainDiv{
     display: flex;
-    padding: 5%;
     margin: 0px;
     width: 100%;
 }
 .auctionCarouselMainDiv{
     flex: 2;
     max-width: 800px;
+    margin-left: 2%;
 }
 
 .auctionContentMainDiv{
@@ -121,21 +161,16 @@
 }
 
 
-
-
-.auctionParticipateDiv{
-    margin-right: 4rem;
-    height: min-content;
-    /* flex:2; */
+.OfferDiv{
+    width: 80px !important;
 }
+
+
 .auctionModifyInputMainDiv{
     height: min-content;
 }
 
-.auctionModifyInputDiv{
-    height: min-content;
 
-}
 
 .auctionInputDiv{
     width: 100%;
@@ -148,7 +183,7 @@
 .auctionFormInputs{
     margin: 1%;
     margin-top:1%;
-    max-width: 300px;
+    max-width: 250px;
 }
 .form-label{
     margin-left: 2%;
