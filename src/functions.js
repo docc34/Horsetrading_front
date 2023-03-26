@@ -1,6 +1,37 @@
 import './functions.css';
 import { relativeTimeRounding } from 'moment';
 import { useEffect, useState, useRef } from 'react';
+import * as signalR from "@microsoft/signalr";
+
+//Määritetään yhteys bäckendin hubiin ja laitetaan se muuttujaan
+// const [connection, setConnection] = useState("password");
+const connection = new signalR.HubConnectionBuilder()
+.withUrl("https://localhost:44371/auctionhub")
+.withAutomaticReconnect()
+.build();
+    //Aloitetaan yhteys hubiin
+connection.start().catch(e=>console.log(e));
+// connection.on("receiveMessage", (user,message)=>{
+//     RecieveMessage(user,message);
+// });
+// const RecieveMessage = (user,message)=>{
+//     console.log(user,message);
+// }
+//Määritetään "Kiinniotto" funktio. Kun joku lähettää viestin apilta suoritetaan frontista annettu funktio ja annetaan sille vastaanotetut parametrit 
+const RecieveMessage = (messageRecieveFunction)=>{
+    connection.on("receiveMessage", (user,message)=>{
+        messageRecieveFunction(user,message);
+});
+}
+
+//Viestin lähetysfunktio
+const SignalRTestSend = (price)=>{
+    //Lähetetään yksittäiseltä käyttäjältä kaikille yhdistetyille viesti apin kautta
+    //KUtsutaan apin SendMessage nimistä hubia ja annetaan sille samat parametrit.
+    connection.send("sendMessage", "price", price).then(x => console.log("sent"));
+
+}
+
 
 const handleInputChange = (o)=>{
     if(o.target.value == null  || o.target.value == ""|| o.target.value == 0){
@@ -130,4 +161,4 @@ const useInterval = (callback, delay) => {
     };
 //#endregion
 
-export {handleInputChange, MakeStoreCell, CountdownTimer, useInterval}
+export {handleInputChange, MakeStoreCell, CountdownTimer, useInterval, SignalRTestSend, RecieveMessage}

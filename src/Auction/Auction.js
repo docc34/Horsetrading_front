@@ -9,13 +9,12 @@ import Collapse from 'react-bootstrap/Collapse';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 
-
 import { useState, useEffect, useCallback } from 'react';
 import { useCookies } from 'react-cookie';
 
 import './Auction.css';
 import { useLocation } from "react-router-dom";
-import { handleInputChange, CountdownTimer, useInterval} from  '../functions';
+import { handleInputChange, CountdownTimer, useInterval, RecieveMessage, SignalRTestSend} from  '../functions';
 import { propTypes } from 'react-bootstrap/esm/Image';
 import '@inovua/reactdatagrid-community/index.css'
 
@@ -64,7 +63,7 @@ const Auction = ()=>{
     const [passwordVisibility, setPasswordVisibility] = useState("password");
     
     const [userOfferExists, setUserOfferExists] = useState(false);
-
+    
     const auctioneerColumns = [
         {name:"id", header: "Id",  defaultVisible: false},
         {name:"igTag" , header:"Instagram tag",  defaultFlex:2},
@@ -80,8 +79,8 @@ const Auction = ()=>{
         {name:"username" , header:"Username", defaultFlex:2},
         {name:"price" , header:"Offer", type: "number", defaultFlex:1}
     ]
-//    headers: { "Authorization": `Bearer ${cookies.token}`}
-    
+
+
     const togglePasswordVisibility = () => {
         if (passwordVisibility === "password") {
         setPasswordVisibility("text");
@@ -141,6 +140,10 @@ const Auction = ()=>{
         
     }
 
+    const recieveSingalMessage = (user, message)=>{
+        console.log("recieved"+user+message);
+        setMessage(message);
+    }
     useInterval(()=>{
         fetchAuctioneers(0);//TODO:Ota käyttöön haku kun saat toimimaan
     },60000);
@@ -419,6 +422,8 @@ const Auction = ()=>{
         fetchAuctionItem(1);
         fetchAuctioneers(0, true);//TODO:Ota käyttöön haku kun saat toimimaan
         fetchImages();
+
+        RecieveMessage(recieveSingalMessage);
     },[]);
 
     const carouselImagesRender = carouselImages.map((e, i)=>{
@@ -466,6 +471,7 @@ const Auction = ()=>{
             <div className='auctionReactDataGridDiv'>
                 <div className='auctionTitleDiv'>
                     <h1 className='auctionTitle'>Auction!</h1>
+                    <button onClick={()=>{SignalRTestSend(priceModify)}}>TestSend</button>
                 </div>
                 <div className='auctionCountdownDiv'>
                     <CountdownTimer targetDate={currentAuctionItem?.closingTime} />
