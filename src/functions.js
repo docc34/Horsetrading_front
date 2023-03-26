@@ -18,21 +18,20 @@ connection.start().catch(e=>console.log(e));
 //     console.log(user,message);
 // }
 //Määritetään "Kiinniotto" funktio. Kun joku lähettää viestin apilta suoritetaan frontista annettu funktio ja annetaan sille vastaanotetut parametrit 
-const recieveMessage = (messageRecieveFunction)=>{
+const receiveMessage = (messageRecieveFunction)=>{
     connection.on("receiveMessage", (user,message)=>{
         messageRecieveFunction(user,message);
 });
 }
 
 //Viestin lähetysfunktio
-const sendSignalMessage = (auctionItemId,Auctioneers)=>{
+const sendSignalMessage = async (auctionItemId,Auctioneers)=>{
     //Lähetetään yksittäiseltä käyttäjältä kaikille yhdistetyille viesti apin kautta
     //KUtsutaan apin SendMessage nimistä hubia ja annetaan sille samat parametrit.
-    connection.send("sendMessage", auctionItemId, Auctioneers).then(x => console.log("sent"));
-
+    await connection.send("SendMessage", auctionItemId, Auctioneers).then(x => console.log("sent"));
 }
 
-
+//Vanha validaatio metodi
 const handleInputChange = (o)=>{
     if(o.target.value == null  || o.target.value == ""|| o.target.value == 0){
         o.target.setAttribute('style','border-color: red; border-width: 2px')
@@ -68,27 +67,6 @@ const MakeStoreCell = (d)=>{
         </div>
     )
 }
-
-//Käytetään kutsumaan apia refreshaamaan auctionitem pöytä
-const useInterval = (callback, delay) => {
-
-    const savedCallback = useRef();
-  
-    useEffect(() => {
-      savedCallback.current = callback;
-    }, [callback]);
-  
-  
-    useEffect(() => {
-      function tick() {
-        savedCallback.current();
-      }
-      if (delay !== null) {
-        const id = setInterval(tick, delay);
-        return () => clearInterval(id);
-      }
-    }, [delay]);
-  }
 
 //#region
 //Timer functions
@@ -161,4 +139,4 @@ const useInterval = (callback, delay) => {
     };
 //#endregion
 
-export {handleInputChange, MakeStoreCell, CountdownTimer, useInterval, sendSignalMessage, recieveMessage}
+export {handleInputChange, MakeStoreCell, CountdownTimer, sendSignalMessage, receiveMessage}

@@ -14,7 +14,7 @@ import { useCookies } from 'react-cookie';
 
 import './Auction.css';
 import { useLocation } from "react-router-dom";
-import { handleInputChange, CountdownTimer, useInterval, recieveMessage, sendSignalMessage} from  '../functions';
+import { CountdownTimer,receiveMessage, sendSignalMessage} from  '../functions';
 import { propTypes } from 'react-bootstrap/esm/Image';
 import '@inovua/reactdatagrid-community/index.css'
 
@@ -80,7 +80,17 @@ const Auction = ()=>{
         {name:"price" , header:"Offer", type: "number", defaultFlex:1}
     ]
 
-
+    //Kun joku tekee tarjouksen ja hinta päivittyy tämä funktio ottaa sen vastaan
+    const receiveSignalMessage = (auctionItemId, auctioneers)=>{
+        if(auctionItemId == auctionId){
+            setAuctioneers(auctioneers);
+            //päivitetään highest offer
+            var addedAuctioneer = auctioneers[0];
+            setHighestOffer(addedAuctioneer?.price);
+        }
+    }
+    
+    //Salasanan näyttämisnapin funktio
     const togglePasswordVisibility = () => {
         if (passwordVisibility === "password") {
         setPasswordVisibility("text");
@@ -88,7 +98,7 @@ const Auction = ()=>{
         }
         setPasswordVisibility("password");
     };
-
+    //Kun datagridin riviä klikataan
     const onSelectionChange = useCallback((selected) => {
         setUsernameModify(selected?.data.username);
         setPriceModify(selected?.data.price);
@@ -123,56 +133,36 @@ const Auction = ()=>{
     }
 
     const setCookies = (result)=>{
-        if(result?.status > 210){
-            setMessage("Error");
-        }
-        else{
-
-            console.log(result.object.value);
+        if(result.status == "Ok" && result != undefined){
+            //Otetaan apin antamat arvot talteen
             var resultList = result.object.value;
             var addedAuctioneer = resultList[0];
-            console.log(addedAuctioneer);
+            
+            //Tallennetaan kekseihin käöyttäjän omien tarjousten arvot.
             setCookie('auctioneerId', addedAuctioneer.id, { path: '/Auction' });
             setCookie('auctioneerDefaultPrice', addedAuctioneer.price, { path: '/Auction' });
             setCookie('auctioneerDefaultIgTag', addedAuctioneer.igTag, { path: '/Auction' });
             setCookie('auctioneerDefaultUsername', addedAuctioneer.username, { path: '/Auction' });
 
-            //Lähetetään lisäyksen hakemat uusimmat auctioneerit muille signalrrin kautta.
+            //Lähetetään lisäyksen hakemat uusimmat auctioneerit muille signalrrin pipen kautta.
             sendSignalMessage(auctionId,resultList);
+
             //Päivitetään data
             setAuctioneers(resultList);
             //päivitetään highest offer
             setHighestOffer(addedAuctioneer.price);
-            // fetchAuctioneers();
+            //Haetaan nykyisen käyttäjän tiedot uudestaan.
             fetchCurrentAuctioneer(addedAuctioneer.id);
             resetValues();
+        }
+        else{
+            setMessage("Error");
         }
         
     }
 
-    const recieveSingalMessage = (auctionItemId, auctioneers)=>{
-        if(auctionItemId == auctionId){
-            console.log("recieved");
-            console.log(auctioneers);
-            setAuctioneers(auctioneers);
-        }
-    }
-    // useInterval(()=>{
-    //     fetchAuctioneers(0);//TODO:Ota käyttöön haku kun saat toimimaan
-    // },60000);
-    //https://react-bootstrap.github.io/forms/validation/
-    // const handleSubmit = (event) => {
-    //     const form = event.currentTarget;
-    //     if (form.checkValidity() === false) {
-    //       event.preventDefault();
-    //       event.stopPropagation();
-    //     }
-    //     else{
-    //         setValidated(true);
-    //         postAuction();
-    //     }
-    
-    //   };
+
+
     const handleParticipateSubmit = (event) => {
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
@@ -230,8 +220,8 @@ const Auction = ()=>{
 
                 var search = await fetch("https://localhost:44371/api/Auctioneers/"+auctionId,options);
                 var result = await search.json();
-                if(result?.status != "Error" && result != null){
-                    setCookies(result);
+                if(await result?.status == "Ok" ){
+                    setCookies(await result);
                 }
                 else{
                     setMessage(result?.message);
@@ -364,8 +354,8 @@ const Auction = ()=>{
     
                 var search = await fetch("https://localhost:44371/api/Auctioneers/"+auctionId,options);
                 var result = await search.json();
-                if(await result?.id > 0){
-                    setCookies(result);
+                if(await result?.status == "Ok"){
+                    setCookies(await result);
                 }
                 else{
                     setMessage(result?.message);
@@ -435,7 +425,7 @@ const Auction = ()=>{
         fetchAuctioneers(0, true);//TODO:Ota käyttöön haku kun saat toimimaan
         fetchImages();
         //Laitetaan funktioihin eteenpäin paikallinen vastaanotto funktio
-        recieveMessage(recieveSingalMessage);
+        receiveMessage(receiveSignalMessage);
     },[]);
 
     const carouselImagesRender = carouselImages.map((e, i)=>{
@@ -497,7 +487,6 @@ const Auction = ()=>{
                         <Tab eventKey="Top5" title="Top 5 highest offers" onClick={()=>{fetchAuctioneers(5);}}>
                             <div className='auctionDataGridTitleDiv'>
                                 <h3>Top 5 highest offers</h3>
-                                <p className="text-muted">Offers are updated every 60 seconds</p>
                             </div>
                             <ReactDataGrid
                                 idProperty="id"
@@ -520,7 +509,6 @@ const Auction = ()=>{
                         <Tab eventKey="allOffers" title="All offers" onClick={()=>{fetchAuctioneers(0)}} href="#">
                             <div className='auctionDataGridTitleDiv'>
                                 <h3>All offers</h3>
-                                <p className="text-muted">Offers are updated every 60 seconds</p>
                             </div>
                             <ReactDataGrid
                                 idProperty="id"
@@ -550,7 +538,7 @@ const Auction = ()=>{
                         {/* //currentAuctioneerColumns */}
                             <ReactDataGrid
                                 idProperty="id"
-                                style={{minHeight: 42}}
+                                style={{minHeight: 43}}
                                 columns={currentAuctioneerColumns}
                                 dataSource={currentAuctioneer}
                                 enableSelection={true}
@@ -693,7 +681,7 @@ const Auction = ()=>{
                         </Modal>
                     </div>
                 </div>
-                    <div  className='auctionModifyInputMainDiv' style={userOfferExists == true ? {'max-width':"100%",'width':"100%"} : null}>
+                    <div  className='auctionModifyInputMainDiv' style={userOfferExists == true ? {'maxWidth':"100%",'width':"100%"} : null}>
                         <div className='auctionModifyTitleDiv'>
                             <h4>Raise offer</h4>
                             <p>
@@ -708,7 +696,8 @@ const Auction = ()=>{
                             </Modal.Header>
                             <Form noValidate validated={modifyValidated} onSubmit={handleModifySubmit} >
                                 <Modal.Body className="ModalBody">
-                                <div className='auctionModifyFormInputs' style={userOfferExists == false ? {"display":"flex","flex-direction":"column","width":"220px"} : null}>
+                                <div className='auctionModifyFormInputs' style={userOfferExists == false ? {"display":"flex","width":"220px"} : null}>
+                                    {/* "flexDirection":"column", */}
                                     <div className='auctionFormInputs '>
                                         <Form.Label>Offer</Form.Label>
                                         <Form.Control className='OfferDiv' required disabled={selectedRow} type="number" placeholder='€' value={priceModify != 0 ? priceModify : cookies.auctioneerDefaultPrice} onChange={(e)=>{setPriceModify(e.target.value);}} />

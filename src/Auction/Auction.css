@@ -22,10 +22,6 @@
         padding-right: 2%;
         align-items: center;
     }
-
-    .auctionDataGridTitleDiv{
-        flex-direction: column;
-    }
  }
  @media (min-width: 1000px) { 
     .auctionMainDiv{
@@ -301,8 +297,3 @@
     display: flex;
 }
 
-
-.auctionDataGridTitleDiv{
-    display: flex;
-    justify-content: space-between;
-}
