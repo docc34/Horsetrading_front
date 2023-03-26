@@ -14,7 +14,7 @@ import { useCookies } from 'react-cookie';
 
 import './Auction.css';
 import { useLocation } from "react-router-dom";
-import { handleInputChange, CountdownTimer, useInterval, RecieveMessage, SignalRTestSend} from  '../functions';
+import { handleInputChange, CountdownTimer, useInterval, recieveMessage, sendSignalMessage} from  '../functions';
 import { propTypes } from 'react-bootstrap/esm/Image';
 import '@inovua/reactdatagrid-community/index.css'
 
@@ -128,25 +128,38 @@ const Auction = ()=>{
         }
         else{
 
-            setCookie('auctioneerId', result.id, { path: '/Auction' });
-            setCookie('auctioneerDefaultPrice', result.price, { path: '/Auction' });
-            setCookie('auctioneerDefaultIgTag', result.igTag, { path: '/Auction' });
-            setCookie('auctioneerDefaultUsername', result.username, { path: '/Auction' });
-            //window.location.reload(); // HUONO PITÄIS SAAHA PÄIVITTYMÄÄN PAREMMIN
-            fetchAuctioneers();
-            fetchCurrentAuctioneer(result.id);
+            console.log(result.object.value);
+            var resultList = result.object.value;
+            var addedAuctioneer = resultList[0];
+            console.log(addedAuctioneer);
+            setCookie('auctioneerId', addedAuctioneer.id, { path: '/Auction' });
+            setCookie('auctioneerDefaultPrice', addedAuctioneer.price, { path: '/Auction' });
+            setCookie('auctioneerDefaultIgTag', addedAuctioneer.igTag, { path: '/Auction' });
+            setCookie('auctioneerDefaultUsername', addedAuctioneer.username, { path: '/Auction' });
+
+            //Lähetetään lisäyksen hakemat uusimmat auctioneerit muille signalrrin kautta.
+            sendSignalMessage(auctionId,resultList);
+            //Päivitetään data
+            setAuctioneers(resultList);
+            //päivitetään highest offer
+            setHighestOffer(addedAuctioneer.price);
+            // fetchAuctioneers();
+            fetchCurrentAuctioneer(addedAuctioneer.id);
             resetValues();
         }
         
     }
 
-    const recieveSingalMessage = (user, message)=>{
-        console.log("recieved"+user+message);
-        setMessage(message);
+    const recieveSingalMessage = (auctionItemId, auctioneers)=>{
+        if(auctionItemId == auctionId){
+            console.log("recieved");
+            console.log(auctioneers);
+            setAuctioneers(auctioneers);
+        }
     }
-    useInterval(()=>{
-        fetchAuctioneers(0);//TODO:Ota käyttöön haku kun saat toimimaan
-    },60000);
+    // useInterval(()=>{
+    //     fetchAuctioneers(0);//TODO:Ota käyttöön haku kun saat toimimaan
+    // },60000);
     //https://react-bootstrap.github.io/forms/validation/
     // const handleSubmit = (event) => {
     //     const form = event.currentTarget;
@@ -353,7 +366,6 @@ const Auction = ()=>{
                 var result = await search.json();
                 if(await result?.id > 0){
                     setCookies(result);
-
                 }
                 else{
                     setMessage(result?.message);
@@ -422,8 +434,8 @@ const Auction = ()=>{
         fetchAuctionItem(1);
         fetchAuctioneers(0, true);//TODO:Ota käyttöön haku kun saat toimimaan
         fetchImages();
-
-        RecieveMessage(recieveSingalMessage);
+        //Laitetaan funktioihin eteenpäin paikallinen vastaanotto funktio
+        recieveMessage(recieveSingalMessage);
     },[]);
 
     const carouselImagesRender = carouselImages.map((e, i)=>{
@@ -471,7 +483,6 @@ const Auction = ()=>{
             <div className='auctionReactDataGridDiv'>
                 <div className='auctionTitleDiv'>
                     <h1 className='auctionTitle'>Auction!</h1>
-                    <button onClick={()=>{SignalRTestSend(priceModify)}}>TestSend</button>
                 </div>
                 <div className='auctionCountdownDiv'>
                     <CountdownTimer targetDate={currentAuctionItem?.closingTime} />

@@ -18,17 +18,17 @@ connection.start().catch(e=>console.log(e));
 //     console.log(user,message);
 // }
 //Määritetään "Kiinniotto" funktio. Kun joku lähettää viestin apilta suoritetaan frontista annettu funktio ja annetaan sille vastaanotetut parametrit 
-const RecieveMessage = (messageRecieveFunction)=>{
+const recieveMessage = (messageRecieveFunction)=>{
     connection.on("receiveMessage", (user,message)=>{
         messageRecieveFunction(user,message);
 });
 }
 
 //Viestin lähetysfunktio
-const SignalRTestSend = (price)=>{
+const sendSignalMessage = (auctionItemId,Auctioneers)=>{
     //Lähetetään yksittäiseltä käyttäjältä kaikille yhdistetyille viesti apin kautta
     //KUtsutaan apin SendMessage nimistä hubia ja annetaan sille samat parametrit.
-    connection.send("sendMessage", "price", price).then(x => console.log("sent"));
+    connection.send("sendMessage", auctionItemId, Auctioneers).then(x => console.log("sent"));
 
 }
 
@@ -161,4 +161,4 @@ const useInterval = (callback, delay) => {
     };
 //#endregion
 
-export {handleInputChange, MakeStoreCell, CountdownTimer, useInterval, SignalRTestSend, RecieveMessage}
+export {handleInputChange, MakeStoreCell, CountdownTimer, useInterval, sendSignalMessage, recieveMessage}
