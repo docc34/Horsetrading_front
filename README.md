@@ -9,3 +9,6 @@ Ja auctionitems hallinta sivulle en ole tehnyt yhtään muotoiluja, sinne saat v
 Kanssa sinne ois hyvä olla ominaisuus jossa maksettujen laskujen riviväri olisi vihree ja maksamattomien punainen. 
 Oon käyttäny ReactDataGridiä kaikissa tableissa sieltä löytyy todnäk miten saa custom css riveille tms tässä linkki dokumentteihin.
 https://reactdatagrid.io/docs/
+
+Sivuilla käytetään bootstrapin elementtejä, käytä niitä koodatessa. Tässä vielä linkki niihin:
+https://react-bootstrap.github.io/components/alerts
