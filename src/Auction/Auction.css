@@ -113,7 +113,7 @@
         margin-left: 7%;
     }
     
-    .auctionParticipateDiv{
+    .auctionParticipateMainDiv{
         margin-right: 1rem;
         height: min-content;
         /* flex:2; */
@@ -121,14 +121,12 @@
  }
  @media (min-width: 440px) {
     
-    .auctionParticipateDiv{
+    .auctionParticipateMainDiv{
         margin-right: 4rem;
         height: min-content;
         /* flex:2; */
     }
  }
-
-
 
 .auctionMainDiv{
     display: flex;
@@ -143,7 +141,6 @@
 
 .auctionContentMainDiv{
     flex:2;
-
     max-width:52rem;
 }
 
@@ -159,6 +156,19 @@
 
 .OfferDiv{
     width: 80px !important;
+}
+.auctionParticipateMainDiv{
+    width: 100%;
+}
+.auctionParticipateMainDiv input{
+    width: 207px !important;
+}
+.auctionParticipateFormBodyDiv{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 2%;
+    
 }
 
 
@@ -292,6 +302,7 @@
 
 .auctionOfferFormPasswordText{
     margin-top: 3%;
+    margin-left: 0%;
 }
 .auctionOfferFormPasswordDiv{
     display: flex;
