@@ -6,6 +6,7 @@ import CardGroup from 'react-bootstrap/CardGroup';
 
 const Home = ()=>{
     const[data,setData] = useState([]);
+    const uniqueUsers = [];
 
     const getCellData = async()=>{
         var search = await fetch("https://horsetradingapi.azurewebsites.net/api/AuctionItems/public");
@@ -14,24 +15,39 @@ const Home = ()=>{
             setData(data);
         }
     }
-
     useEffect(()=>{
         getCellData();
     },[]);
 
-    const renderCells = data.map((x)=>{
-        
-        if(x?.description?.length > 380){
+
+    const RenderCells = ({companyName}) => {
+        return(
+            <CardGroup>
+                {data.map((item) => {
+                    if(companyName == item.companyName) {
+                        return(
+                            <MakeStoreCell data={item} />
+                        )
+                    }
+                })}
+            </CardGroup>
+        )
+    }
+
+    const MakeUserCell = (d)=>{
+        const {companyName} = d.props;
+        if (!uniqueUsers.includes(companyName)) { // filtteröidään siten, että käyttäjät näkyvät vain kerran
+            uniqueUsers.push(companyName);
             return(
-                <MakeStoreCell data={x} fade={true}/>
-            )
-        }
-        else{
-            return(
-                <MakeStoreCell data={x} fade={false}/>
-            )
-        }
-    });
+                <div className='user-cell'>
+                    <h1>
+                        {companyName}
+                    </h1>
+                    <RenderCells companyName={companyName} />
+                </div>
+        )}
+    }
+
     return(
     <div className='HomeMainDiv'>
         <div className='homeCellsDiv'>
@@ -42,12 +58,19 @@ const Home = ()=>{
                     </div> 
                 :
                 <CardGroup>
-                   {renderCells}
+                   
+                    {data.map(item => {
+                        return (
+                            <MakeUserCell props={item}/>
+                        )
+                    })}
+                    
                 </CardGroup>
                     
             }
         </div>
-    </div>);
+    </div>
+    );
 }
 
 export{Home}
