@@ -203,15 +203,20 @@ const AuctionController = ()=>{
 
             var search = await fetch("https://localhost:44371/api/Bills/CheckUsersBills",options);
             var result = await search.json();
-            if(result?.status == "Ok" && result != null){
-                setBillsMessage(result.message);
-                setUsersBills(result.object.value);
-                // await fetchUsersBills();
-            }
-            else if(result?.message == "No new billable items found"){
-                setUsersBills(result.object.value);
+            console.log(result);
+            if(result?.status == "Error" && result?.message == "No new billable items found"){
+                setUsersBills(result?.object?.value);
                 setBillsMessage(result?.message);
             }
+            else if(result?.status == "Error"){
+                setBillsMessage(result?.message);
+            }
+            else if(result?.status == "Ok" && result != null){
+                setBillsMessage(result?.message);
+                setUsersBills(result?.object?.value);
+                // await fetchUsersBills();
+            }
+
             else{
                 setBillsMessage(result?.message);
             }
@@ -248,9 +253,13 @@ const AuctionController = ()=>{
             }
             var search = await fetch("https://localhost:44371/api/AuctionItems/User",options);
             var auctionItems = await search.json();
-            if(auctionItems != null || auctionItems != undefined){
+            if(auctionItems?.status == "Error"){
+                setMessage(auctionItems?.message == "Error");
+            }
+            else if(auctionItems != null && auctionItems != undefined && auctionItems != []&& auctionItems?.length != 0 ){
                 setAuctionItems(await auctionItems);
             }
+            
         }
     }
 
@@ -328,10 +337,8 @@ const AuctionController = ()=>{
 
     //Images CRUD
     const postImages = async (auctionItemId)=>{
-                console.log("post image");
         if(auctionItemId != undefined && auctionItemId != 0){
             const uploadPromises = imageFiles.map( async (file)=>{
-                console.log(file);
 
                 const formData = new FormData();
                     formData.append("ImageFile",file);

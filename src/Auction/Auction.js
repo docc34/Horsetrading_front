@@ -14,7 +14,8 @@ import { useCookies } from 'react-cookie';
 
 import './Auction.css';
 import { useLocation } from "react-router-dom";
-import { CountdownTimer,receiveMessage, sendSignalMessage} from  '../functions';
+import { CountdownTimer} from  '../functions';
+import {receiveMessage, sendSignalMessage} from '../SignalRConnection';
 import { propTypes } from 'react-bootstrap/esm/Image';
 import '@inovua/reactdatagrid-community/index.css'
 
