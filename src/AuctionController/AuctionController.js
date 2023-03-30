@@ -154,7 +154,7 @@ const AuctionController = ()=>{
                 method: 'GET',
                 headers: { "Authorization": `Bearer ${cookies.token}`}
             }
-            let data = await fetch("https://localhost:44371/api/Login", options);
+            let data = await fetch("https://horsetradingapi.azurewebsites.net/api/Login", options);
             let loggedIn = await data.json();
             if(loggedIn == true){
                 setLoggedIn(loggedIn);
@@ -165,7 +165,7 @@ const AuctionController = ()=>{
     const handleLogin = async() => {
         if(username != "" && password != ""){
             try{
-                let data = await fetch("https://localhost:44371/api/Login",{
+                let data = await fetch("https://horsetradingapi.azurewebsites.net/api/Login",{
                         method:'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body:JSON.stringify({username: username, password: password})
@@ -201,7 +201,7 @@ const AuctionController = ()=>{
                 headers: {"Authorization": `Bearer ${cookies.token}`}
             }
 
-            var search = await fetch("https://localhost:44371/api/Bills/CheckUsersBills",options);
+            var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Bills/CheckUsersBills",options);
             var result = await search.json();
             console.log(result);
             if(result?.status == "Error" && result?.message == "No new billable items found"){
@@ -238,7 +238,7 @@ const AuctionController = ()=>{
                 })
             }
 
-            var search = await fetch("https://localhost:44371/api/AuctionItems",options);
+            var search = await fetch("https://horsetradingapi.azurewebsites.net/api/AuctionItems",options);
             var result = await search.json();
 
             await postImages(result?.message);
@@ -251,7 +251,7 @@ const AuctionController = ()=>{
                 method: 'GET',
                 headers: {"Authorization": `Bearer ${cookies.token}`}
             }
-            var search = await fetch("https://localhost:44371/api/AuctionItems/User",options);
+            var search = await fetch("https://horsetradingapi.azurewebsites.net/api/AuctionItems/User",options);
             var auctionItems = await search.json();
             if(auctionItems?.status == "Error"){
                 setMessage(auctionItems?.message == "Error");
@@ -269,7 +269,7 @@ const AuctionController = ()=>{
             headers: {"Authorization": `Bearer ${cookies.token}`}
         }
 
-        var search = await fetch("https://localhost:44371/api/AuctionItems/Visibility/"+selectedRowValue.id,options);
+        var search = await fetch("https://horsetradingapi.azurewebsites.net/api/AuctionItems/Visibility/"+selectedRowValue.id,options);
         var data = await search.json();
         if(data?.status == "Ok"){
             await fetchAuctionItems();
@@ -296,7 +296,7 @@ const AuctionController = ()=>{
                 }
                 console.log("Visible" + visible);
 
-                var search = await fetch("https://localhost:44371/api/AuctionItems/"+selectedRowValue.id, options);
+                var search = await fetch("https://horsetradingapi.azurewebsites.net/api/AuctionItems/"+selectedRowValue.id, options);
                 var answer = await search.json();
                 if(answer?.status == "Ok" && imageFiles != null){
                     console.log(answer.message);
@@ -321,7 +321,7 @@ const AuctionController = ()=>{
                     headers: {"Authorization": `Bearer ${cookies.token}`}
                 }
                 
-                var search = await fetch("https://localhost:44371/api/AuctionItems/"+selectedRowValue.id,options);
+                var search = await fetch("https://horsetradingapi.azurewebsites.net/api/AuctionItems/"+selectedRowValue.id,options);
                 var data = await search.json();
                 if(data?.status == "Ok"){
                     await fetchAuctionItems();
@@ -349,7 +349,7 @@ const AuctionController = ()=>{
                     body:formData
                 }
 
-                var search = await fetch("https://localhost:44371/api/Images/"+auctionItemId,options);
+                var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Images/"+auctionItemId,options);
             });
 
             Promise.all(uploadPromises).then(async ()=>{
@@ -367,7 +367,7 @@ const AuctionController = ()=>{
             method: 'GET',
             headers: {"Authorization": `Bearer ${cookies.token}`}
         }
-        var search = await fetch("https://localhost:44371/api/Images/"+selectedRowValue.id,options);
+        var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Images/"+selectedRowValue.id,options);
         var result = await search.json();
         if(result?.status != "Error" && result != undefined){
             setSelectedImages(await result);
@@ -379,7 +379,7 @@ const AuctionController = ()=>{
             method: 'DELETE',
             headers: {"Authorization": `Bearer ${cookies.token}`}
         }
-        var search = await fetch("https://localhost:44371/api/Images/?ImageUrl="+imageUrl,options);
+        var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Images/?ImageUrl="+imageUrl,options);
         var result = await search.json();
         if(result?.status == "Ok"){
             await fetchImages();

@@ -8,7 +8,7 @@ const Home = ()=>{
     const[data,setData] = useState([]);
 
     const getCellData = async()=>{
-        var search = await fetch("https://localhost:44371/api/AuctionItems/public");
+        var search = await fetch("https://horsetradingapi.azurewebsites.net/api/AuctionItems/public");
         var data = await search.json();
         if(data != null || data != undefined){
             setData(data);

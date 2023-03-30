@@ -3,7 +3,7 @@ import * as signalR from "@microsoft/signalr";
 //Määritetään yhteys bäckendin hubiin ja laitetaan se muuttujaan
 // const [connection, setConnection] = useState("password");
 const connection = new signalR.HubConnectionBuilder()
-.withUrl("https://localhost:44371/auctionhub")
+.withUrl("https://horsetradingapi.azurewebsites.net/auctionhub")
 .withAutomaticReconnect()
 .build();
     //Aloitetaan yhteys hubiin

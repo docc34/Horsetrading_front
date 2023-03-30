@@ -219,7 +219,7 @@ const Auction = ()=>{
                     })
                 }
 
-                var search = await fetch("https://localhost:44371/api/Auctioneers/"+auctionId,options);
+                var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Auctioneers/"+auctionId,options);
                 var result = await search.json();
                 if(await result?.status == "Ok" ){
                     setCookies(await result);
@@ -242,11 +242,11 @@ const Auction = ()=>{
         var result = null;
         var amount = amountToFetch != undefined ? amountToFetch : 0;
         if(cookies.token == undefined){
-            var search = await fetch("https://localhost:44371/api/Auctioneers/"+auctionId+"?Amount="+ amount);
+            var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Auctioneers/"+auctionId+"?Amount="+ amount);
             result = await search.json();
         }
         else{
-            var search = await fetch("https://localhost:44371/api/Auctioneers/Creator/"+auctionId+"?Amount="+ amount, options);
+            var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Auctioneers/Creator/"+auctionId+"?Amount="+ amount, options);
             result = await search.json();
             if(result?.length > 0){
                 setDatagridColumnVisiblility(true);
@@ -307,7 +307,7 @@ const Auction = ()=>{
         if(cookies?.auctioneerId != null && cookies?.auctioneerId != undefined && cookies?.auctioneerId != 0 || auctioneerId != undefined && auctionId != 0){
 
             var id = auctioneerId != undefined ? auctioneerId : cookies.auctioneerId;
-            var search = await fetch("https://localhost:44371/api/Auctioneers/Current/?auctionItemId="+auctionId+"&auctioneerId="+id);
+            var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Auctioneers/Current/?auctionItemId="+auctionId+"&auctioneerId="+id);
             var result = await search.json();
             if(result?.status != "Error" && result != null){
                 if( JSON.stringify(currentAuctioneer) !== JSON.stringify([result])){
@@ -353,7 +353,7 @@ const Auction = ()=>{
                 }
 
     
-                var search = await fetch("https://localhost:44371/api/Auctioneers/"+auctionId,options);
+                var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Auctioneers/"+auctionId,options);
                 var result = await search.json();
                 if(await result?.status == "Ok"){
                     setCookies(await result);
@@ -376,7 +376,7 @@ const Auction = ()=>{
                     headers: { "Authorization": `Bearer ${cookies.token}`}  
                 }
 
-                var search = await fetch("https://localhost:44371/api/Auctioneers/"+selectedRowId+"?auctionItemId="+auctionId,options);
+                var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Auctioneers/"+selectedRowId+"?auctionItemId="+auctionId,options);
                 var result = await search.json();
                 if(result?.status != "Error" && result != null){
                     setMessage(result?.message);
@@ -395,7 +395,7 @@ const Auction = ()=>{
 
     const fetchAuctionItem = async (i)=>{
         if(i == 1){
-            var search = await fetch("https://localhost:44371/api/AuctionItems/"+auctionId);
+            var search = await fetch("https://horsetradingapi.azurewebsites.net/api/AuctionItems/"+auctionId);
             var auctionItem = await search.json();
     
             if(auctionItem?.status != "Error"){
@@ -412,7 +412,7 @@ const Auction = ()=>{
 
     const fetchImages = async ()=>{
         if(auctionId != null && auctionId != ""){
-            var search = await fetch("https://localhost:44371/api/Images/public/"+auctionId);
+            var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Images/public/"+auctionId);
             var images = await search.json();
     
             if(images != null && images != undefined && images?.status != "Error")
