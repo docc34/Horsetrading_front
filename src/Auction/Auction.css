@@ -61,34 +61,24 @@
         width: 100%;
         max-width:768px;
     }
-    .auctionModifyInputDiv{
+    /* .auctionModifyInputDiv{
         visibility: hidden;
         height: 0px;
-    }
+    } */
     .auctionModifyFormInputs{
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
     }
-
-    .auctionModifyRaiseButton{
-        visibility: visible;
-    }
-    .auctionModifyTitleDiv{
-        height: 160px;
-     }
  }
  @media (min-width: 768px) {
-    .auctionModifyTitleDiv{
-        height: 82px;
-     }
-    .auctionModifyRaiseButton{
+    /* .auctionModifyRaiseButton{
         visibility: hidden;
         height: 0px;
         width: 0px;
         margin: 0px !important;
         padding: 0px !important;
         border: 0px !important;
-    }
+    } */
     .auctionMainDiv{
         margin: 5%;
     }
@@ -100,6 +90,16 @@
         max-width: 350px;
     }
 
+ }
+ @media(max-width:569.98px){
+    .auctionParticipateFormBodyDiv{
+        flex-direction: column;
+    }
+ }
+ @media(min-width:569.98px){
+    .auctionParticipateFormBodyDiv{
+        flex-direction: row;
+    }
  }
  @media (max-width: 439.98px) {
     .auctionMainDiv{
@@ -160,22 +160,19 @@
 .auctionParticipateMainDiv{
     width: 100%;
 }
-.auctionParticipateMainDiv input{
+.auctionParticipateFormBodyDiv input{
     width: 207px !important;
 }
 .auctionParticipateFormBodyDiv{
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 2%;
-    
+    margin: 1%;
 }
 
 
 .auctionModifyInputMainDiv{
     height: min-content;
 }
-
 
 
 .auctionInputDiv{
@@ -190,6 +187,7 @@
     margin: 1%;
     margin-top:1%;
     max-width: 250px;
+    width: 100%;
 }
 .form-label{
     margin-left: 2%;
@@ -279,18 +277,20 @@
     margin-top:1%;
     text-decoration: none;
     color: white;
+    width: 100%;
+    display: flex;
+    align-items: center;
 }
 .phonenumberCollapseTitle:hover{
     color: white;
 }
 .phonenumberCollapseTitle:after{
-    display: inline-block;
     margin-left: 0.255em;
     vertical-align: 0.255em;
     content: "";
-    border-top: 0.3em solid;
+    border-top: 0em ;
     border-right: 0.3em solid transparent;
-    border-bottom: 0;
+    border-bottom: 0.3em solid;
     border-left: 0.3em solid transparent;
 }
 
@@ -307,4 +307,11 @@
 .auctionOfferFormPasswordDiv{
     display: flex;
 }
-
+.auctionModifyTitleDiv{
+    height: 82px;
+ }
+ .auctionModifySaveButtonDiv{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+ }

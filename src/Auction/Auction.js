@@ -42,46 +42,54 @@ const Auction = ()=>{
     const [passwordModify, setPasswordModify] = useState("");
     const [priceModify, setPriceModify] = useState(0);
     const [igTagModify, setIgTagModify] = useState("");
-    const [showAuctionModifyModal, setShowAuctionModifyModal] = useState(false);
+    const [phonenumberModify, setPhonenumberModify] = useState(0);
     
     const [message, setMessage] = useState("");
 
-    const [auctioneerParticipateModal, setAuctioneerParticipateModal] = useState(false);
     const [auctionVisible, setAuctionVisible] = useState(0);
     
-    const [datagridColumnVisiblility, setDatagridColumnVisiblility] = useState(false);
     const [datagridDefaultSelected, setDatagridDefaultSelected] = useState(cookies.auctioneerId);
     
     const [currentAuctioneer, setCurrentAuctioneer] = useState([]);
 
     const [highestOffer, setHighestOffer] = useState([]);
 
-    //Dont Delete
+    //ÄLÄ POISTA
     const [phonenumberCollapse, setPhonenumberCollapse] = useState(false);
+    const [igTagCollapse, setIgTagCollapse] = useState(true);
     const [participateValidated, setParticipateValidated] = useState(false);
     const [modifyValidated, setModifyValidated] = useState(false);
     
     const [passwordVisibility, setPasswordVisibility] = useState("password");
     
     //These control the state of the user and what the application shows dependand on that
+    const [isCreator, setIsCreator] = useState(false);
     const [userOfferExists, setUserOfferExists] = useState(false);
     const [newUser, setNewUser] = useState(true);
 
     //Test to fix react update
     const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
     
-    const auctioneerColumns = [
-        {name:"id", header: "Id",  defaultVisible: false},
-        {name:"igTag" , header:"Instagram tag",  defaultFlex:2},
-        {name:"phonenumber" , header:"Phonenumber", defaultVisible: datagridColumnVisiblility, defaultFlex:2},
+    //Defines witch columns are visible dependad on if the user is logged in or not
+    var auctioneerColumns = []
+    { isCreator == false ?        
+    auctioneerColumns =[{name:"id", header: "Id",  defaultVisible: false},
+        {name:"igTag" , header:"Instagram tag",  defaultVisible: false,  defaultFlex:2},
+        {name:"phonenumber" , header:"Phonenumber", defaultVisible: false, defaultFlex:2},
         {name:"username" , header:"Username", defaultFlex:2},
-        {name:"price" , header:"Offer", type: "number", defaultFlex:1}
-    ]
+        {name:"price" , header:"Offer", type: "number", defaultFlex:1}]
+        :
+    auctioneerColumns =[{name:"id", header: "Id",  defaultVisible: false},
+        {name:"igTag" , header:"Instagram tag",    defaultFlex:2},
+        {name:"phonenumber" , header:"Phonenumber", defaultFlex:2},
+        {name:"username" , header:"Username", defaultFlex:2},
+        {name:"price" , header:"Offer", type: "number", defaultFlex:1}]
+    }
 
     const currentAuctioneerColumns = [
         {name:"id", header: "Id",  defaultVisible: false},
         {name:"igTag" , header:"Instagram tag",  defaultFlex:2},
-        {name:"phonenumber" , header:"Phonenumber",  defaultVisible: false, defaultFlex:2},
+        {name:"phonenumber" , header:"Phonenumber",  defaultFlex:2},
         {name:"username" , header:"Username", defaultFlex:2},
         {name:"price" , header:"Offer", type: "number", defaultFlex:1}
     ]
@@ -109,14 +117,13 @@ const Auction = ()=>{
     const onSelectionChange = useCallback((selected) => {
         setUsernameModify(selected?.data.username);
         setPriceModify(selected?.data.price);
-        setIgTagModify(selected?.data.igTag);
+        setIgTagModify(selected?.data?.igTag);
+        setPhonenumberModify(selected?.data?.phonenumber);
         setSelectedRowId(selected?.data.id);
         setSelectedRow(false);
     }, [])
 
     const resetValues = ()=>{
-
-        setAuctioneerParticipateModal(false);
         setPassword("");
         setUsername("");
         setSuggestionUsername("");
@@ -134,7 +141,6 @@ const Auction = ()=>{
 
         setModifyValidated(false);
         setParticipateValidated(false);
-        setShowAuctionModifyModal(false);
 
         setPasswordVisibility("password");
     }
@@ -144,11 +150,12 @@ const Auction = ()=>{
             //Otetaan apin antamat arvot talteen
             var resultList = result.object.value;
             var addedAuctioneer = resultList[0];
-            
-            //Tallennetaan kekseihin käöyttäjän omien tarjousten arvot.
+             
+            //Tallennetaan kekseihin käyttäjän oman tarjouksen arvot.
             setCookie('auctioneerId', addedAuctioneer.id, { path: '/Auction' });
             setCookie('auctioneerDefaultPrice', addedAuctioneer.price, { path: '/Auction' });
             setCookie('auctioneerDefaultIgTag', addedAuctioneer.igTag, { path: '/Auction' });
+            setCookie('auctioneerDefaultPhonenumber', addedAuctioneer.phonenumber, { path: '/Auction' });
             setCookie('auctioneerDefaultUsername', addedAuctioneer.username, { path: '/Auction' });
 
             //Lähetetään lisäyksen hakemat uusimmat auctioneerit muille signalrrin pipen kautta.
@@ -159,7 +166,7 @@ const Auction = ()=>{
             //päivitetään highest offer
             setHighestOffer(addedAuctioneer.price);
             //Haetaan nykyisen käyttäjän tiedot uudestaan.
-            fetchCurrentAuctioneer(addedAuctioneer.id);
+            fetchCurrentAuctioneer(addedAuctioneer.id, result?.message);
             resetValues();
         }
         else{
@@ -210,24 +217,37 @@ const Auction = ()=>{
     };
 
     const postAuctioneer = async ()=>{
-        try{
-            if(igTag != "@" && igTag != "" &&  price != 0 &&  price != ""&&  password != ""){
-                const options = {
-                    method:'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body:JSON.stringify({
+        try{ //TODO:Check
+            if(igTag != "@" || phonenumber != ""&&  price != 0 &&  price != ""&&  password != ""){
+                var body = null;
+                if(igTagCollapse == true){
+                    body = {
                         Username: username == "" ? suggestionUsername :username, 
                         IgTag: igTag,
                         Price: price,
                         Password: password,
-                        Phonenumber:phonenumber == "" ? 0 : phonenumber,
                         AuctionItemId: currentAuctionItem.id
-                    })
+                    }
+                }
+                else if(igTagCollapse == false){
+                    body = {
+                        Username: username == "" ? suggestionUsername :username, 
+                        Phonenumber: phonenumber.replace(/ /g, ""),
+                        Price: price,
+                        Password: password,
+                        AuctionItemId: currentAuctionItem.id
+                    }
+                }
+                const options = {
+                    method:'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:JSON.stringify(body)
                 }
 
                 var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Auctioneers/"+auctionId,options);
                 var result = await search.json();
                 if(await result?.status == "Ok" ){
+                    setCookie('auctioneerPassword', await result.message, { path: '/Auction' });
                     setCookies(await result);
                 }
                 else{
@@ -247,6 +267,7 @@ const Auction = ()=>{
         }
         var result = null;
         var amount = amountToFetch != undefined ? amountToFetch : 0;
+        //Tässä pitää olla token tarkistus jossa isCreatortin voi tarkistaa
         if(cookies.token == undefined){
             var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Auctioneers/"+auctionId+"?Amount="+ amount);
             result = await search.json();
@@ -254,8 +275,14 @@ const Auction = ()=>{
         else{
             var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Auctioneers/Creator/"+auctionId+"?Amount="+ amount, options);
             result = await search.json();
-            if(result?.length > 0){
-                setDatagridColumnVisiblility(true);
+            if(result?.status == "Ok" && result?.message == "Creator not found"){
+                setIsCreator(false);
+                setMessage(result.message);
+                search = await fetch("https://horsetradingapi.azurewebsites.net/api/Auctioneers/"+auctionId+"?Amount="+ amount);
+                result = await search.json();
+            }
+            else if(result?.length > 0){
+                setIsCreator(true);
                 result.map((e)=>{
                     if(e.phonenumber == 0){
                         e.phonenumber = "";
@@ -265,37 +292,16 @@ const Auction = ()=>{
         }
 
         if(cookies?.auctioneerId != null && cookies?.auctioneerId != undefined && cookies?.auctioneerId != 0){
+            //Estää turhien tuplahakujen tapahtumisen
             if(firstFetch == true){
                 fetchCurrentAuctioneer();
             }
-            //TODO: Korjaa
-            //Tarkistetaan jos selaimessa olevat cookiet liittyvät eri auctionitemiin ne poistetaan.
-            // var cookieExistOutsideAuction = true;
-            // result.map((e)=>{
-            //         if(e.id == cookies.auctioneerId){
-            //             cookieExistOutsideAuction = false;
-            //         }
-            // });
-
-            // if(cookieExistOutsideAuction == false){
-            //     if(firstFetch == true){
-            //         setDatagridDefaultSelected(cookies.auctioneerId);
-            //         setSelectedRow(false);
-            //         fetchCurrentAuctioneer();
-            //     }
-            // }
-            // else{
-            //     removeCookie('auctioneerId',{ path: '/Auction' });
-            //     removeCookie('auctioneerDefaultPrice',{ path: '/Auction' });
-            //     removeCookie('auctioneerDefaultIgTag',{ path: '/Auction' });
-            //     removeCookie('auctioneerDefaultUsername',{ path: '/Auction' });
-            // }
         }
         
-        
-        if(result != null && result != undefined && result?.status != "Error"){
+        if(result !== null && result !== undefined && result?.status !== "Error"){
             try{
                 var i = await result;
+                //Ei päivitetä listaa jos se ei ole muuttunut
                 if(JSON.stringify(i) !== JSON.stringify(auctioneers)){
                     setAuctioneers(i);
                     setHighestOffer(result[0].highestOffer);
@@ -304,16 +310,15 @@ const Auction = ()=>{
             catch(e){
                 console.log(e);
             }
-
-
         }
     }
 
-    const fetchCurrentAuctioneer = async (auctioneerId)=>{
+    const fetchCurrentAuctioneer = async (auctioneerId, password)=>{
         if(cookies?.auctioneerId != null && cookies?.auctioneerId != undefined && cookies?.auctioneerId != 0 || auctioneerId != undefined && auctionId != 0){
 
             var id = auctioneerId != undefined ? auctioneerId : cookies.auctioneerId;
-            var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Auctioneers/Current/?auctionItemId="+auctionId+"&auctioneerId="+id);
+            var password = password != undefined ? password : cookies.auctioneerPassword;
+            var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Auctioneers/Current/?auctionItemId="+auctionId+"&auctioneerId="+id+"&password="+password);
             var result = await search.json();
             if(result?.status != "Error" && result != null){
                 if( JSON.stringify(currentAuctioneer) !== JSON.stringify([result])){
@@ -325,7 +330,7 @@ const Auction = ()=>{
                 }
             }
             else{
-                setMessage(result?.message);
+                console.log(result?.message);
             }
         }
     }
@@ -333,36 +338,34 @@ const Auction = ()=>{
     const modifyAuction = async ()=>{
         try{
             if(passwordModify != "" &&  priceModify != 0 || passwordModify != "" && cookies.auctioneerDefaultPrice != null){
-                var options = {}
-                if(selectedRow == true){
-                    options = {
-                        method:'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body:JSON.stringify({
-                            Username: usernameModify == "" ? cookies.auctioneerDefaultUsername : usernameModify, 
-                            IgTag: usernameModify == "" ? cookies.auctioneerDefaultUsername : usernameModify,
-                            Price: priceModify == 0 ? cookies.auctioneerDefaultPrice : priceModify,
-                            Password: passwordModify,
-                        })
+                var body = null;
+                if(igTagCollapse == true){
+                    body = {
+                        Username: usernameModify == "" ? cookies.auctioneerDefaultUsername : usernameModify, 
+                        IgTag: igTagModify == 0 ? cookies.auctioneerDefaultIgTag : igTagModify,
+                        Price: priceModify == 0 ? cookies.auctioneerDefaultPrice : priceModify,
+                        Password: passwordModify,
                     }
                 }
-                else{
-                    options = {
-                        method:'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body:JSON.stringify({
-                            Username: usernameModify == "" ? cookies.auctioneerDefaultUsername : usernameModify, 
-                            IgTag: igTagModify == "" ? cookies.auctioneerDefaultIgTag : igTagModify,
-                            Price: priceModify == 0 ? cookies.auctioneerDefaultPrice : priceModify,
-                            Password: passwordModify,
-                        })
+                else if(igTagCollapse == false){
+                    body = {
+                        Username: usernameModify == "" ? cookies.auctioneerDefaultUsername : usernameModify, 
+                        Phonenumber: phonenumberModify == 0 ? cookies.auctioneerDefaultPhonenumber : phonenumberModify,
+                        Price: priceModify == 0 ? cookies.auctioneerDefaultPrice : priceModify,
+                        Password: passwordModify,
                     }
+                }
+                var options =  {
+                    method:'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:JSON.stringify(body)
                 }
 
     
                 var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Auctioneers/"+auctionId,options);
                 var result = await search.json();
                 if(await result?.status == "Ok"){
+                    setCookie('auctioneerPassword', await result.message, { path: '/Auction' });
                     setCookies(await result);
                 }
                 else{
@@ -377,7 +380,7 @@ const Auction = ()=>{
 
     const deleteSelectedAuctioneer = async()=>{
         try{
-            if(cookies.token != undefined && selectedRow == false){
+            if(isCreator == true && selectedRow == false){
                 const options = {
                     method:'DELETE',
                     headers: { "Authorization": `Bearer ${cookies.token}`}  
@@ -472,9 +475,7 @@ const Auction = ()=>{
                 <div className='auctionDescriptionDiv square rounded'>
                     <hr />
                     <p className='auctionDescription'>{currentAuctionItem?.description}</p>
-                    <hr />
                 </div>
-                
             </div>
 
             <div className='auctionContentMainDiv'>
@@ -495,13 +496,12 @@ const Auction = ()=>{
                             <Tab eventKey="Top5" title="Top 5 highest offers" onClick={()=>{fetchAuctioneers(5);}}>
                                 <div className='auctionDataGridTitleDiv'>
                                     <h3>Top 5 highest offers</h3>
-
                                 </div>
                                 {ignored}
                                 <ReactDataGrid
                                     idProperty="id"
                                     className='auctionReactDataGrid'
-                                    style={cookies?.token?.length > 6 ? {height: 1000} : {minHeight: 243}}
+                                    style={isCreator == true ? {height: 1000} : {minHeight: 243}}
                                     columns={auctioneerColumns}
                                     dataSource={auctioneers?.slice(0, 5)}
                                     enableSelection={userOfferExists == true ? false : true}
@@ -523,7 +523,7 @@ const Auction = ()=>{
                                 <ReactDataGrid
                                     idProperty="id"
                                     className='auctionReactDataGrid'
-                                    style={cookies?.token?.length > 6 ? {height: 1000} : {minHeight: 43+ 40 * auctioneers?.length}}
+                                    style={isCreator == true ? {height: 1000} : {minHeight: 43+ 40 * auctioneers?.length}}
                                     columns={auctioneerColumns}
                                     dataSource={auctioneers}
                                     enableSelection={userOfferExists == true ? false : true}
@@ -574,7 +574,8 @@ const Auction = ()=>{
                             <div>
 
                                 {/* <Button onClick={()=>{setAuctioneerParticipateModal(true);}}>Participate</Button> */}
-                                {cookies.token != undefined && cookies.token.length > 6 ? <Button disabled={selectedRow} onClick={()=>{deleteSelectedAuctioneer();}}>Delete selected Auctioneer</Button>
+                                {isCreator == true ? 
+                                <Button disabled={selectedRow} onClick={()=>{deleteSelectedAuctioneer();}}>Delete selected Auctioneer</Button>
                                 :
                                 null}
                             </div>
@@ -583,37 +584,42 @@ const Auction = ()=>{
                             <Form noValidate validated={participateValidated} onSubmit={handleParticipateSubmit} >
                                 <div>
                                     <h3>The current highest offer is {highestOffer != 0 ? highestOffer : 0}€</h3>
-                                    <p>Your offer must be atleast 5€ higher than the current highest offer.</p>
+                                    <p>Your offer must be atleast 5€ higher than the current highest offer. 
+                                        The instagram tag is used by the seller to contact the winner. 
+                                        You can alternatively sign up using your phonenumber! </p>
                                 </div>
                                 <div >
                                     <div className="auctionParticipateFormBodyDiv">
                                         <div >
-                                            <Form.Label>Instagram tag</Form.Label>
-                                            <Form.Control required autoFocus className='Input' placeholder='@ExampleInstagramAccount' defaultValue={igTag} 
-                                                onBlur={(e)=>{ 
-                                                    if(username == "")
-                                                        setSuggestionUsername(e.target.value); 
-                                                    setIgTag(e.target.value);}
-                                                } 
-                                            />
-                                        </div>
-                                        {/* ÄLÄ POISTA MAHD OMINAISUUS */}
-                                        {/* <a className='phonenumberCollapseTitle' onClick={()=>{setPhonenumberCollapse(!phonenumberCollapse)}} href="#">
-                                            You can also sing up with your phonenumber!
-                                        </a>
-
-                                        <div className='auctionFormInputs'>
-
+                                            <Collapse in={igTagCollapse}>
+                                                <div>
+                                                    <Form.Label>Instagram tag</Form.Label>
+                                                    <Form.Control required autoFocus className='Input' defaultValue={igTag} 
+                                                        onBlur={(e)=>{ 
+                                                            if(username == "")
+                                                                setSuggestionUsername(e.target.value); 
+                                                            setIgTag(e.target.value);}
+                                                        } 
+                                                    />
+                                                </div>
+                                            </Collapse>
                                             <Collapse in={phonenumberCollapse}>
                                                 <div className='auctionFormInputs'>
                                                     <Form.Label>Phonenumber</Form.Label>
                                                     <Form.Control className='Input' placeholder='Phonenumber' onChange={(e)=>{setPhonenumber(e.target.value);}} />
-                                                    <Form.Text className="text-muted" id="phonenumberText">
-                                                        Phonenumber is optional
-                                                    </Form.Text>
+
                                                 </div>
                                             </Collapse>
-                                        </div> */}
+                                            <a className='phonenumberCollapseTitle' onClick={(e)=>{e.preventDefault();setPhonenumberCollapse(!phonenumberCollapse); setIgTagCollapse(!igTagCollapse);}} href="#">
+                                                {phonenumberCollapse == false ? 
+                                                "Want to use your phonenumber instead?"
+                                                :
+                                                "Want to use your Instagram tag instead?"
+                                                }
+                                            </a>
+
+
+                                        </div>
                                         <div>
                                             <Form.Label>Username</Form.Label>
                                             <Form.Control required type="username" placeholder='Username' value={suggestionUsername} onChange={(e)=>{setUsername(e.target.value); setSuggestionUsername(e.target.value);}} />
@@ -683,7 +689,7 @@ const Auction = ()=>{
                         <div  className='auctionModifyInputMainDiv' style={userOfferExists == true || userOfferExists == false ? {'maxWidth':"100%",'width':"100%"} : null}>
 
                                 <div className='auctionModifyTitleDiv'>
-                                    <h4>Raise offer</h4>
+                                    <h3>Raise offer</h3>
                                     {userOfferExists == false ? 
                                         <p>
                                             Select yourself in the table above and raise your offer here.
@@ -693,23 +699,14 @@ const Auction = ()=>{
                                             Type in your offer and password to raise the offer.
                                         </p>
                                     }
-                                    <Button className='auctionModifyRaiseButton' disabled={selectedRow} onClick={()=>{setShowAuctionModifyModal(true);}}>Raise</Button>
+                                    {/* <Button className='auctionModifyRaiseButton' disabled={selectedRow} onClick={()=>{setShowAuctionModifyModal(true);}}>Raise</Button> */}
                                 </div>
 
                             <div className='auctionModifyInputDiv'>
                                 <Form noValidate validated={modifyValidated} onSubmit={handleModifySubmit} >
                                     <div className='auctionModifyFormInputs' style={userOfferExists == true ? {"display":"flex","flex-direction":"row","width":"100%"} : null}>
-                                        <div className='auctionFormInputs ' >
-                                            <Form.Label>Offer</Form.Label>
-                                            {/* cookies.auctioneerDefaultPrice != undefined && cookies.auctioneerDefaultPrice != 0 ? cookies.auctioneerDefaultPrice + '€': 0 + '€' */}
-                                            <Form.Control className='OfferDiv' required  type="number" placeholder={"€"} onBlur={(e)=>{setPriceModify(e.target.value);}} />
-                                            <Form.Text >
-                                                The current highest offer is <b>{highestOffer != 0 ? highestOffer : 0}</b>€
-                                            </Form.Text>
-                                            <Form.Control.Feedback type="invalid">
-                                                Please type in an offer higher then <b>{highestOffer != 0 ? highestOffer : 0}</b>€
-                                            </Form.Control.Feedback>
-                                        </div>
+
+                                        <div className="auctionParticipateFormBodyDiv">
                                         {userOfferExists == false ? 
                                             <div className='auctionFormInputs' >
                                                 <Form.Label>Username</Form.Label>
@@ -725,9 +722,9 @@ const Auction = ()=>{
                                         :null
                                         }
 
-                                        <div className='auctionFormInputs'>
-                                            <Form.Label>Password</Form.Label>
-                                            <div className='auctionOfferFormPasswordDiv'>
+                                            <div className='auctionFormInputs'>
+                                                <Form.Label>Password</Form.Label>
+                                                <div className='auctionOfferFormPasswordDiv'>
                                                     <Form.Control required  type={passwordVisibility} placeholder='Password' onBlur={(e)=>{setPasswordModify(e.target.value);}} />
                                                         <button type='button' className="btn btn-primary" onClick={()=>{togglePasswordVisibility();}}>
                                                             {passwordVisibility === "password" ? (
@@ -754,115 +751,42 @@ const Auction = ()=>{
                                                                 </svg>
                                                             )}
                                                         </button>
-                                                    </div>
-                                            <Form.Control.Feedback type="invalid">
-                                                Please type in an password.
-                                            </Form.Control.Feedback>
+                                                </div>
+                                                <Form.Control.Feedback type="invalid">
+                                                    Please type in an password.
+                                                </Form.Control.Feedback>
 
-                                            <Form.Text className="text-muted">
-                                                Use the password you created
-                                            </Form.Text>
+                                                <Form.Text className="text-muted">
+                                                    Use the password you created
+                                                </Form.Text>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className='auctionFormInputs'>
-                                        <div>
-                                            <Button  type="submit" > {/*onClick={()=>{modifyAuction();}}*/}
-                                                Save
-                                            </Button>
-                                            <p className='errorMessage'>{message}</p>
+                                        <div className="auctionParticipateFormBodyDiv">
+                                            <div className='auctionFormInputs ' >
+                                                    <Form.Label>Offer</Form.Label>
+                                                <div className='auctionFormInputs auctionModifySaveButtonDiv'>
+                                                    {/* cookies.auctioneerDefaultPrice != undefined && cookies.auctioneerDefaultPrice != 0 ? cookies.auctioneerDefaultPrice + '€': 0 + '€' */}
+                                                    <Form.Control  required  type="number" placeholder={"€"} onBlur={(e)=>{setPriceModify(e.target.value);}} />
+                                                    <Button  type="submit" > {/*onClick={()=>{modifyAuction();}}*/}
+                                                        Save
+                                                    </Button>
+                                                </div>
+                                                <Form.Text >
+                                                    The current highest offer is <b>{highestOffer != 0 ? highestOffer : 0}</b>€
+                                                </Form.Text>
+                                                <Form.Control.Feedback type="invalid">
+                                                    Please type in an offer higher then <b>{highestOffer != 0 ? highestOffer : 0}</b>€
+                                                </Form.Control.Feedback>
+                                                <p className='errorMessage'>{message}</p>
+
+                                            </div>
                                         </div>
                                         {userOfferExists == false ? 
-                                        <a href="" onClick={(e)=>{e.preventDefault(); setNewUser(true);}}>Have you already made an offer?</a>
-                                        :null
-                                        }
+                                        <a href="" onClick={(e)=>{e.preventDefault(); setNewUser(true);}}>Want to register a new offer?</a>
+                                        : null}
                                     </div>
                                 </Form>
                             </div>
-
-                            <Modal show={showAuctionModifyModal}>
-                                <Modal.Header className="ModalHeader">
-                                    <Modal.Title>Raise your offer</Modal.Title>
-                                    <CloseButton variant="white" className='modalCloseButton' onClick={()=>{resetValues();}} />
-                                </Modal.Header>
-                                <Form noValidate validated={modifyValidated} onSubmit={handleModifySubmit} >
-                                    <Modal.Body className="ModalBody">
-                                    <div className='auctionModifyFormInputs' style={userOfferExists == false ? {"display":"flex","width":"220px"} : null}>
-                                        {/* "flexDirection":"column", */}
-                                        <div className='auctionFormInputs '>
-                                            <Form.Label>Offer</Form.Label>
-                                            <Form.Control className='OfferDiv' required disabled={selectedRow} type="number" placeholder='€' value={priceModify != 0 ? priceModify : cookies.auctioneerDefaultPrice} onChange={(e)=>{setPriceModify(e.target.value);}} />
-                                            <Form.Text >
-                                                The current highest offer is <b>{highestOffer != 0 ? highestOffer : 0}</b>€
-                                            </Form.Text>
-                                            <Form.Control.Feedback type="invalid">
-                                                Please type in an offer higher than <b>{highestOffer != 0 ? highestOffer : 0}</b>€
-                                            </Form.Control.Feedback>
-                                        </div>
-                                        {userOfferExists == false ? 
-                                            <div className='auctionFormInputs' >
-                                                <Form.Label>Username</Form.Label>
-                                                {/* cookies.auctioneerDefaultPrice != undefined && cookies.auctioneerDefaultPrice != 0 ? cookies.auctioneerDefaultPrice + '€': 0 + '€' */}
-                                                <Form.Control required  value={usernameModify} placeholder={"Username"} onChange={(e)=>{setUsernameModify(e.target.value);}} />
-                                                <Form.Text >
-                                                    Use the username you joined with, or select yourself from the list above
-                                                </Form.Text>
-                                                <Form.Control.Feedback type="invalid">
-                                                    Please type in your username.
-                                                </Form.Control.Feedback>
-                                            </div>
-                                        :null
-                                        }
-                                        <div className='auctionFormInputs'>
-                                            <Form.Label>Password</Form.Label>
-                                            <div className='auctionOfferFormPasswordDiv'>
-                                                    <Form.Control required disabled={selectedRow} type={passwordVisibility} placeholder='Password' onBlur={(e)=>{setPasswordModify(e.target.value);}} />
-                                                        <button type='button' className="btn btn-primary" onClick={()=>{togglePasswordVisibility();}}>
-                                                            {passwordVisibility === "password" ? (
-                                                                <svg
-                                                                width="20"
-                                                                height="17"
-                                                                fill="currentColor"
-                                                                className="bi bi-eye-slash-fill"
-                                                                viewBox="0 0 16 16"
-                                                                >
-                                                                <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z" />
-                                                                <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z" />
-                                                                </svg>
-                                                            ) : (
-                                                                <svg
-                                                                width="20"
-                                                                height="17"
-                                                                fill="currentColor"
-                                                                className="bi bi-eye-fill"
-                                                                viewBox="0 0 16 16"
-                                                                >
-                                                                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
-                                                                <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
-                                                                </svg>
-                                                            )}
-                                                        </button>
-                                                    </div>
-                                            <Form.Control.Feedback type="invalid">
-                                                Please type in an password.
-                                            </Form.Control.Feedback>
-
-                                            <Form.Text className="text-muted">
-                                                Use the password you created
-                                            </Form.Text>
-                                        </div>
-                                    </div>
-                                    </Modal.Body>
-                                    <Modal.Footer className="ModalFooter">
-                                        <p className='errorMessage'>{message}</p>
-                                        <Button variant="secondary" onClick={()=>{resetValues();}}>
-                                            Close
-                                        </Button>
-                                        <Button disabled={selectedRow} type="submit" > {/*onClick={()=>{modifyAuction();}}*/}
-                                            Save
-                                        </Button>
-                                    </Modal.Footer>
-                                </Form>
-                            </Modal>
                         </div>
                         :   
                         null

@@ -22,7 +22,7 @@ const AuctionController = ()=>{
     const [selectedRow, setSelectedRow] = useState(true);
     const [selectedRowValue, setSelectedRowValue] = useState("");
 
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loginVisibilityModal, setLoginVisibilityModal] = useState(false);
     
@@ -98,7 +98,7 @@ const AuctionController = ()=>{
     const resetValues = ()=>{
         setLoginVisibilityModal(false);
         setPassword("");
-        setUsername("");
+        setEmail("");
 
         setMessage("");
 
@@ -163,19 +163,19 @@ const AuctionController = ()=>{
     }
 
     const handleLogin = async() => {
-        if(username != "" && password != ""){
+        if(email != "" && password != ""){
             try{
                 let data = await fetch("https://horsetradingapi.azurewebsites.net/api/Login",{
                         method:'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body:JSON.stringify({username: username, password: password})
+                        body:JSON.stringify({email: email, password: password})
                     });
     
                 let result = await data.json();
                 
                 if (result?.status == "Error") {
                     setMessage(result.message);
-                    setUsername("");
+                    setEmail("");
                     setPassword("");
                     removeCookie('token',{ path: '/' });
                 }
@@ -618,13 +618,13 @@ const AuctionController = ()=>{
 
                                 <Modal.Body className="ModalBody">
                                 <div className='controllerFormInputs'>
-                                    <Form.Label>Username</Form.Label>
-                                    <Form.Control type="username" placeholder='Username' onChange={(e)=>{setUsername(handleInputChange(e));}} />
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control placeholder='Email' onBlur={(e)=>{setEmail(handleInputChange(e));}} />
                                 </div>
 
                                 <div className='controllerFormInputs'>
                                     <Form.Label>Password</Form.Label>
-                                    <Form.Control type="password" placeholder='Password' onChange={(e)=>{setPassword(handleInputChange(e));}} />
+                                    <Form.Control type="password" placeholder='Password' onBlur={(e)=>{setPassword(handleInputChange(e));}} />
                                     <Form.Text className="text-muted">
                                         Logging in is only available for administrators
                                     </Form.Text>
