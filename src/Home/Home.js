@@ -1,5 +1,5 @@
 import './Home.css';
-import {MakeStoreCell} from '../functions';
+import {StoreCell} from '../components/StoreCell'
 import { useEffect, useState } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
 import CardGroup from 'react-bootstrap/CardGroup';
@@ -26,7 +26,7 @@ const Home = ()=>{
                 {data.map((item) => {
                     if(companyName == item.companyName) {
                         return(
-                            <MakeStoreCell data={item} />
+                            <StoreCell data={item} />
                         )
                     }
                 })}

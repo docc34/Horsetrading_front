@@ -11,7 +11,7 @@ import CloseButton from 'react-bootstrap/CloseButton';
 
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import {handleInputChange} from  '../functions'
+import {handleInputChange} from  '../functions/handleInputChange'
 
 
 import Datetime from 'react-datetime';
