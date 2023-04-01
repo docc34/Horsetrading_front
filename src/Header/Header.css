@@ -4,20 +4,36 @@
     display: flex;
     align-items: center;
     text-align: left;
-    height: 65px;
+    height: 80px;
     justify-content: space-between;
 }
 
+.headerTitleDiv{
+    display: flex;
+    flex-direction: column;
+    margin-left: 1rem;
+    margin-bottom: 4px;
+}
 .headerTitle{
     color: rgb(255, 255, 255);
-    margin-left: 1rem;
     font-size: 40px;
     text-decoration: none;
-    margin-bottom: 4px;
 }
 .headerTitle:hover{
     color: rgb(255, 255, 255);
 }
+.headerDefinition{
+    color: rgb(255, 255, 255);
+    font-size: 11.5px;
+    font-family: cursive;
+    font-style: italic; 
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+.headerDefinition:hover{
+    color: rgb(255, 255, 255);
+}
+
 
 
 .headerLogoutButton{

@@ -3,12 +3,12 @@ import Nav from 'react-bootstrap/Nav'
 const Footer = ()=>{
     return(
     <div className="footerMainDiv">
-        <a href='/' className='footerTitle'>Antitech</a>
+        <a href='/' className='footerTitle'>Horsetrading</a>
 
         <div className="footerContentMainDiv">
             <div className='footerContactsDiv'>
                 <h3>Contacts</h3>
-                <p>Creator: Eemeli Antikainen</p>
+                <p>CEO of AntiTech: Eemeli Antikainen</p>
                 <p>Phonenumber: +358409606973</p>
                 <p>Email: antitechofficial@gmail.com</p>
             </div>

@@ -1,5 +1,5 @@
 import './StoreCells.css'
-import { useCountdown } from "../functions/countdown";
+import { useCountdown } from "../functions/Countdown";
 
 
 const StoreCell = (d)=>{
@@ -11,7 +11,7 @@ const StoreCell = (d)=>{
     if (seconds < 0) {
         countDownIsActive = false;
     }
-    const countDownOutput = countDownIsActive ? countDown : 'Auction has ended' // muokataanko loppuneet pois näkyvistä?
+    const countDownOutput = countDownIsActive ? countDown : 'Auction has ended' // muokataanko loppuneet pois näkyvistä? //Tähän vaan se että api palauttaa auctionitemit uusin ensin ja kotisivu näyttää 4 uusinta -> vanhat suodattuu itestään pois kun sille tarve
 
     console.log(useCountdown(countDownDate))
 

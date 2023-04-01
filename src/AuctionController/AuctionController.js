@@ -175,8 +175,8 @@ const AuctionController = ()=>{
                 
                 if (result?.status == "Error") {
                     setMessage(result.message);
-                    setEmail("");
                     setPassword("");
+                    setEmail("");            
                     removeCookie('token',{ path: '/' });
                 }
                 else if(result?.status == "Ok"){
@@ -628,12 +628,12 @@ const AuctionController = ()=>{
                                 <Modal.Body className="ModalBody">
                                 <div className='controllerFormInputs'>
                                     <Form.Label>Email</Form.Label>
-                                    <Form.Control placeholder='Email' onBlur={(e)=>{setEmail(handleInputChange(e));}} />
+                                    <Form.Control placeholder='Email' value={email} onChange={(e)=>{setEmail(handleInputChange(e));}} />
                                 </div>
 
                                 <div className='controllerFormInputs'>
                                     <Form.Label>Password</Form.Label>
-                                    <Form.Control type="password" placeholder='Password' onBlur={(e)=>{setPassword(handleInputChange(e));}} />
+                                    <Form.Control type="password" placeholder='Password' value={password} onChange={(e)=>{setPassword(handleInputChange(e));}} />
                                     <Form.Text className="text-muted">
                                         Logging in is only available for administrators
                                     </Form.Text>

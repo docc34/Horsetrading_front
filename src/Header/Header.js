@@ -6,7 +6,10 @@ const Header = ()=>{
     const [cookies, setCookie,removeCookie] = useCookies(['token']);
     return(
     <div className="headerMainDiv">
-        <a href='/' className='headerTitle'>Antitech</a>
+        <div className='headerTitleDiv'>
+            <a href='/' className='headerTitle'>Horsetrading</a>
+            <a href='/' className='headerDefinition'>"Unofficial discussion in which people make agreements that provide both sides with advantages"</a>
+        </div>
         {
             cookies?.token != null && cookies?.token != undefined ?
                 <Button className='headerLogoutButton' variant="primary" onClick={()=>{removeCookie('token',{ path: '/' }); window.location.reload();}}>logout</Button>

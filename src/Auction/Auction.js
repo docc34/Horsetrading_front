@@ -217,7 +217,7 @@ const Auction = ()=>{
     };
 
     const postAuctioneer = async ()=>{
-        try{ //TODO:Check
+        try{
             if(igTag != "@" || phonenumber != ""&&  price != 0 &&  price != ""&&  password != ""){
                 var body = null;
                 if(igTagCollapse == true){
