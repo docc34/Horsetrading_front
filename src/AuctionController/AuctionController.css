@@ -1,45 +1,43 @@
-@media (max-width: 767.98px){
-    .auctionControllerLoginModal{
-        width: fit-content !important;
-    }
+@media (max-width: 767.98px) {
+  .auctionControllerLoginModal {
+    width: fit-content !important;
+  }
 }
 
-.auctionControllerMainDiv{
-    margin:4%;
+.auctionControllerMainDiv {
+  margin: 4%;
 }
 
-.auctionControllerContentMainDiv{
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+.auctionControllerContentMainDiv {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
-
-.renderedImage{
-    max-width: 100px;
+.renderedImage {
+  max-width: 100px;
 }
-.auctionControllerLoginMainDiv{
-    min-height: 45rem;
-    width: 100%;
+.auctionControllerLoginMainDiv {
+  min-height: 45rem;
+  width: 100%;
 }
-.auctionControllerModifyImagesDiv{
-    margin:3%;
-    display: flex;
-    flex-direction: row;
-}
-
-.auctionControllerBillsReactDataGridDiv{
-    width: 100%;
-}
-.auctionControllerBillsReactDataGrid{
-    width: 100%;
+.auctionControllerModifyImagesDiv {
+  margin: 3%;
+  display: flex;
+  flex-direction: row;
 }
 
+.auctionControllerBillsReactDataGridDiv {
+  width: 100%;
+}
+.auctionControllerBillsReactDataGrid {
+  width: 100%;
+}
 
-.auctionControllerButtonsDiv{
-    margin-top: 1rem;
-    width: 100%;
-    display: flex;
-    justify-content: space-evenly;
+.auctionControllerButtonsDiv {
+  margin-top: 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
 }

@@ -406,6 +406,14 @@ const AuctionController = ()=>{
         </div>)
     });
 
+    const changeRowColor = (rowProps) => {
+        if(rowProps.data.paid == 0) {
+            rowProps.style.background = '#EB4242';
+        } else (
+            rowProps.style.background = '#00FF00'
+        )
+    }
+
     return(
     <div className='auctionControllerMainDiv'>
         {loggedIn == true ? 
@@ -595,6 +603,7 @@ const AuctionController = ()=>{
                             defaultSortInfo={{name: "billDate",  dir: -1, type: 'date'}}
                             sortable={false}
                             onSelectionChange={onSelectionChange}
+                            onRenderRow={changeRowColor}
                             />
                         <p>{billsMessage}</p>
                     </div>
