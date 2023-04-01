@@ -1,6 +1,5 @@
 import './functions.css';
-import { relativeTimeRounding } from 'moment';
-import { useEffect, useState, useRef } from 'react';
+import { useCountdown } from './functions/Countdown';
 
 //Vanha validaatio metodi
 const handleInputChange = (o)=>{
@@ -15,6 +14,18 @@ const handleInputChange = (o)=>{
 }
 
 const MakeStoreCell = (d)=>{
+    const countDownDate = d.data.formattedClosingTime;
+    const [days, hours, minutes, seconds] = useCountdown(countDownDate);
+
+    const countDown = `${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`
+    let countDownIsActive = true;
+    if (seconds < 0) {
+        countDownIsActive = false;
+    }
+    const countDownOutput = countDownIsActive ? countDown : 'Auction has ended' // muokataanko loppuneet pois näkyvistä?
+
+    console.log(useCountdown(countDownDate))
+
     var url = "/Auction?auctionId="+d.data?.id
     var storeCellContentClassName = "fade-out "
     if(d?.fade == true){
@@ -22,7 +33,8 @@ const MakeStoreCell = (d)=>{
     }
     return(
         <div className="storeCellMainDiv square rounded">
-            <a href={url}> 
+            <h2>{countDownOutput}</h2>
+            <a href={url}>
                 <div className='storeCellImgDiv'>
                     <img className="storeCellImg" src={d.data?.imageLink}/>
                 </div>
@@ -41,37 +53,7 @@ const MakeStoreCell = (d)=>{
 
 //#region
 //Timer functions
-
-    const useCountdown = (targetDate) => {
-        const countDownDate = new Date(targetDate).getTime();
-
-        const [countDown, setCountDown] = useState(
-            countDownDate - new Date().getTime()
-        );
-
-        useEffect(() => {
-            const interval = setInterval(() => {
-            setCountDown(countDownDate - new Date().getTime());
-            }, 1000);
-
-            return () => clearInterval(interval);
-        }, [countDownDate]);
-
-        return getReturnValues(countDown);
-    };
-
-    const getReturnValues = (countDown) => {
-        // calculate time left
-        const days = Math.floor(countDown / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(
-            (countDown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        );
-        const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((countDown % (1000 * 60)) / 1000);
-
-        return [days, hours, minutes, seconds];
-    };
-
+    
     const DateTimeDisplay = ({ value, type, isDanger }) => {
         return (
         <div className={isDanger ? 'countdown danger' : 'countdown'}>
