@@ -109,10 +109,12 @@
         justify-content: center;
     }
     .auctionReactDataGrid{
-        max-width: 320px;
-        margin-left: 7%;
+        min-width: 250px;
     }
-    
+    .tab-content{
+        display: flex;
+        justify-content: center;
+    }
     .auctionParticipateMainDiv{
         margin-right: 1rem;
         height: min-content;
@@ -233,6 +235,8 @@
 }
 .auctionReactDataGrid{
     /* background-color: #1b1e24 !important; */
+    min-width: 250px;
+    width: 100%;
     color:#1b1e24 !important;
     /* border-color: #1b1e24  !important; */
 }

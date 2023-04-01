@@ -584,7 +584,7 @@ const Auction = ()=>{
                             <Form noValidate validated={participateValidated} onSubmit={handleParticipateSubmit} >
                                 <div>
                                     <h3>The current highest offer is {highestOffer != 0 ? highestOffer : 0}€</h3>
-                                    <p>Your offer must be atleast 5€ higher than the current highest offer. 
+                                    <p>Your offer must be at least 5€ higher than the current highest offer. 
                                         The instagram tag is used by the seller to contact the winner. 
                                         You can alternatively sign up using your phonenumber! </p>
                                 </div>
@@ -604,7 +604,7 @@ const Auction = ()=>{
                                                 </div>
                                             </Collapse>
                                             <Collapse in={phonenumberCollapse}>
-                                                <div className='auctionFormInputs'>
+                                                <div>
                                                     <Form.Label>Phonenumber</Form.Label>
                                                     <Form.Control className='Input' placeholder='Phonenumber' onChange={(e)=>{setPhonenumber(e.target.value);}} />
 
@@ -692,7 +692,8 @@ const Auction = ()=>{
                                     <h3>Raise offer</h3>
                                     {userOfferExists == false ? 
                                         <p>
-                                            Select yourself in the table above and raise your offer here.
+                                            Select yourself in the table above and raise your offer here. 
+                                            The current highest offer is <b>{highestOffer != 0 ? highestOffer : 0}</b>€
                                         </p>
                                         :
                                         <p>
@@ -708,7 +709,7 @@ const Auction = ()=>{
 
                                         <div className="auctionParticipateFormBodyDiv">
                                         {userOfferExists == false ? 
-                                            <div className='auctionFormInputs' >
+                                            <div >
                                                 <Form.Label>Username</Form.Label>
                                                 {/* cookies.auctioneerDefaultPrice != undefined && cookies.auctioneerDefaultPrice != 0 ? cookies.auctioneerDefaultPrice + '€': 0 + '€' */}
                                                 <Form.Control required  value={usernameModify} placeholder={"Username"} onChange={(e)=>{setUsernameModify(e.target.value);}} />
@@ -722,7 +723,7 @@ const Auction = ()=>{
                                         :null
                                         }
 
-                                            <div className='auctionFormInputs'>
+                                            <div>
                                                 <Form.Label>Password</Form.Label>
                                                 <div className='auctionOfferFormPasswordDiv'>
                                                     <Form.Control required  type={passwordVisibility} placeholder='Password' onBlur={(e)=>{setPasswordModify(e.target.value);}} />
@@ -762,14 +763,12 @@ const Auction = ()=>{
                                             </div>
                                         </div>
                                         <div className="auctionParticipateFormBodyDiv">
-                                            <div className='auctionFormInputs ' >
+                                            <div  >
                                                     <Form.Label>Offer</Form.Label>
                                                 <div className='auctionFormInputs auctionModifySaveButtonDiv'>
                                                     {/* cookies.auctioneerDefaultPrice != undefined && cookies.auctioneerDefaultPrice != 0 ? cookies.auctioneerDefaultPrice + '€': 0 + '€' */}
-                                                    <Form.Control  required  type="number" placeholder={"€"} onBlur={(e)=>{setPriceModify(e.target.value);}} />
-                                                    <Button  type="submit" > {/*onClick={()=>{modifyAuction();}}*/}
-                                                        Save
-                                                    </Button>
+                                                    <Form.Control required onWheel={(e) => e.target.blur()} step={5}  type="number" placeholder={"€"} onBlur={(e)=>{setPriceModify(e.target.value);}} />
+                                                    <Button  type="submit" > {/*onClick={()=>{modifyAuction();}}*/}Save</Button>
                                                 </div>
                                                 <Form.Text >
                                                     The current highest offer is <b>{highestOffer != 0 ? highestOffer : 0}</b>€
