@@ -5,7 +5,6 @@ const Footer = ()=>{
     <div className="footerMainDiv">
         <div className='footerTitleDiv'>
             <a href='/' className='footerTitle'>Horsetrading</a>
-            <p>-Product of <a href="https://www.antitech.fi">AntiTech</a></p>
         </div>
 
         <div className="footerContentMainDiv">
@@ -28,7 +27,9 @@ const Footer = ()=>{
             </div>
         </div>
         
-
+        <div className='footerPlugDiv'>
+            <p>-Product of <a href="https://www.antitech.fi">AntiTech</a></p>
+        </div>
     </div>)
 }
 

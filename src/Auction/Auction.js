@@ -425,7 +425,7 @@ const Auction = ()=>{
             var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Images/public/"+auctionId);
             var images = await search.json();
     
-            if(images != null && images != undefined && images?.status != "Error")
+            if(images != null && images != undefined && images?.status != "Error" && images?.status < 230)
                 setCarouselImages(await images);
         }
     }
