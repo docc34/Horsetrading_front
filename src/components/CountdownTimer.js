@@ -1,5 +1,5 @@
 import './CountdownTimer.css'
-import { useCountdown } from '../functions/Countdown';
+import { useCountdown } from '../functions/countdown';
 
 const DateTimeDisplay = ({ value, type, isDanger }) => {
     return (

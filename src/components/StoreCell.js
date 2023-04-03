@@ -1,5 +1,5 @@
 import './StoreCells.css'
-import { useCountdown } from "../functions/Countdown";
+import { useCountdown } from "../functions/countdown";
 
 
 const StoreCell = (d)=>{
