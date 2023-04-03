@@ -1,4 +1,4 @@
-import './StoreCells.css'
+import './StoreCell.css'
 import { useCountdown } from "../functions/countdown";
 
 
@@ -13,8 +13,6 @@ const StoreCell = (d)=>{
     }
     const countDownOutput = countDownIsActive ? countDown : 'Auction has ended' // muokataanko loppuneet pois näkyvistä? //Tähän vaan se että api palauttaa auctionitemit uusin ensin ja kotisivu näyttää 4 uusinta -> vanhat suodattuu itestään pois kun sille tarve
 
-    console.log(useCountdown(countDownDate))
-
     var url = "/Auction?auctionId="+d.data?.id
     var storeCellContentClassName = "fade-out "
     if(d?.fade == true){
@@ -22,7 +20,6 @@ const StoreCell = (d)=>{
     }
     return(
         <div className="storeCellMainDiv square rounded">
-            <h2>{countDownOutput}</h2>
             <a href={url}>
                 <div className='storeCellImgDiv'>
                     <img className="storeCellImg" src={d.data?.imageLink}/>
@@ -31,8 +28,10 @@ const StoreCell = (d)=>{
             <a href={url} className={storeCellContentClassName}>
                 <div>
                     <h2>{d.data?.title}</h2>
-                    <hr className='storeCellLine'/>
-                    <p >{d.data?.description}</p>
+                    <p>{d.data?.description}</p>
+                    <div className='countdown-container'>
+                        <h4>{countDownOutput}</h4>
+                    </div>
                 </div>
             </a>
            
