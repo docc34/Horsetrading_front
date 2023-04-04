@@ -23,7 +23,7 @@ const Footer = ()=>{
             </div>
             <div>
                 <h3>Are you interested?</h3>
-                <p>If you want to become a seller, with your own auction. Contact me.</p>
+                <p>If you want to become a seller, with your own auction, contact me.</p>
             </div>
         </div>
         

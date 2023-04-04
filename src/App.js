@@ -5,25 +5,25 @@ import {Header} from './Header/Header';
 import { Footer } from './Footer/Footer';
 import './App.css';
 import '@inovua/reactdatagrid-community/index.css'
-import {Routes,Route } from 'react-router-dom';
+import {HashRouter,BrowserRouter ,Routes,Route } from 'react-router-dom';
 
 function App() {
   return (
-      <div>
+  <BrowserRouter>
+      <Routes>
+        <Route path="/*" element={<Header />} exact />
+      </Routes>
+      <div className='appMainDiv'>
         <Routes>
-          <Route path="/*" element={<Header />}/>
-        </Routes>
-        <div className='appMainDiv'>
-          <Routes>
-            <Route path="/" element={<Home />}/>
-            <Route path="/Auction" element={<Auction />}/>
-            <Route path="/AuctionController" element={<AuctionController />}/>
-          </Routes>
-        </div>
-        <Routes>
-          <Route path="/*" element={<Footer />}/>
+          <Route path="/" element={<Home />} exact />
+          <Route path="/Auction" element={<Auction />} exact />
+          <Route path="/AuctionController" element={<AuctionController />} exact />
         </Routes>
       </div>
+      <Routes>
+        <Route path="/*" element={<Footer />} exact />
+      </Routes>
+    </BrowserRouter >
   );
 }
 
