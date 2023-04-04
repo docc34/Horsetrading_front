@@ -5,6 +5,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { BrowserRouter} from 'react-router-dom';
 
 const container = document.getElementById('root');
 
@@ -12,7 +13,11 @@ const container = document.getElementById('root');
 const root = ReactDOMClient.createRoot(container);
 
 // Initial render: Render an element to the root.
-root.render(<App/>);
+      
+    root.render(
+    <BrowserRouter>
+        <App/>
+    </BrowserRouter>);
 
 // ReactDOM.render(
 //   <React.StrictMode>

@@ -5,11 +5,11 @@ import {Header} from './Header/Header';
 import { Footer } from './Footer/Footer';
 import './App.css';
 import '@inovua/reactdatagrid-community/index.css'
-import { BrowserRouter,Routes,Route } from 'react-router-dom';
+import {Routes,Route } from 'react-router-dom';
 
 function App() {
   return (
-      <BrowserRouter>
+      <div>
         <Routes>
           <Route path="/*" element={<Header />}/>
         </Routes>
@@ -23,7 +23,7 @@ function App() {
         <Routes>
           <Route path="/*" element={<Footer />}/>
         </Routes>
-      </BrowserRouter>
+      </div>
   );
 }
 
