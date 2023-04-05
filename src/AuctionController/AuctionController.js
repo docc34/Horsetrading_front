@@ -369,7 +369,7 @@ const AuctionController = ()=>{
         }
         var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Images/"+selectedRowValue.id,options);
         var result = await search.json();
-        if(result?.status != "Error" && result != undefined && result?.status < 230){
+        if(result?.status != "Error" && result != undefined && result?.status != 404&& result?.status != 401&& result?.status != 403&& result?.status != 500){
             setSelectedImages(await result);
         }
     }

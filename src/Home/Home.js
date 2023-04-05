@@ -49,11 +49,11 @@ const Home = ()=>{
     }
 
     return(
-    <div className='HomeMainDiv'>
+    <div className='homeMainDiv'>
         <div className='homeCellsDiv'>
             { 
                 data == null || data?.length == 0 ? 
-                    <div className='HomeSpinnerDiv'>
+                    <div className='homeSpinnerDiv'>
                         <Spinner variant="light" animation="border" />
                     </div> 
                 :
@@ -68,6 +68,10 @@ const Home = ()=>{
                 </CardGroup>
                     
             }
+        </div>
+        <div className='homeProductionDisclaimerDiv'>
+            <h1>Site looking empty?</h1>
+            <p>In the future this site will be filled with all kinds of beautiful art works to auction, but currently the site is still in production. More items will be posted soon. Sorry for the inconvenience.</p>
         </div>
     </div>
     );

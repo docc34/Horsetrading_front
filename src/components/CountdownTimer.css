@@ -1,7 +1,13 @@
 @media (max-width: 399.98px) {
+
+}
+@media (min-width: 440px) {
+
+}
+@media (max-width: 379.98px){
   .show-counter {
     padding: 0rem;
-    font-size: 1.05rem;
+    font-size: 0.8rem;
     line-height: 1rem;
   }
   .expired-notice {
@@ -10,7 +16,7 @@
     margin-top: 0.5rem;
   }
   .expired-notice > span {
-    font-size: 17px;
+    font-size: 1.7rem;
     font-weight: bold;
   }
 
@@ -18,7 +24,7 @@
     font-size: 12px;
   }
 }
-@media (min-width: 440px) {
+@media (min-width: 380px){
   .show-counter {
     padding: 0.5rem;
     font-size: 1.25rem;
@@ -41,7 +47,6 @@
     font-size: 1.5rem;
   }
 }
-
 .show-counter {
 }
 

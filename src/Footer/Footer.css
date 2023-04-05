@@ -8,18 +8,30 @@
     }
 }
 @media (min-width: 550px){
-    .footerContactsDiv{
-        
-    }
     .footerLinksDiv{
         margin-left: 2rem;
+    }
+}
+@media (max-width: 379.98px){
+    .footerContentMainDiv{
+        flex-direction: column;
+    }
+    .footerMainDiv{
+        height: 40rem;
+    }
+}
+@media (min-width: 380px){
+    .footerContentMainDiv{
+        flex-direction: row;
+    }
+    .footerMainDiv{
+        height: 25rem;
     }
 }
 .footerMainDiv{
     margin-top: auto;
     display: flex;
     width: 100%;
-    height: 20rem;
     background-color: #111111; /*#111214*/
     color: rgb(255, 255, 255);
     flex-direction: column;
@@ -34,12 +46,13 @@
 }
 
 .footerPlugDiv{
+    display: flex;
+    flex-direction: column;
     margin-left: 1rem;
 }
 
 .footerContentMainDiv{
     display: flex;
-    flex-direction: row;
     margin-left: 1rem;
     margin-top: 1rem;
 }
