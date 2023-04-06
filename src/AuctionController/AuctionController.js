@@ -204,7 +204,7 @@ const AuctionController = ()=>{
             var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Bills/CheckUsersBills",options);
             var result = await search.json();
             console.log(result);
-            if(result?.status == "Error" && result?.message == "No new billable items found"){
+            if(result?.status == "Error" && result?.message == "No new billable items found"&& result?.object?.value != null){
                 setUsersBills(result?.object?.value);
                 setBillsMessage(result?.message);
             }
@@ -294,8 +294,8 @@ const AuctionController = ()=>{
                         Visible: visible
                     })
                 }
-                console.log("Visible" + visible);
 
+                
                 var search = await fetch("https://horsetradingapi.azurewebsites.net/api/AuctionItems/"+selectedRowValue.id, options);
                 var answer = await search.json();
                 if(answer?.status == "Ok" && imageFiles != null){
