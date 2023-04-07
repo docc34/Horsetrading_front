@@ -195,7 +195,7 @@ const AuctionController = ()=>{
 //Bills CR
 
     const postUsersBills = async()=>{
-        if(usersBills?.length == 0 ){
+        if(usersBills?.length == 0){
             const options = {
                 method: 'POST',
                 headers: {"Authorization": `Bearer ${cookies.token}`}

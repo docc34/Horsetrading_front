@@ -318,8 +318,10 @@ const Auction = ()=>{
 
             var id = auctioneerId != undefined ? auctioneerId : cookies.auctioneerId;
             var password = password != undefined ? password : cookies.auctioneerPassword;
+
             var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Auctioneers/Current/?auctionItemId="+auctionId+"&auctioneerId="+id+"&password="+password);
             var result = await search.json();
+            
             if(result?.status != "Error" && result != null){
                 if( JSON.stringify(currentAuctioneer) !== JSON.stringify([result])){
                     setCurrentAuctioneer([result]);

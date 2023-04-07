@@ -1,10 +1,23 @@
+@media (max-width: 379.98px) {
+    .headerTitleDiv{
+        margin-top: 10px;
+    }
+    .headerMainDiv{
+        height: 100px;
+    }
+}
+@media (min-width: 380px) {
+    .headerMainDiv{
+        height: 90px;
+    }
+
+}
 .headerMainDiv{
     background-color: #111111;
     width: 100%;
     display: flex;
     align-items: center;
     text-align: left;
-    height: 80px;
     justify-content: space-between;
 }
 
@@ -33,8 +46,6 @@
 .headerDefinition:hover{
     color: rgb(255, 255, 255);
 }
-
-
 
 .headerLogoutButton{
     margin-right: 1rem;
