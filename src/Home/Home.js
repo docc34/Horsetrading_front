@@ -9,7 +9,7 @@ const Home = ()=>{
     const uniqueUsers = [];
 
     const getCellData = async()=>{
-        var search = await fetch("https://horsetradingapi.azurewebsites.net/api/AuctionItems/public");
+        var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/AuctionItems/public");
         var data = await search.json();
         if(data != null || data != undefined){
             setData(data);
