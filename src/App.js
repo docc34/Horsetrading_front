@@ -6,6 +6,7 @@ import { Footer } from './Footer/Footer';
 import './App.css';
 import '@inovua/reactdatagrid-community/index.css'
 import {HashRouter,BrowserRouter ,Routes,Route } from 'react-router-dom';
+import { UserProfile } from './UserProfile/UserProfile';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<Home />} exact />
           <Route path="/Auction" element={<Auction />} exact />
           <Route path="/AuctionController" element={<AuctionController />} exact />
+          <Route path={`/users/:id`} element={<UserProfile />} />
         </Routes>
       </div>
       <Routes>
