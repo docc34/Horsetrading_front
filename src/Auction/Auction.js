@@ -570,16 +570,16 @@ const Auction = ()=>{
                     </div>
                 </div>
                 <div className='auctionInputDiv' style={userOfferExists == true ? {'display':"block"} : null}>
-
+                                {/* <Button onClick={()=>{setAuctioneerParticipateModal(true);}}>Participate</Button> */}
+                                {isCreator == true ? 
+                                    <Button disabled={selectedRow} onClick={()=>{deleteSelectedAuctioneer();}}>Delete selected Auctioneer</Button>
+                                :
+                                null}
                     {userOfferExists == false && newUser == true ? 
                         <div className='auctionParticipateMainDiv'>
                             <div>
 
-                                {/* <Button onClick={()=>{setAuctioneerParticipateModal(true);}}>Participate</Button> */}
-                                {isCreator == true ? 
-                                <Button disabled={selectedRow} onClick={()=>{deleteSelectedAuctioneer();}}>Delete selected Auctioneer</Button>
-                                :
-                                null}
+
                             </div>
 
                         
