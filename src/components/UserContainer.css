@@ -1,8 +1,18 @@
-
 .user-cell {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     min-height: 1000px;
+  }
+
+  .userCellLinkDiv{
+    width: 100%;
+
+  }
+  .userCellLink{
+    text-decoration: none;
+    display: flex;
+    align-items:start;
+    flex-direction: column;
   }

@@ -1,46 +1,39 @@
 import './UserContainer.css';
 import { CardGroup } from 'react-bootstrap';
 import { StoreCell } from './StoreCell';
-import { useEffect, useState } from 'react';
 
-const UserContainer = ({user})=>{
-    const {companyName, id} = user;
-    const[data,setData] = useState([]);
+const UserContainer = (data)=>{
+    //Data palautuu nyt järkevämmin apista, palauttaa käyttäjän jonka alla palauttaa listassa käyttäjän auctionitemit.
 
-    const getContainerData = async()=>{
-        var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/AuctionItems/public");
-        var data = await search.json();
-        if(data != null || data != undefined){
-            setData(data);
-        }
-    }
-    useEffect(()=>{
-        getContainerData();
-    },[]);
-    
-    const RenderCells = () => {
+    //Renderöidään käyttäjän auctionitemit
+    const RenderAuctionItemsCells = (cellData) => {
         return(
             <CardGroup>
-                {data.map((item) => {
-                    if(companyName == item.companyName) {
-                        return(
+                {cellData.auctionItems.map((item) => {
+                    console.log(item);
+                    return(
+                        <div>
                             <StoreCell data={item} />
-                        )
-                    }
+                        </div>
+                    )
                 })}
             </CardGroup>
         )
     }
-    
-
-    const route = `/users/${id}`
 
     return(
-        <div className='user-cell'>
-            <a href={route}>
-                {companyName}
-            </a>
-            <RenderCells companyName={companyName} />
+        <div>
+            <div className='user-cell'>
+                <div className='userCellLinkDiv'>
+                    <a href={"/user?userId="+data?.user?.id} className='userCellLink'>
+                        <h1>{data?.user?.companyName}</h1>
+                        <p>{data.user.description}</p>  
+                    </a>
+                </div>
+                <div>
+                    <RenderAuctionItemsCells auctionItems={data.user.userAuctionItems} /> 
+                </div>
+            </div>
         </div>
     )
 }

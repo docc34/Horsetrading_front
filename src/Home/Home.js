@@ -3,9 +3,12 @@ import { useEffect, useState } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
 import CardGroup from 'react-bootstrap/CardGroup';
 import { UserContainer } from '../components/UserContainer';
+import { useCookies } from 'react-cookie';
 
 const Home = ()=>{
+    const [cookies] = useCookies(["recentAuctionItems"]);
     const[containerData,setContainerData] = useState([]);
+    const[recentAuctionItems,setRecentAuctionItems] = useState([]);
 
     const getContainerData = async()=>{
         var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/AuctionItems/public");
@@ -14,25 +17,29 @@ const Home = ()=>{
             setContainerData(data);
         }
     }
+
+    //Asettaa home sivulla seurattavien viimeksi vierailtujen auctionitemien id:n 
+    const getRecentAuctionItems = async ()=>{
+        var list = cookies?.recentAuctionItems;
+        if(list != null && list != undefined && list != ""){
+            const options = {
+                method:'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:JSON.stringify(list)
+            }
+            var search = await fetch(`https://horsetradingapidev.azurewebsites.net/api/AuctionItems/Recent`,options);
+            var data = await search.json();
+            
+            if(data?.result != "Error" && data?.result != null && data?.result != undefined){
+                setRecentAuctionItems(data);
+                //TODO: tee graafinen liittymä recent auctionitemsseille
+            }
+        }
+    }
+
     useEffect(()=>{
         getContainerData();
-    },[]);
-
-    const[userData,setUserData] = useState([]);
-    const getUserData = async()=>{
-        const users = [1,2]
-        let dataList = []
-        await users.map(async (user) => {
-            var search = await fetch(`https://horsetradingapidev.azurewebsites.net/api/Profiles/${user}`);
-            var data = await search.json();
-            if(data != null || data != undefined){
-                dataList.push(data)
-            }
-        })  
-        setUserData(dataList)
-    }
-    useEffect(()=>{
-        getUserData();
+        getRecentAuctionItems();
     },[]);
 
     return(
@@ -46,10 +53,11 @@ const Home = ()=>{
                     :
                     <CardGroup>
                     
-                        {userData.map(user => {
-                            
+                        {containerData.map(container => {
+                            //Data palautuu nyt järkevämmin apista, palauttaa käyttäjän jonka alla palauttaa listassa käyttäjän auctionitemit.
+                            //Tein tämän että yhdellä api kutsulla saisi kaikki tiedot näkymään
                             return (
-                                <UserContainer user={user}/>
+                                <UserContainer user={container}/>
                             )
                         })}
                         

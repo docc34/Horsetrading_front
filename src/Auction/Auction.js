@@ -22,7 +22,7 @@ import '@inovua/reactdatagrid-community/index.css'
 const Auction = ()=>{
     const search = useLocation().search;
     const auctionId = new URLSearchParams(search).get('auctionId');
-    const [cookies, setCookie, removeCookie] = useCookies(['token', "auctioneerId","auctioneerDefaultPrice", "auctioneerDefaultIgTag", "auctioneerDefaultUsername"]);
+    const [cookies, setCookie, removeCookie] = useCookies(['token', "auctioneerId","auctioneerDefaultPrice", "auctioneerDefaultIgTag", "auctioneerDefaultUsername","recentAuctionItems"]);
 
     const [selectedRow, setSelectedRow] = useState(true);
     const [selectedRowId, setSelectedRowId] = useState(0);
@@ -105,6 +105,27 @@ const Auction = ()=>{
         }
     }
     
+    //Asettaa home sivulla seurattavien viimeksi vierailtujen auctionitemien id:n 
+    const setRecentAuctionItems = ()=>{
+        var list = cookies?.recentAuctionItems;
+        if(list != null && list != undefined && list != ""){
+            //Checks that the auctionitemid dosent already exist in the taböe
+            var i = true
+            list?.map((e)=>{
+                if(e == auctionId){
+                    i = false;
+                }
+            });
+            if(i == true){
+                list[list?.length +1] = auctionId;
+                setCookie('recentAuctionItems', list, { path: '/' });
+            }
+        }
+        else{
+            setCookie('recentAuctionItems', [auctionId], { path: '/' });
+        }
+    }
+
     //Salasanan näyttämisnapin funktio
     const togglePasswordVisibility = () => {
         if (passwordVisibility === "password") {
@@ -174,8 +195,6 @@ const Auction = ()=>{
         }
         
     }
-
-
 
     const handleParticipateSubmit = (event) => {
         const form = event.currentTarget;
@@ -432,13 +451,13 @@ const Auction = ()=>{
         }
     }
 
-
     useEffect(()=>{
         fetchAuctionItem(1);
         fetchAuctioneers(0, true);//TODO:Ota käyttöön haku kun saat toimimaan
         fetchImages();
         //Laitetaan funktioihin eteenpäin paikallinen vastaanotto funktio
         receiveMessage(receiveSignalMessage);
+        setRecentAuctionItems();
     },[]);
 
     const carouselImagesRender = carouselImages.map((e, i)=>{

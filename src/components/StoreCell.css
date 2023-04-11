@@ -17,10 +17,9 @@
 
 .storeCellMainDiv {
   flex-direction: column;
-  display: flex;
   margin: 1rem;
   width: 100%;
-  height: min-content;
+    height: min-content;
   border: 2px solid black;
   text-align: center;
 }
@@ -58,10 +57,13 @@
 }
 
 /* 231, 231, 231 */
-
+.countdownContainerType{
+  text-align: left;
+  margin-bottom: 10px;
+}
 .countdown-container {
   width: 100%;
-  padding: 20px;
+  padding: 5px;
   margin: 10px auto, 50px, auto;
   background-color: rgba(240, 232, 232, 0.144);
   margin-left: auto;

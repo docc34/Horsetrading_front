@@ -3,7 +3,7 @@ import { useCountdown } from "../functions/countdown";
 
 
 const StoreCell = (d)=>{
-    const countDownDate = d.data.formattedClosingTime;
+    const countDownDate = d.data.closingTime;
     const [days, hours, minutes, seconds] = useCountdown(countDownDate);
 
     const countDown = `${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`
@@ -26,10 +26,11 @@ const StoreCell = (d)=>{
                 </div>
             </a>
             <a href={url} className={storeCellContentClassName}>
-                <div>
+                <div className='storeCellContentDiv'>
                     <h2>{d.data?.title}</h2>
                     <p>{d.data?.description}</p>
                     <div className='countdown-container'>
+                        <p className='countdownContainerType'>Type: {d.data?.type}</p>
                         <h4>{countDownOutput}</h4>
                     </div>
                 </div>

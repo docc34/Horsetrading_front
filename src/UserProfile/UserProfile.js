@@ -1,6 +1,11 @@
+import { useLocation } from "react-router-dom";
+
 const UserProfile = () => {
+    const search = useLocation().search;
+    const auctionId = new URLSearchParams(search).get('userId');
+    
     return (
-        <div>I'm user profile</div>
+        <div><h1>I'm profile {auctionId}</h1></div>
     )
 }
 
