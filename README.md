@@ -1,6 +1,6 @@
 Julkasin tietokannan ja apin azureen toistaseks.
 Api on julkastu osotteeseen:
-https://horsetradingapi.azurewebsites.net/
+https://horsetradingapidev.azurewebsites.net/
 jos ei toimi oo yhteydessä. korvaat fronttikoordin localhost urlit tolla nii pitäs tulla dataa.
 
 Jos voisit tehdä sen auctionin jäljellä olevan ajan näyttämisen jotenkin kotiruudussa.
