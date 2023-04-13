@@ -4,6 +4,7 @@ import { UserContainer } from "../components/UserContainer";
 import { useState, useEffect } from "react";
 import CardGroup from 'react-bootstrap/CardGroup';
 import { useCookies } from 'react-cookie';
+import { UserEditModal } from '../components/UserEditModal';
 
 
 const UserProfile = () => {
@@ -11,7 +12,6 @@ const UserProfile = () => {
     const auctionId = new URLSearchParams(search).get('userId');
     const [loggedIn, setLoggedIn] = useState(false);
     const [cookies] = useCookies(['token']);
-
 
 
     const[containerData,setContainerData] = useState([]);
@@ -38,8 +38,6 @@ const UserProfile = () => {
         }
     }
 
-    
-
     useEffect(()=>{
         getContainerData();
         checkLoginStatus();
@@ -56,10 +54,15 @@ const UserProfile = () => {
                     <CardGroup>
                     {
                         containerData.filter(item => item.id == auctionId).map(id => {
-                            return <UserContainer user={id} />
-                        })
+                            return (
+                                <div>
+                                    <UserContainer user={id} />
+                                    <UserEditModal user={id} />
+                                </div>
+                                )})
                     }
                     </CardGroup>
+                    
                 </div>
             :
                 <div className='user-container'>
