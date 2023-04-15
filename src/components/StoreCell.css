@@ -19,7 +19,7 @@
   flex-direction: column;
   margin: 1rem;
   width: 100%;
-    height: min-content;
+  height: min-content;
   border: 2px solid black;
   text-align: center;
 }
@@ -59,14 +59,26 @@
 /* 231, 231, 231 */
 .countdownContainerType{
   text-align: left;
-  margin-bottom: 10px;
+  margin-bottom: 0.5rem;
+  margin-top: 0.3rem;
+  margin-left: 0.8rem;
+  font-size: 0.9rem;
 }
 .countdown-container {
   width: 100%;
   padding: 5px;
   margin: 10px auto, 50px, auto;
-  background-color: rgba(240, 232, 232, 0.144);
+  /* background-color: rgba(240, 232, 232, 0.144); */
   margin-left: auto;
   margin-right: auto;
   border-radius: 8px;
+}
+
+
+.storeCellContentDiv{
+  border: 1px solid;
+  /* border-color: #dadd0b; */
+  /* border-color: #0437df; */
+}
+.border-warning {
 }

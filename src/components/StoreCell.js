@@ -26,11 +26,13 @@ const StoreCell = (d)=>{
                 </div>
             </a>
             <a href={url} className={storeCellContentClassName}>
-                <div className='storeCellContentDiv'>
+                <div className='storeCellContentDiv rounded-bottom ' style={d.data?.type == "Purchase" ? {borderColor: '#dadd0b'} : {borderColor: '#0437df'}}>
+
+                    <p className='countdownContainerType'>Type: {d.data?.type}</p>
+
                     <h2>{d.data?.title}</h2>
                     <p>{d.data?.description}</p>
                     <div className='countdown-container'>
-                        <p className='countdownContainerType'>Type: {d.data?.type}</p>
                         <h4>{countDownOutput}</h4>
                     </div>
                 </div>

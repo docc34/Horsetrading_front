@@ -54,7 +54,6 @@ const Auction = ()=>{
 
     const [highestOffer, setHighestOffer] = useState([]);
 
-    //ÄLÄ POISTA
     const [phonenumberCollapse, setPhonenumberCollapse] = useState(false);
     const [igTagCollapse, setIgTagCollapse] = useState(true);
     const [participateValidated, setParticipateValidated] = useState(false);
