@@ -521,7 +521,7 @@ const Auction = ()=>{
                                 <ReactDataGrid
                                     idProperty="id"
                                     className='auctionReactDataGrid'
-                                    style={isCreator == true ? {height: 1000} : {minHeight: 243}}
+                                    style={{minHeight: 243}}
                                     columns={auctioneerColumns}
                                     dataSource={auctioneers?.slice(0, 5)}
                                     enableSelection={userOfferExists == true ? false : true}
@@ -543,7 +543,7 @@ const Auction = ()=>{
                                 <ReactDataGrid
                                     idProperty="id"
                                     className='auctionReactDataGrid'
-                                    style={isCreator == true ? {height: 1000} : {minHeight: 43+ 40 * auctioneers?.length}}
+                                    style={{minHeight: 43+ 40 * auctioneers?.length}}
                                     columns={auctioneerColumns}
                                     dataSource={auctioneers}
                                     enableSelection={userOfferExists == true ? false : true}
@@ -590,7 +590,7 @@ const Auction = ()=>{
                 <div className='auctionInputDiv' style={userOfferExists == true ? {'display':"block"} : null}>
                                 {/* <Button onClick={()=>{setAuctioneerParticipateModal(true);}}>Participate</Button> */}
                                 {isCreator == true ? 
-                                    <Button disabled={selectedRow} onClick={()=>{deleteSelectedAuctioneer();}}>Delete selected Auctioneer</Button>
+                                    <div><Button disabled={selectedRow} onClick={()=>{deleteSelectedAuctioneer();}}>Delete selected Auctioneer</Button></div>
                                 :
                                 null}
                     {userOfferExists == false && newUser == true ? 

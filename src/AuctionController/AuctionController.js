@@ -34,8 +34,11 @@ const AuctionController = ()=>{
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [closingTime, setClosingTime] = useState("");
+    const [startingPrice, setStartingPrice] = useState("");
     const [imageFiles, setImageFiles] = useState(null);
     const [errors, setErrors] = useState([]);
+    const [auctionItemType, setAuctionItemType] = useState(1);
+    const [auctionItemRaisePeriod, setAuctionItemRaisePeriod] = useState(0);
     
     const [auctionItemDeleteModal, setAuctionItemDeleteModal] = useState(false);
     
@@ -43,6 +46,7 @@ const AuctionController = ()=>{
     const [titleModify, setTitleModify] = useState("");
     const [descriptionModify, setDescriptionModify] = useState("");
     const [closingTimeModify, setClosingTimeModify] = useState("");
+    const [auctionItemTypeModify, setAuctionItemTypeModify] = useState(1);
     const [visible, setVisible] = useState(1);
     const [selecetdImages, setSelectedImages] = useState([]);
     
@@ -54,16 +58,18 @@ const AuctionController = ()=>{
     const auctionItemsColumns = [
         {name:"id", header: "Id",  defaultVisible: false},
         {name:"title" , header:"Title",  defaultFlex:2},
-        {name:"description" , header:"Description", defaultFlex:2},
+        {name:"description" , header:"Description", defaultVisible: false},
         {name:"visible" , header:"Visible", defaultFlex:1},
+        {name:"type" , header:"Type", defaultFlex:1 },
+        {name:"typeId" , header:"typeId", defaultVisible: false },
         {name: 'closingTime',header: 'Closing Time', defaultFlex:2,},
-        {name:"url" , header:"Url", defaultFlex:2, render: ({value}) => {
+        {name:"url" , header:"Url", defaultFlex:1, render: ({value}) => {
             return <a href={value}>Auction</a>
         }}
     ]
     const billsColumns = [
         {name:"id", header: "Id",  defaultVisible: false},
-        {name:"companyName" , header:"CompanyName",  defaultFlex:2},
+        {name:"auctionItemName" , header:"Name",  defaultFlex:1},
         {name:"winner" , header:"Auction winner", defaultFlex:2},
         {name:"winnerOffer" , header:"Winning offer", defaultFlex:1},
         {name:"amount" , header:"Amount",  defaultFlex:1},
@@ -108,12 +114,16 @@ const AuctionController = ()=>{
         setClosingTime("");
         setDescription("");
         setTitle("");
+        setStartingPrice("");
+        setAuctionItemRaisePeriod("");
+        setAuctionItemType(1);
 
         setAuctionItemModifyModal(false);
         setClosingTimeModify("");
         setDescriptionModify("");
         setTitleModify("");
         setVisible(1);
+        setAuctionItemTypeModify(1);
         setSelectedImages([]);
 
         setAuctionItemDeleteModal(false);
@@ -127,6 +137,7 @@ const AuctionController = ()=>{
         setDescriptionModify(e.data?.description);
         setVisible(e.data.visible);
         setClosingTimeModify(e.data.closingTime);
+        setAuctionItemTypeModify(e.data.typeId);
         setSelectedRowValue(e.data);
         setSelectedRow(false);
     }, [])
@@ -234,7 +245,11 @@ const AuctionController = ()=>{
                 body: JSON.stringify({
                     title: title, 
                     description: description,
-                    closingTime: closingTime//moment(closingTime).format('D.M.YYYY HH.MM.s')
+                    closingTime: closingTime,
+                    visible: visible,
+                    typeId: auctionItemType,
+                    startingPrice: startingPrice != "" && startingPrice != null ? startingPrice : 0,
+                    raiseClosingTimeInterval: auctionItemRaisePeriod//moment(closingTime).format('D.M.YYYY HH.MM.s')
                 })
             }
 
@@ -291,15 +306,16 @@ const AuctionController = ()=>{
                         Title: titleModify,
                         Description:descriptionModify,
                         ClosingTime: closingTimeModify,
-                        Visible: visible
+                        Visible: visible,
+                        typeId: auctionItemTypeModify
                     })
                 }
-
+                console.log(options.body);
+                console.log(auctionItemTypeModify);
                 
                 var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/AuctionItems/"+selectedRowValue.id, options);
                 var answer = await search.json();
                 if(answer?.status == "Ok" && imageFiles != null){
-                    console.log(answer.message);
                     postImages(answer.message);
                 }
                 else{
@@ -427,11 +443,12 @@ const AuctionController = ()=>{
                                 style={{ minHeight: 450, minWidth: 500 }}
                                 columns={auctionItemsColumns}
                                 dataSource={auctionItems}
-                                enableSelection={true}
                                 defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
-                                sortable={false}
                                 onSelectionChange={onSelectionChange}
-                                />
+                                enableSelection={true}
+                                sortable={false}
+                                showColumnMenuTool={false}
+                            />
                         </div>
                         <div>
                             <div className='auctionControllerButtonsDiv'>
@@ -479,12 +496,37 @@ const AuctionController = ()=>{
                                             <Form.Control placeholder='Title' onBlur={(e)=>{setTitle(handleInputChange(e));}} />
                                         </div>
 
-                                        <div className='controllerFormInputs'>
+                                        <div>
                                             <Form.Label>Description</Form.Label>
                                             <Form.Control as="textarea" placeholder='Description' onBlur={(e)=>{setDescription(handleInputChange(e));}} />
                                         </div>
 
+                                        <div className='controllerFormInputs'>
+                                            <Form.Label >Visible</Form.Label>
+                                            <Form.Select value={visible} onChange={(e)=>{setVisible(e.target.value);}} >
+                                                <option value={1}>true</option>
+                                                <option value={0}>false</option>
+                                            </Form.Select>
+                                        </div>
 
+                                        <div className='controllerFormInputs'>
+                                            <Form.Label >Type</Form.Label>
+                                            <Form.Select value={auctionItemType} onChange={(e)=>{setAuctionItemType(e.target.value);}} >
+                                                <option value={1}>Commission</option>
+                                                <option value={2}>Purchase</option>
+                                            </Form.Select>
+                                        </div>
+                                        <div className='controllerFormInputs'>
+                                            <Form.Label>Starting Price</Form.Label>
+                                            <Form.Control placeholder='0€' onBlur={(e)=>{setStartingPrice(handleInputChange(e));}} />
+                                        </div>
+                                        <div className='controllerFormInputs'>
+                                            <Form.Label>Closing time raise period</Form.Label>
+                                            <Form.Control placeholder='0 minutes' onBlur={(e)=>{setAuctionItemRaisePeriod(handleInputChange(e));}} />
+                                            <Form.Text>
+                                                When the auction is about to close, this amount of minutes will be added to the timer when an offer is made.
+                                            </Form.Text>
+                                        </div>
                                         <div className='controllerFormInputs'>
                                             <Form.Label>Closing time</Form.Label>
                                             <Datetime 
@@ -494,6 +536,8 @@ const AuctionController = ()=>{
                                                 Set when the auction bidding will close.
                                             </Form.Text>
                                         </div>
+
+
 
                                         <div>
                                             <input onChange={(e)=>{setFileFromInput(e);}} type={"file"} accept={'image/*'} id={"image-uploader"} className={"form-control"+applyErrorClass("imageSource")} multiple></input>
@@ -529,7 +573,7 @@ const AuctionController = ()=>{
                                         <Form.Control value={titleModify} placeholder='Title' onChange={(e)=>{setTitleModify(handleInputChange(e));}} />
                                     </div>
 
-                                    <div className='controllerFormInputs'>
+                                    <div>
                                         <Form.Label>Description</Form.Label>
                                         <Form.Control as="textarea" value={descriptionModify} placeholder='Description' onChange={(e)=>{setDescriptionModify(handleInputChange(e));}} />
                                     </div>
@@ -539,6 +583,14 @@ const AuctionController = ()=>{
                                         <Form.Select value={visible} onChange={(e)=>{setVisible(e.target.value);}} >
                                             <option value={1}>true</option>
                                             <option value={0}>false</option>
+                                        </Form.Select>
+                                    </div>
+
+                                    <div className='controllerFormInputs'>
+                                        <Form.Label >Type</Form.Label>
+                                        <Form.Select value={auctionItemType} onChange={(e)=>{setAuctionItemType(e.target.value);}} >
+                                            <option value={1}>Commission</option>
+                                            <option value={2}>Purchase</option>
                                         </Form.Select>
                                     </div>
 
@@ -564,7 +616,7 @@ const AuctionController = ()=>{
                                     
                                     <Modal.Footer className="ModalFooter">
                                     <p className='errorMessage'>{message}</p>
-                                        <Button variant="secondary" onClick={()=>{resetValues()}}>
+                                        <Button variant="secondary" onClick={()=>{setAuctionItemModifyModal(false)}}>
                                             Close
                                         </Button>
                                         <Button variant="primary" onClick={()=>{modifyAuctionItem()}}>
@@ -599,11 +651,12 @@ const AuctionController = ()=>{
                             style={{ minHeight: 43+ 40 * usersBills?.length }}
                             columns={billsColumns}
                             dataSource={usersBills}
-                            enableSelection={false}
                             defaultSortInfo={{name: "billDate",  dir: -1, type: 'date'}}
-                            sortable={false}
                             onSelectionChange={onSelectionChange}
                             onRenderRow={changeRowColor}
+                            enableSelection={false}
+                            sortable={false}
+                            showColumnMenuTool={false}
                             />
                         <p>{billsMessage}</p>
                     </div>
