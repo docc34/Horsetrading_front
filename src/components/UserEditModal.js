@@ -9,6 +9,7 @@ const UserEditModal = ({user}) => {
     const [cookies] = useCookies(['token']);
     const [show, setShow] = useState(false);
 
+
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -49,45 +50,52 @@ const UserEditModal = ({user}) => {
 
         <Modal show={show} onHide={handleClose} centered>
             <Modal.Header closeButton>
-            <Modal.Title>Edit profile</Modal.Title>
+                <Modal.Title>Edit profile</Modal.Title>
             </Modal.Header>
             <Modal.Body>
             <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                <Form.Label>Company Name</Form.Label>
-                <Form.Control
-                    type="username"
-                    placeholder={user.companyName}
-                    autoFocus
-                    onChange={(event) =>
-                        setUsernameModify(event.target.value)
-                      }
-                />
-                </Form.Group>
                 <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlTextarea1"
+                    className="mb-3"
+                    controlId="exampleForm.ControlTextarea1"
                 >
-                <Form.Label>Description</Form.Label>
-                <Form.Control 
-                    as="textarea" 
-                    type="description"
-                    placeholder={user.description}
-                    rows={3}
-                    onChange={(event) =>
-                        setDescriptionModify(event.target.value)
-                      }
-                />
+                    <Form.Label>Username</Form.Label>
+                    <Form.Control
+                        as="textarea" 
+                        type="username"
+                        autoFocus
+                        onChange={(event) =>
+                            setUsernameModify(event.target.value)
+                        }
+                    >
+                    {user.companyName}
+                    </Form.Control>
+                </Form.Group>
+                
+                <Form.Group
+                    className="mb-3"
+                    controlId="exampleForm.ControlTextarea1"
+                >
+                    <Form.Label>Description</Form.Label>
+                    <Form.Control 
+                        as="textarea" 
+                        type="description"
+                        rows={3}
+                        onChange={(event) =>
+                            setDescriptionModify(event.target.value)
+                        }
+                    >
+                    {user.description}
+                    </Form.Control>
                 </Form.Group>
             </Form>
             </Modal.Body>
             <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-                Close
-            </Button>
-            <Button variant="primary" onClick={modifyUserProfile}>
-                Save Changes
-            </Button>
+                <Button variant="secondary" onClick={handleClose}>
+                    Close
+                </Button>
+                <Button variant="primary" onClick={modifyUserProfile}>
+                    Save Changes
+                </Button>
             </Modal.Footer>
         </Modal>
         </>
