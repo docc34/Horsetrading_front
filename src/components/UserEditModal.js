@@ -1,15 +1,45 @@
 import './UserEditModal.css'
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import { useCookies } from 'react-cookie';
 
 const UserEditModal = ({user}) => {
-    console.log('modal', user.companyName)
+    const [cookies] = useCookies(['token']);
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const [usernameModify, setUsernameModify] = useState(user.companyName);
+    const [descriptionModify, setDescriptionModify] = useState(user.description)
+
+    const modifyUserProfile = async()=>{
+        try{
+            if(usernameModify != ""){
+                const options = {
+                    method:'PUT',
+                    headers: { 'Content-Type': 'application/json', "Authorization": `Bearer ${cookies.token}` },
+                    body:JSON.stringify({
+                        CompanyName: usernameModify,
+                        Description: descriptionModify,
+                    })
+                }
+                await fetch("https://horsetradingapidev.azurewebsites.net/api/Profiles/"+user.id, options);
+                window.location.reload();
+            }
+        }
+        catch(e){
+            console.log(e);      
+        }
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        setUsernameModify('');
+        setDescriptionModify('');
+      };
 
     return (
         <>
@@ -22,13 +52,16 @@ const UserEditModal = ({user}) => {
             <Modal.Title>Edit profile</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            <Form>
+            <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                 <Form.Label>Company Name</Form.Label>
                 <Form.Control
                     type="username"
                     placeholder={user.companyName}
                     autoFocus
+                    onChange={(event) =>
+                        setUsernameModify(event.target.value)
+                      }
                 />
                 </Form.Group>
                 <Form.Group
@@ -40,7 +73,10 @@ const UserEditModal = ({user}) => {
                     as="textarea" 
                     type="description"
                     placeholder={user.description}
-                    rows={3} 
+                    rows={3}
+                    onChange={(event) =>
+                        setDescriptionModify(event.target.value)
+                      }
                 />
                 </Form.Group>
             </Form>
@@ -49,7 +85,7 @@ const UserEditModal = ({user}) => {
             <Button variant="secondary" onClick={handleClose}>
                 Close
             </Button>
-            <Button variant="primary" onClick={handleClose}>
+            <Button variant="primary" onClick={modifyUserProfile}>
                 Save Changes
             </Button>
             </Modal.Footer>
