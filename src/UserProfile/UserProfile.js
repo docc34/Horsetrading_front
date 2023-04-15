@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import CardGroup from 'react-bootstrap/CardGroup';
 import { useCookies } from 'react-cookie';
 import { UserEditModal } from '../components/UserEditModal';
+import { Button } from 'react-bootstrap';
 
 
 const UserProfile = () => {
@@ -48,9 +49,7 @@ const UserProfile = () => {
         <div className='main-container'>
             {loggedIn == true ? 
                 <div className='user-container'>
-
                 
-                    <a href="/AuctionController">Control Page</a>
                     <CardGroup>
                     {
                         containerData.filter(item => item.id == auctionId).map(id => {
@@ -58,6 +57,7 @@ const UserProfile = () => {
                                 <div>
                                     <UserContainer user={id} />
                                     <UserEditModal user={id} />
+                                    <Button href="/AuctionController">Control Page</Button>
                                 </div>
                                 )})
                     }
