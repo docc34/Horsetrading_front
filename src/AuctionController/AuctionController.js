@@ -220,6 +220,7 @@ const AuctionController = ()=>{
                 setBillsMessage(result?.message);
             }
             else if(result?.status == "Error"){
+                await getUsersBills();
                 setBillsMessage(result?.message);
             }
             else if(result?.status == "Ok" && result != null){
@@ -234,6 +235,19 @@ const AuctionController = ()=>{
         }
     }
 
+    const getUsersBills = async ()=>{
+        const options = {
+            method: 'GET',
+            headers: {"Authorization": `Bearer ${cookies.token}`}
+        }
+
+        var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/Bills/User",options);
+        var result = await search.json();
+        if(result?.status != "Error"){
+            setUsersBills(result);
+            // await fetchUsersBills();
+        }
+    }
 
 //Auctionitem CRUD
     const postAuctionItem = async ()=>{
@@ -398,6 +412,7 @@ const AuctionController = ()=>{
         var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/Images/?ImageUrl="+imageUrl,options);
         var result = await search.json();
         if(result?.status == "Ok"){
+            setSelectedImages([]);
             await fetchImages();
         }
     }
@@ -536,7 +551,6 @@ const AuctionController = ()=>{
                                                 Set when the auction bidding will close.
                                             </Form.Text>
                                         </div>
-
 
 
                                         <div>
