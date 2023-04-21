@@ -12,8 +12,8 @@ import CloseButton from 'react-bootstrap/CloseButton';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import {handleInputChange} from  '../functions/handleInputChange'
-
-
+import moment from 'moment';
+import 'moment-timezone';
 import Datetime from 'react-datetime';
 
 const AuctionController = ()=>{
@@ -545,6 +545,7 @@ const AuctionController = ()=>{
                                         <div className='controllerFormInputs'>
                                             <Form.Label>Closing time</Form.Label>
                                             <Datetime 
+                                                displayTimeZone={"Europe/Helsinki"}
                                                 onChange={(e)=>{setClosingTime(e._d);}}
                                             />
                                             <Form.Text>
@@ -611,7 +612,8 @@ const AuctionController = ()=>{
                                     <div className='controllerFormInputs'>
                                         <Form.Label >Closing time</Form.Label>
                                         <Datetime 
-                                            value={closingTimeModify}
+                                            displayTimeZone={"Europe/Helsinki"}
+                                            initialViewDate={closingTimeModify}
                                             onChange={(e)=>{setClosingTimeModify(e._d);}}
                                         />
                                         <Form.Text>
