@@ -15,6 +15,7 @@ import {handleInputChange} from  '../functions/handleInputChange'
 import moment from 'moment';
 import 'moment-timezone';
 import Datetime from 'react-datetime';
+import { NavLink } from 'react-bootstrap';
 
 const AuctionController = ()=>{
     const [loggedIn, setLoggedIn] = useState(false);
@@ -46,6 +47,7 @@ const AuctionController = ()=>{
     const [titleModify, setTitleModify] = useState("");
     const [descriptionModify, setDescriptionModify] = useState("");
     const [closingTimeModify, setClosingTimeModify] = useState("");
+    const [pastClosingTimeModify, setPastClosingTimeModify] = useState("");
     const [auctionItemTypeModify, setAuctionItemTypeModify] = useState(1);
     const [visible, setVisible] = useState(1);
     const [selecetdImages, setSelectedImages] = useState([]);
@@ -55,13 +57,16 @@ const AuctionController = ()=>{
     const [usersBills, setUsersBills] = useState([]);
     const [billsMessage, setBillsMessage] = useState("");
     
+    const [userId, setUserId] = useState("");
+    
     const auctionItemsColumns = [
         {name:"id", header: "Id",  defaultVisible: false},
-        {name:"title" , header:"Title",  defaultFlex:2},
+        {name:"title" , header:"Title",  defaultFlex:1},
         {name:"description" , header:"Description", defaultVisible: false},
-        {name:"visible" , header:"Visible", defaultFlex:1},
+        {name:"visible" , header:"Visible"},
         {name:"type" , header:"Type", defaultFlex:1 },
         {name:"typeId" , header:"typeId", defaultVisible: false },
+        {name:"raiseClosingTimeInterval" , header:"Closing time interval" ,  defaultFlex:1},
         {name: 'closingTime',header: 'Closing Time', defaultFlex:2,},
         {name:"url" , header:"Url", defaultFlex:1, render: ({value}) => {
             return <a href={value}>Auction</a>
@@ -137,6 +142,7 @@ const AuctionController = ()=>{
         setDescriptionModify(e.data?.description);
         setVisible(e.data.visible);
         setClosingTimeModify(e.data.closingTime);
+        setPastClosingTimeModify(e.data.closingTime);
         setAuctionItemTypeModify(e.data.typeId);
         setSelectedRowValue(e.data);
         setSelectedRow(false);
@@ -269,8 +275,12 @@ const AuctionController = ()=>{
 
             var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/AuctionItems",options);
             var result = await search.json();
-
-            await postImages(result?.message);
+            if(result.status == "Error" || result == null){
+                setMessage(result?.message);
+            }
+            else{
+                await postImages(result?.message);
+            }
         }
     }
 
@@ -287,6 +297,8 @@ const AuctionController = ()=>{
             }
             else if(auctionItems != null && auctionItems != undefined && auctionItems != []&& auctionItems?.length != 0 ){
                 setAuctionItems(await auctionItems);
+                console.log(await auctionItems[1]);
+                setUserId(await auctionItems[0]?.userId);
             }
             
         }
@@ -321,20 +333,26 @@ const AuctionController = ()=>{
                         Description:descriptionModify,
                         ClosingTime: closingTimeModify,
                         Visible: visible,
-                        typeId: auctionItemTypeModify
+                        typeId: auctionItemTypeModify,
+                        raiseClosingTimeInterval: selectedRowValue.raiseClosingTimeInterval
+                        
                     })
                 }
-                console.log(options.body);
-                console.log(auctionItemTypeModify);
-                
-                var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/AuctionItems/"+selectedRowValue.id, options);
-                var answer = await search.json();
-                if(answer?.status == "Ok" && imageFiles != null){
-                    postImages(answer.message);
+
+                //Tarkistaa että auctionitem joka on jo ei tule enään muokatuksi
+                if( moment(new Date().getTime()).isAfter(moment(pastClosingTimeModify))){
+                    setMessage("Cannot modify closed auctionitem");
                 }
                 else{
-                    await fetchAuctionItems();
-                    resetValues();
+                    var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/AuctionItems/"+selectedRowValue.id, options);
+                    var answer = await search.json();
+                    if(answer?.status == "Ok" && imageFiles != null){
+                        postImages(answer.message);
+                    }
+                    else{
+                        await fetchAuctionItems();
+                        resetValues();
+                    }
                 }
             }
         }
@@ -448,17 +466,19 @@ const AuctionController = ()=>{
     return(
     <div className='auctionControllerMainDiv'>
         {loggedIn == true ? 
-            <div >
+            <div>
                 <h1>Auction controller</h1>
+                <a href={'user/?userId='+userId}>Go to profile</a>
                 <div className='auctionControllerContentMainDiv'>
                     <div>
+                        <h2>Auction Items</h2>
                         <div>
                             <ReactDataGrid
                                 idProperty="id"
-                                style={{ minHeight: 450, minWidth: 500 }}
+                                style={{minHeight: 43+ 40 * auctionItems?.length, minWidth: 500 }}
                                 columns={auctionItemsColumns}
                                 dataSource={auctionItems}
-                                defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
+                                defaultSortInfo={[{name: "closingTime",  dir: -1, type: 'date'},{name: "visible",  dir: -1, type: 'date'}]}
                                 onSelectionChange={onSelectionChange}
                                 enableSelection={true}
                                 sortable={false}
@@ -533,11 +553,11 @@ const AuctionController = ()=>{
                                         </div>
                                         <div className='controllerFormInputs'>
                                             <Form.Label>Starting Price</Form.Label>
-                                            <Form.Control placeholder='0€' onBlur={(e)=>{setStartingPrice(handleInputChange(e));}} />
+                                            <Form.Control placeholder='0€' type='number' onBlur={(e)=>{setStartingPrice(handleInputChange(e));}} />
                                         </div>
                                         <div className='controllerFormInputs'>
                                             <Form.Label>Closing time raise period</Form.Label>
-                                            <Form.Control placeholder='0 minutes' onBlur={(e)=>{setAuctionItemRaisePeriod(handleInputChange(e));}} />
+                                            <Form.Control placeholder='0 minutes' type='number' max={60} onBlur={(e)=>{setAuctionItemRaisePeriod(handleInputChange(e));}} />
                                             <Form.Text>
                                                 When the auction is about to close, this amount of minutes will be added to the timer when an offer is made.
                                             </Form.Text>
@@ -661,13 +681,15 @@ const AuctionController = ()=>{
                         </div>
                     </div>
                     <div className='auctionControllerBillsReactDataGridDiv'>
+                        <h2>Bills</h2>
+                        <p>All bills are sent to your email address</p>
                         <ReactDataGrid
                             idProperty="id"
                             className='auctionControllerBillsReactDataGrid'
                             style={{ minHeight: 43+ 40 * usersBills?.length }}
                             columns={billsColumns}
                             dataSource={usersBills}
-                            defaultSortInfo={{name: "billDate",  dir: -1, type: 'date'}}
+                            defaultSortInfo={[{name: "paid",  dir: -1, type: 'number'},{name: "billDate",  dir: -1, type: 'date'}]}
                             onSelectionChange={onSelectionChange}
                             onRenderRow={changeRowColor}
                             enableSelection={false}

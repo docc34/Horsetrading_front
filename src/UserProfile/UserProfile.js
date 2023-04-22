@@ -6,6 +6,7 @@ import CardGroup from 'react-bootstrap/CardGroup';
 import { useCookies } from 'react-cookie';
 import { UserEditModal } from '../components/UserEditModal';
 import { Button } from 'react-bootstrap';
+import { ChangePassword } from "../components/ChangePassword";
 
 
 const UserProfile = () => {
@@ -57,6 +58,7 @@ const UserProfile = () => {
                                 <div>
                                     <UserContainer user={id} />
                                     <UserEditModal user={id} />
+                                    <ChangePassword user={id}/>
                                     <Button href="/AuctionController">Control Page</Button>
                                 </div>
                                 )})

@@ -37,6 +37,7 @@ const Auction = ()=>{
     const [price, setPrice] = useState(0);
     const [phonenumber, setPhonenumber] = useState(0);
     const [igTag, setIgTag] = useState("@");
+    const [auctionClosingTime, setAuctionClosingTime] = useState("");
 
     const [usernameModify, setUsernameModify] = useState("");
     const [passwordModify, setPasswordModify] = useState("");
@@ -94,12 +95,13 @@ const Auction = ()=>{
     ]
 
     //Kun joku tekee tarjouksen ja hinta päivittyy tämä funktio ottaa sen vastaan
-    const receiveSignalMessage = (auctionItemId, auctioneers)=>{
+    const receiveSignalMessage = (auctionItemId, auctioneers,AuctionClosingTime)=>{
         if(auctionItemId == auctionId){
             setAuctioneers(auctioneers);
             //päivitetään highest offer
             var addedAuctioneer = auctioneers[0];
             setHighestOffer(addedAuctioneer?.price);
+            setAuctionClosingTime(AuctionClosingTime);
             forceUpdate();
         }
     }
@@ -111,12 +113,12 @@ const Auction = ()=>{
             //Checks that the auctionitemid dosent already exist in the taböe
             var i = true
             list?.map((e)=>{
-                if(e == auctionId){
+                if(e == auctionId && e != null){
                     i = false;
                 }
             });
             if(i == true){
-                list[list?.length +1] = auctionId;
+                list[list?.length] = auctionId;
                 setCookie('recentAuctionItems', list, { path: '/' });
             }
         }
@@ -179,7 +181,7 @@ const Auction = ()=>{
             setCookie('auctioneerDefaultUsername', addedAuctioneer.username, { path: '/Auction' });
 
             //Lähetetään lisäyksen hakemat uusimmat auctioneerit muille signalrrin pipen kautta.
-            sendSignalMessage(auctionId,resultList);
+            sendSignalMessage(auctionId,resultList,addedAuctioneer.auctionItemClosingTime);
 
             //Päivitetään data
             setAuctioneers(resultList);
@@ -430,6 +432,7 @@ const Auction = ()=>{
     
             if(auctionItem?.status != "Error"){
                 setCurrentAuctionItem(await auctionItem);
+                setAuctionClosingTime(auctionItem?.closingTime);
                 setAuctionVisible(1);                
             }
             else{
@@ -504,7 +507,7 @@ const Auction = ()=>{
                         <h1 className='auctionTitle'>Auction!</h1>
                     </div>
                     <div className='auctionCountdownDiv'>
-                        <CountdownTimer targetDate={currentAuctionItem?.closingTime} />
+                        <CountdownTimer targetDate={auctionClosingTime} />
                     </div>
                     <div className='auctionReactDataGridTabsDiv'>
                         <Tabs
@@ -686,7 +689,7 @@ const Auction = ()=>{
                                         </div>
                                         <div >
                                             <Form.Label>Offer</Form.Label>
-                                            <Form.Control required step={5} type="number" placeholder='Offer' onBlur={(e)=>{setPrice(e.target.value);}} />
+                                            <Form.Control required  type="number" placeholder='Offer' onBlur={(e)=>{setPrice(e.target.value);}} />
                                             <Form.Text >
                                                 The current highest offer is {highestOffer != 0 ? highestOffer : 0}€
                                             </Form.Text>
@@ -788,7 +791,8 @@ const Auction = ()=>{
                                                 <Form.Label>Offer</Form.Label>
                                                 <div className='auctionFormInputs auctionModifySaveButtonDiv'>
                                                     {/* cookies.auctioneerDefaultPrice != undefined && cookies.auctioneerDefaultPrice != 0 ? cookies.auctioneerDefaultPrice + '€': 0 + '€' */}
-                                                    <Form.Control required onWheel={(e) => e.target.blur()} step={5}  type="number" placeholder={"€"} onBlur={(e)=>{setPriceModify(e.target.value);}} />
+                                                    {/* step={5} */}
+                                                    <Form.Control required onWheel={(e) => e.target.blur()}  type="number" placeholder={"€"} onBlur={(e)=>{setPriceModify(e.target.value);}} />
                                                     <Button  type="submit" > {/*onClick={()=>{modifyAuction();}}*/}Save</Button>
                                                 </div>
                                                 <Form.Text >

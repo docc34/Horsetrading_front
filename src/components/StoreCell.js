@@ -1,5 +1,6 @@
 import './StoreCell.css'
 import { useCountdown } from "../functions/countdown";
+import Alert from 'react-bootstrap/Alert';
 
 
 const StoreCell = (d)=>{
@@ -26,9 +27,12 @@ const StoreCell = (d)=>{
                 </div>
             </a>
             <a href={url} className={storeCellContentClassName}>
-                <div className='storeCellContentDiv rounded-bottom ' style={d.data?.type == "Purchase" ? {borderColor: '#dadd0b'} : {borderColor: '#0437df'}}>
-
-                    <p className='countdownContainerType'>Type: {d.data?.type}</p>
+                <div className='storeCellContentDiv rounded-bottom ' >
+                            {/* style={d.data?.type == "Purchase" ? {backgroundColor: '#dadd0b'} : {backgroundColor: '#0437df'}} */}
+                            {/* variant={d.data?.type == "Purchase" ? 'warning' : 'info'} */}
+                           <Alert className='countdownContainerType' style={d.data?.type == "Purchase" ? {backgroundColor: '#3E215C', borderColor: '#3E215C'} : {backgroundColor: '#AB7E0E', borderColor: '#AB7E0E'}}  >
+                                <p>Type: {d.data?.type}</p>
+                            </Alert> 
 
                     <h2>{d.data?.title}</h2>
                     <p>{d.data?.description}</p>

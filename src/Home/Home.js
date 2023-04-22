@@ -4,6 +4,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import CardGroup from 'react-bootstrap/CardGroup';
 import { UserContainer } from '../components/UserContainer';
 import { useCookies } from 'react-cookie';
+import { StoreCell } from '../components/StoreCell';
 
 const Home = ()=>{
     const [cookies] = useCookies(["recentAuctionItems"]);
@@ -27,11 +28,18 @@ const Home = ()=>{
                 headers: { 'Content-Type': 'application/json' },
                 body:JSON.stringify(list)
             }
+
+            console.log(list);
             var search = await fetch(`https://horsetradingapidev.azurewebsites.net/api/AuctionItems/Recent`,options);
             var data = await search.json();
             
             if(data?.result != "Error" && data?.result != null && data?.result != undefined){
+                console.log(data?.message);
+            }
+            else{
                 setRecentAuctionItems(data);
+                console.log(data);
+                console.log("data");
                 //TODO: tee graafinen liittymä recent auctionitemsseille
             }
         }
@@ -42,8 +50,27 @@ const Home = ()=>{
         getRecentAuctionItems();
     },[]);
 
+
+    
     return(
         <div className='homeMainDiv'>
+            {/* Recently viewed, does not work yet. Only shows the last visited item */}
+            {/* <div>
+                <h2>Recently viewed</h2>
+                <div>
+                <CardGroup>
+
+                    {recentAuctionItems.map((e)=>{
+                        console.log("e");
+                        console.log(e);
+                        return (
+                            <StoreCell data={e} />
+                        )
+
+                    })}
+                </CardGroup>
+                </div>
+            </div> */}
             <div className='homeCellsDiv'>
                 { 
                     containerData == null || containerData?.length == 0 ? 
