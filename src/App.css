@@ -82,4 +82,8 @@ p{
 .offerInput{
   width:80px !important;
 }
+
+.alert{
+  margin-bottom:0px !important; 
+}
 /* #282c34 */

@@ -135,6 +135,7 @@ const Auction = ()=>{
         }
         setPasswordVisibility("password");
     };
+
     //Kun datagridin riviä klikataan
     const onSelectionChange = useCallback((selected) => {
         setUsernameModify(selected?.data.username);
@@ -611,9 +612,9 @@ const Auction = ()=>{
                                         The instagram tag is used by the seller to contact the winner. 
                                         You can alternatively sign up using your phonenumber! </p>
                                 </div>
-                                <div >
+                                <div>
                                     <div className="auctionParticipateFormBodyDiv">
-                                        <div >
+                                        <div>
                                             <Collapse in={igTagCollapse}>
                                                 <div>
                                                     <Form.Label>Instagram tag</Form.Label>

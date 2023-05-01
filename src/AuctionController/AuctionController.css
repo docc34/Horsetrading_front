@@ -17,10 +17,23 @@
 .renderedImage {
   max-width: 100px;
 }
+
+
 .auctionControllerLoginMainDiv {
   min-height: 45rem;
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
+.auctionControllerLoginButtonDiv{
+  display: flex;
+  justify-content: left;
+  align-items: start;
+}
+
+
 .auctionControllerModifyImagesDiv {
   margin: 3%;
   display: flex;
@@ -43,5 +56,18 @@
 }
 
 .controllerFormInputs{
-  max-width: 200px;
+  width: 100%;
+}
+.controllerFormInputs input{
+  max-width: 250px;
+}
+.controllerFormInputs select{
+  max-width: 250px;
+}
+.controllerFormImageInputDiv{
+  margin-top: 1rem;
+}
+ 
+.loginControllerFormInputs{
+  max-width: 250px;
 }

@@ -11,6 +11,7 @@ import CloseButton from 'react-bootstrap/CloseButton';
 
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import {handleInputChange} from  '../functions/handleInputChange'
 import moment from 'moment';
 import 'moment-timezone';
@@ -25,12 +26,12 @@ const AuctionController = ()=>{
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loginVisibilityModal, setLoginVisibilityModal] = useState(false);
     
     const [message, setMessage] = useState("");
 
     const [cookies, setCookie,removeCookie] = useCookies(['token']);
     
+    const [auctionItemCreateValidated, setAuctionIteCreateValidated] = useState(false);
     const [auctionItemPostModal, setAuctionItemPostModal] = useState(false);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -41,8 +42,11 @@ const AuctionController = ()=>{
     const [auctionItemType, setAuctionItemType] = useState(1);
     const [auctionItemRaisePeriod, setAuctionItemRaisePeriod] = useState(0);
     
+    const [showMessageAlert, setShowMessageAlert] = useState(false);
+
     const [auctionItemDeleteModal, setAuctionItemDeleteModal] = useState(false);
     
+    const [auctionItemModifyValidated, setAuctionIteModifyValidated] = useState(false);
     const [auctionItemModifyModal, setAuctionItemModifyModal] = useState(false);
     const [titleModify, setTitleModify] = useState("");
     const [descriptionModify, setDescriptionModify] = useState("");
@@ -87,27 +91,44 @@ const AuctionController = ()=>{
         // }}
     ]
 
+    const handleCreateAuctionItemSubmit = (event) => {
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+            setAuctionIteCreateValidated(true);
+        }
+        // if(price - highestOffer < 5){
+        //     event.preventDefault();
+        //     event.stopPropagation();
+        // }
+        else{
+            event.preventDefault();
+            postAuctionItem()
+            setAuctionIteCreateValidated(false);
+        }
+    };
 
-    // {
-    //     name: 'created',header: 'Created',defaultWidth: 150,
-    //     // need to specify dateFormat
-    //     dateFormat: 'YYYY-MM-DD, HH:mm',
-    //     filterEditor: DateFilter,
-    //     filterEditorProps: (props, { index }) => {
-    //       // for range and notinrange operators, the index is 1 for the after field
-    //       return {
-    //         dateFormat: 'YYYY-MM-DD, HH:mm',
-    //         placeholder: index == 1 ? 'Last login date is before...': 'Last login date is after...'
-    //       }
-    //     },
-    //     //Momentjs formats the date
-    //     render: ({ value, cellProps: { dateFormat } }) =>
-    //       moment(value).format(dateFormat), 
-    // },
-    
+    const handleModifyAuctionItemSubmit = (event) => {
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+            setAuctionIteModifyValidated(true);
+        }
+        // if(price - highestOffer < 5){
+        //     event.preventDefault();
+        //     event.stopPropagation();
+        // }
+        else{
+            event.preventDefault();
+            modifyAuctionItem();
+            setAuctionIteModifyValidated(false);
+        }
+    };
+
     //functions
     const resetValues = ()=>{
-        setLoginVisibilityModal(false);
         setPassword("");
         setEmail("");
 
@@ -134,7 +155,6 @@ const AuctionController = ()=>{
         setAuctionItemDeleteModal(false);
 
         setAuctionItemVisibilityModal(false);
-
     }
 
     const onSelectionChange = useCallback((e) => {
@@ -230,6 +250,7 @@ const AuctionController = ()=>{
                 setBillsMessage(result?.message);
             }
             else if(result?.status == "Ok" && result != null){
+                setShowMessageAlert(true);
                 setBillsMessage(result?.message);
                 setUsersBills(result?.object?.value);
                 // await fetchUsersBills();
@@ -258,7 +279,6 @@ const AuctionController = ()=>{
 //Auctionitem CRUD
     const postAuctionItem = async ()=>{
         if(title !== "" && description !== "" && closingTime !== "" && imageFiles!==null){
-            console.log(imageFiles);
             const options = {
                 method: 'POST',
                 headers: {"Authorization": `Bearer ${cookies.token}`, 'Content-Type': 'application/json'},
@@ -269,7 +289,7 @@ const AuctionController = ()=>{
                     visible: visible,
                     typeId: auctionItemType,
                     startingPrice: startingPrice != "" && startingPrice != null ? startingPrice : 0,
-                    raiseClosingTimeInterval: auctionItemRaisePeriod//moment(closingTime).format('D.M.YYYY HH.MM.s')
+                    raiseClosingTimeInterval: auctionItemRaisePeriod != "" ? auctionItemRaisePeriod : 0//moment(closingTime).format('D.M.YYYY HH.MM.s')
                 })
             }
 
@@ -471,6 +491,20 @@ const AuctionController = ()=>{
                 <a href={'user/?userId='+userId}>Go to profile</a>
                 <div className='auctionControllerContentMainDiv'>
                     <div>
+                        <Modal show={showMessageAlert}>
+                            <Alert show={true} variant="success">
+                                <Alert.Heading>New message!</Alert.Heading>
+                                <p>{message}</p>
+                                <br/>
+                                <p>{billsMessage}</p>
+                                <hr />
+
+                                <div className="d-flex justify-content-end">
+                                    <Button onClick={() => setShowMessageAlert(false)} variant="outline-success">Ok</Button>
+                                </div>
+                            </Alert>
+                        </Modal>
+
                         <h2>Auction Items</h2>
                         <div>
                             <ReactDataGrid
@@ -518,7 +552,7 @@ const AuctionController = ()=>{
 
                             <div>
                                 <Modal show={auctionItemPostModal} >
-                                    <form>
+                                    <Form noValidate validated={auctionItemCreateValidated} onSubmit={handleCreateAuctionItemSubmit} >
 
                                         <Modal.Header className="ModalHeader" >
                                             <Modal.Title>Add auctionitem</Modal.Title>
@@ -528,20 +562,23 @@ const AuctionController = ()=>{
                                         <Modal.Body className="ModalBody">
                                         <div className='controllerFormInputs'>
                                             <Form.Label>Title</Form.Label>
-                                            <Form.Control placeholder='Title' onBlur={(e)=>{setTitle(handleInputChange(e));}} />
+                                            <Form.Control required placeholder='Title' onBlur={(e)=>{setTitle(e.target.value);}} />
                                         </div>
 
                                         <div>
                                             <Form.Label>Description</Form.Label>
-                                            <Form.Control as="textarea" placeholder='Description' onBlur={(e)=>{setDescription(handleInputChange(e));}} />
+                                            <Form.Control required as="textarea" placeholder='Description' onBlur={(e)=>{setDescription(e.target.value);}} />
                                         </div>
 
                                         <div className='controllerFormInputs'>
-                                            <Form.Label >Visible</Form.Label>
+                                            <Form.Label >Hidden</Form.Label>
                                             <Form.Select value={visible} onChange={(e)=>{setVisible(e.target.value);}} >
-                                                <option value={1}>true</option>
-                                                <option value={0}>false</option>
+                                                <option value={1}>No</option>
+                                                <option value={0}>Yes</option>
                                             </Form.Select>
+                                            <Form.Text>
+                                                You can also make an auction "hidden" so that its only visible to you.
+                                            </Form.Text>
                                         </div>
 
                                         <div className='controllerFormInputs'>
@@ -553,29 +590,35 @@ const AuctionController = ()=>{
                                         </div>
                                         <div className='controllerFormInputs'>
                                             <Form.Label>Starting Price</Form.Label>
-                                            <Form.Control placeholder='0€' type='number' onBlur={(e)=>{setStartingPrice(handleInputChange(e));}} />
+                                            <Form.Control min={0}  placeholder='0€' type='number' onBlur={(e)=>{setStartingPrice(e.target.value);}} />
+                                            <Form.Text>
+                                                Set the starting price of the auction.
+                                            </Form.Text>
                                         </div>
                                         <div className='controllerFormInputs'>
                                             <Form.Label>Closing time raise period</Form.Label>
-                                            <Form.Control placeholder='0 minutes' type='number' max={60} onBlur={(e)=>{setAuctionItemRaisePeriod(handleInputChange(e));}} />
+                                            <Form.Control min={0} placeholder='0 minutes' type='number' max={60} onBlur={(e)=>{setAuctionItemRaisePeriod(e.target.value);}} />
                                             <Form.Text>
                                                 When the auction is about to close, this amount of minutes will be added to the timer when an offer is made.
                                             </Form.Text>
                                         </div>
                                         <div className='controllerFormInputs'>
                                             <Form.Label>Closing time</Form.Label>
-                                            <Datetime 
+                                            <Datetime  
+                                                input={false}
                                                 displayTimeZone={"Europe/Helsinki"}
                                                 onChange={(e)=>{setClosingTime(e._d);}}
                                             />
-                                            <Form.Text>
+                                            <Form.Text 
+                                                
+                                                >
                                                 Set when the auction bidding will close.
                                             </Form.Text>
                                         </div>
 
 
-                                        <div>
-                                            <input onChange={(e)=>{setFileFromInput(e);}} type={"file"} accept={'image/*'} id={"image-uploader"} className={"form-control"+applyErrorClass("imageSource")} multiple></input>
+                                        <div className='controllerFormImageInputDiv'>
+                                            <input required onChange={(e)=>{setFileFromInput(e);}} type={"file"} accept={'image/*'} id={"image-uploader"} className={"form-control"+applyErrorClass("imageSource")} multiple></input>
                                         </div>
 
                                         </Modal.Body>
@@ -585,80 +628,82 @@ const AuctionController = ()=>{
                                             <Button variant="secondary" onClick={()=>{resetValues()}}>
                                                 Close
                                             </Button>
-                                            <Button variant="primary" onClick={()=>{postAuctionItem()}}  >  
-                                            {/*  */}
-                                                Save
-                                            </Button>
+                                            <Button variant="primary" type="submit"> Save</Button>
                                         </Modal.Footer>
-                                    </form>
+                                    </Form>
                                 </Modal>
                             </div>
 
                             <div>
                                 <Modal show={auctionItemModifyModal} >
+                                    <Form noValidate validated={auctionItemModifyValidated} onSubmit={handleModifyAuctionItemSubmit} >
+                                        <Modal.Header className="ModalHeader">
+                                            <Modal.Title>Modify auctionitem</Modal.Title>
+                                            <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemModifyModal(false);}}></CloseButton>
+                                        </Modal.Header>
 
-                                    <Modal.Header className="ModalHeader">
-                                        <Modal.Title>Modify auctionitem</Modal.Title>
-                                        <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemModifyModal(false);}}></CloseButton>
-                                    </Modal.Header>
+                                        <Modal.Body className="ModalBody">
+                                        <div className='controllerFormInputs'>
+                                            <Form.Label>Title</Form.Label>
+                                            <Form.Control required type='text' value={titleModify} placeholder='Title' onChange={(e)=>{setTitleModify(e.target.value);}} />
+                                        </div>
 
-                                    <Modal.Body className="ModalBody">
-                                    <div className='controllerFormInputs'>
-                                        <Form.Label>Title</Form.Label>
-                                        <Form.Control value={titleModify} placeholder='Title' onChange={(e)=>{setTitleModify(handleInputChange(e));}} />
-                                    </div>
+                                        <div>
+                                            <Form.Label>Description</Form.Label>
+                                            <Form.Control required type='text' as="textarea" value={descriptionModify} placeholder='Description' onChange={(e)=>{setDescriptionModify(e.target.value);}} />
+                                        </div>
 
-                                    <div>
-                                        <Form.Label>Description</Form.Label>
-                                        <Form.Control as="textarea" value={descriptionModify} placeholder='Description' onChange={(e)=>{setDescriptionModify(handleInputChange(e));}} />
-                                    </div>
+                                        <div className='controllerFormInputs'>
+                                            <Form.Label >Hidden</Form.Label>
+                                            <Form.Select value={visible} onChange={(e)=>{setVisible(e.target.value);}} >
+                                                <option value={1}>No</option>
+                                                <option value={0}>Yes</option>
+                                            </Form.Select>
+                                            <Form.Text>
+                                                    You can also make an auction "hidden" so that its only visible to you.
+                                            </Form.Text>
+                                        </div>
 
-                                    <div className='controllerFormInputs'>
-                                        <Form.Label >Visible</Form.Label>
-                                        <Form.Select value={visible} onChange={(e)=>{setVisible(e.target.value);}} >
-                                            <option value={1}>true</option>
-                                            <option value={0}>false</option>
-                                        </Form.Select>
-                                    </div>
+                                        <div className='controllerFormInputs'>
+                                            <Form.Label >Type</Form.Label>
+                                            <Form.Select value={auctionItemType} onChange={(e)=>{setAuctionItemType(e.target.value);}} >
+                                                <option value={1}>Commission</option>
+                                                <option value={2}>Purchase</option>
+                                            </Form.Select>
+                                        </div>
 
-                                    <div className='controllerFormInputs'>
-                                        <Form.Label >Type</Form.Label>
-                                        <Form.Select value={auctionItemType} onChange={(e)=>{setAuctionItemType(e.target.value);}} >
-                                            <option value={1}>Commission</option>
-                                            <option value={2}>Purchase</option>
-                                        </Form.Select>
-                                    </div>
+                                        <div className='controllerFormInputs'>
+                                            <Form.Label >Closing time</Form.Label>
+                                            <Datetime 
+                                                input={false}
+                                                displayTimeZone={"Europe/Helsinki"}
+                                                initialViewDate={closingTimeModify}
+                                                onChange={(e)=>{setClosingTimeModify(e._d);}}
+                                            />
+                                            <Form.Text>
+                                                Set when the auction bidding will close.
+                                            </Form.Text>
+                                        </div>
 
-                                    <div className='controllerFormInputs'>
-                                        <Form.Label >Closing time</Form.Label>
-                                        <Datetime 
-                                            displayTimeZone={"Europe/Helsinki"}
-                                            initialViewDate={closingTimeModify}
-                                            onChange={(e)=>{setClosingTimeModify(e._d);}}
-                                        />
-                                        <Form.Text>
-                                        Set when the auction bidding will close.
-                                        </Form.Text>
-                                    </div>
+                                        <div className='controllerFormImageInputDiv'>
+                                            <input onChange={(e)=>{setFileFromInput(e);}} type={"file"} accept={'image/*'} id={"image-uploader"} className={"form-control"+applyErrorClass("imageSource")} multiple></input>
+                                        </div>
 
-                                    <div>
-                                        <input onChange={(e)=>{setFileFromInput(e);}} type={"file"} accept={'image/*'} id={"image-uploader"} className={"form-control"+applyErrorClass("imageSource")} multiple></input>
-                                    </div>
-
-                                    <div className='auctionControllerModifyImagesDiv'>
-                                        {renderImages}
-                                    </div>
-                                    </Modal.Body>
-                                    
-                                    <Modal.Footer className="ModalFooter">
-                                    <p className='errorMessage'>{message}</p>
-                                        <Button variant="secondary" onClick={()=>{setAuctionItemModifyModal(false)}}>
-                                            Close
-                                        </Button>
-                                        <Button variant="primary" onClick={()=>{modifyAuctionItem()}}>
-                                            Save
-                                        </Button>
-                                    </Modal.Footer>
+                                        <div className='auctionControllerModifyImagesDiv'>
+                                            {renderImages}
+                                        </div>
+                                        </Modal.Body>
+                                        
+                                        <Modal.Footer className="ModalFooter">
+                                        <p className='errorMessage'>{message}</p>
+                                            <Button variant="secondary" onClick={()=>{setAuctionItemModifyModal(false)}}>
+                                                Close
+                                            </Button>
+                                            <Button variant="primary" type="submit">
+                                                Save
+                                            </Button>
+                                        </Modal.Footer>
+                                    </Form>
                                 </Modal>
                             </div>
                         
@@ -702,50 +747,31 @@ const AuctionController = ()=>{
             </div>
             :
             <div className='auctionControllerLoginMainDiv'>
-                <p>You dont have authorization to be here</p>
-                <div>
+                <h4>If your an seller, you can login here</h4>
+                <div className='auctionControllerLoginButtonDiv'>
+                    <div>
                         <div>
-                            <Button variant="primary" onClick={()=>{setLoginVisibilityModal(true);}}>
-                                login
-                            </Button>
+                            <div className='loginControllerFormInputs'>
+                                <Form.Label>Email</Form.Label>
+                                <Form.Control placeholder='Email' value={email} onChange={(e)=>{setEmail(handleInputChange(e));}} />
+                            </div>
 
-                            <Modal className='auctionControllerLoginModal' show={loginVisibilityModal} >
-
-                                <Modal.Header className="ModalHeader" >
-                                    <Modal.Title>Login</Modal.Title>
-                                    <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setLoginVisibilityModal(false);}}></CloseButton>
-                                </Modal.Header>
-
-                                <Modal.Body className="ModalBody">
-                                <div className='controllerFormInputs'>
-                                    <Form.Label>Email</Form.Label>
-                                    <Form.Control placeholder='Email' value={email} onChange={(e)=>{setEmail(handleInputChange(e));}} />
-                                </div>
-
-                                <div className='controllerFormInputs'>
-                                    <Form.Label>Password</Form.Label>
-                                    <Form.Control type="password" placeholder='Password' value={password} onChange={(e)=>{setPassword(handleInputChange(e));}} />
-                                    <Form.Text className="text-muted">
-                                        Logging in is only available for administrators
-                                    </Form.Text>
-                                
-                                    <p className='errorMessage'>{message}</p>
-                                </div>
-
-
-                                </Modal.Body>
-                                
-                                <Modal.Footer className="ModalFooter">
-                                    <Button variant="secondary" onClick={()=>{setLoginVisibilityModal(false); }}>
-                                        Close
-                                    </Button>
-                                    <Button variant="primary" onClick={()=>{handleLogin()}}>
-                                        Login
-                                    </Button>
-                                </Modal.Footer>
-                            </Modal>
+                            <div className='loginControllerFormInputs'>
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control type="password" placeholder='Password' value={password} onChange={(e)=>{setPassword(handleInputChange(e));}} />
+                                <Form.Text className="text-muted">
+                                    Logging in is only available for administrators
+                                </Form.Text>
+                            
+                                <p className='errorMessage'>{message}</p>
+                            </div>
                         </div>
+
+                        <Button variant="primary" onClick={()=>{handleLogin()}}>
+                            Login
+                        </Button>
                     </div>
+                </div>
             </div>}
        
     </div>);
