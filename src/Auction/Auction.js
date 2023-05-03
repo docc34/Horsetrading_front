@@ -18,11 +18,13 @@ import { CountdownTimer} from '../components/CountdownTimer'
 import {receiveMessage, sendSignalMessage} from '../SignalRConnection';
 import { propTypes } from 'react-bootstrap/esm/Image';
 import '@inovua/reactdatagrid-community/index.css'
+import { useTranslation } from 'react-i18next';
 
 const Auction = ()=>{
     const search = useLocation().search;
     const auctionId = new URLSearchParams(search).get('auctionId');
     const [cookies, setCookie, removeCookie] = useCookies(['token', "auctioneerId","auctioneerDefaultPrice", "auctioneerDefaultIgTag", "auctioneerDefaultUsername","recentAuctionItems"]);
+    const {t} = useTranslation();
 
     const [selectedRow, setSelectedRow] = useState(true);
     const [selectedRowId, setSelectedRowId] = useState(0);
@@ -74,24 +76,24 @@ const Auction = ()=>{
     var auctioneerColumns = []
     { isCreator == false ?        
     auctioneerColumns =[{name:"id", header: "Id",  defaultVisible: false},
-        {name:"igTag" , header:"Instagram tag",  defaultVisible: false,  defaultFlex:2},
-        {name:"phonenumber" , header:"Phonenumber", defaultVisible: false, defaultFlex:2},
-        {name:"username" , header:"Username", defaultFlex:2},
-        {name:"price" , header:"Offer", type: "number", defaultFlex:1}]
+        {name:"igTag" , header:t("igTag"),  defaultVisible: false,  defaultFlex:2},
+        {name:"phonenumber" , header:t("phonenumber"), defaultVisible: false, defaultFlex:2},
+        {name:"username" , header:t("username"), defaultFlex:2},
+        {name:"price" , header:t("offer"), type: "number", defaultFlex:1}]
         :
     auctioneerColumns =[{name:"id", header: "Id",  defaultVisible: false},
-        {name:"igTag" , header:"Instagram tag",    defaultFlex:2},
-        {name:"phonenumber" , header:"Phonenumber", defaultFlex:2},
-        {name:"username" , header:"Username", defaultFlex:2},
-        {name:"price" , header:"Offer", type: "number", defaultFlex:1}]
+        {name:"igTag" , header:t("igTag"),    defaultFlex:2},
+        {name:"phonenumber" , header:t("phonenumber"), defaultFlex:2},
+        {name:"username" , header:t("username"), defaultFlex:2},
+        {name:"price" , header:t("offer"), type: "number", defaultFlex:1}]
     }
 
     const currentAuctioneerColumns = [
         {name:"id", header: "Id",  defaultVisible: false},
-        {name:"igTag" , header:"Instagram tag",  defaultFlex:2},
-        {name:"phonenumber" , header:"Phonenumber",  defaultFlex:2},
-        {name:"username" , header:"Username", defaultFlex:2},
-        {name:"price" , header:"Offer", type: "number", defaultFlex:1}
+        {name:"igTag" , header:t("igTag"),  defaultFlex:2},
+        {name:"phonenumber" , header:t("phonenumber"),  defaultFlex:2},
+        {name:"username" , header:t("username"), defaultFlex:2},
+        {name:"price" , header:t("offer"), type: "number", defaultFlex:1}
     ]
 
     //Kun joku tekee tarjouksen ja hinta päivittyy tämä funktio ottaa sen vastaan
@@ -505,7 +507,7 @@ const Auction = ()=>{
             <div className='auctionContentMainDiv'>
                 <div className='auctionReactDataGridDiv'>
                     <div className='auctionTitleDiv'>
-                        <h1 className='auctionTitle'>Auction!</h1>
+                        <h1 className='auctionTitle'>{t("auctionAuction")}</h1>
                     </div>
                     <div className='auctionCountdownDiv'>
                         <CountdownTimer targetDate={auctionClosingTime} />
@@ -517,9 +519,9 @@ const Auction = ()=>{
                             className="mb-3"
                             fill
                         >
-                            <Tab eventKey="Top5" title="Top 5 highest offers" onClick={()=>{fetchAuctioneers(5);}}>
+                            <Tab eventKey="Top5" title={t("auctionTop5")} onClick={()=>{fetchAuctioneers(5);}}>
                                 <div className='auctionDataGridTitleDiv'>
-                                    <h3>Top 5 highest offers</h3>
+                                    <h3>{t("auctionTop5")}</h3>
                                 </div>
                                 {ignored}
                                 <ReactDataGrid
@@ -540,9 +542,9 @@ const Auction = ()=>{
                                     showColumnMenuTool={false}
                                 />
                             </Tab>
-                            <Tab eventKey="allOffers" title="All offers" onClick={()=>{fetchAuctioneers(0)}} href="#">
+                            <Tab eventKey="allOffers" title={t("auctionAllOffers")} onClick={()=>{fetchAuctioneers(0)}} href="#">
                                 <div className='auctionDataGridTitleDiv'>
-                                    <h3>All offers</h3>
+                                    <h3>{t("auctionAllOffers")}</h3>
                                 </div>
                                 <ReactDataGrid
                                     idProperty="id"
@@ -567,7 +569,7 @@ const Auction = ()=>{
                     <div className='auctionReactDataGridSingleDiv'>
                         {cookies.auctioneerId != null && currentAuctioneer != [] && currentAuctioneer?.length != 0 ? 
                             <div >
-                                <h3>Your offer</h3>
+                                <h3>{t("auctionYourOffer")}</h3>
                             {/* //currentAuctioneerColumns */}
                                 <ReactDataGrid
                                     className='auctionReactDataGridSingle'
@@ -594,7 +596,7 @@ const Auction = ()=>{
                 <div className='auctionInputDiv' style={userOfferExists == true ? {'display':"block"} : null}>
                                 {/* <Button onClick={()=>{setAuctioneerParticipateModal(true);}}>Participate</Button> */}
                                 {isCreator == true ? 
-                                    <div><Button disabled={selectedRow} onClick={()=>{deleteSelectedAuctioneer();}}>Delete selected Auctioneer</Button></div>
+                                    <div><Button disabled={selectedRow} onClick={()=>{deleteSelectedAuctioneer();}}>{t("auctionDeleteSelectedAuctioneer")}</Button></div>
                                 :
                                 null}
                     {userOfferExists == false && newUser == true ? 
@@ -607,17 +609,15 @@ const Auction = ()=>{
                         
                             <Form noValidate validated={participateValidated} onSubmit={handleParticipateSubmit} >
                                 <div>
-                                    <h3>The current highest offer is {highestOffer != 0 ? highestOffer : 0}€</h3>
-                                    <p>Your offer must be at least 5€ higher than the current highest offer. 
-                                        The instagram tag is used by the seller to contact the winner. 
-                                        You can alternatively sign up using your phonenumber! </p>
+                                    <h3>{t("auctionCurrentHighest")}  {highestOffer != 0 ? highestOffer : 0}€</h3>
+                                    <p>{t("auctionJoinAuction")}</p>
                                 </div>
                                 <div>
                                     <div className="auctionParticipateFormBodyDiv">
                                         <div>
                                             <Collapse in={igTagCollapse}>
                                                 <div>
-                                                    <Form.Label>Instagram tag</Form.Label>
+                                                    <Form.Label>{t("igTag")}</Form.Label>
                                                     <Form.Control required autoFocus className='Input' defaultValue={igTag} 
                                                         onBlur={(e)=>{ 
                                                             if(username == "")
@@ -629,33 +629,33 @@ const Auction = ()=>{
                                             </Collapse>
                                             <Collapse in={phonenumberCollapse}>
                                                 <div>
-                                                    <Form.Label>Phonenumber</Form.Label>
-                                                    <Form.Control className='Input' placeholder='Phonenumber' onChange={(e)=>{setPhonenumber(e.target.value);}} />
+                                                    <Form.Label>{t("phonenumber")}</Form.Label>
+                                                    <Form.Control className='Input' placeholder={t("phonenumber")} onChange={(e)=>{setPhonenumber(e.target.value);}} />
 
                                                 </div>
                                             </Collapse>
                                             <a className='phonenumberCollapseTitle' onClick={(e)=>{e.preventDefault();setPhonenumberCollapse(!phonenumberCollapse); setIgTagCollapse(!igTagCollapse);}} href="#">
                                                 {phonenumberCollapse == false ? 
-                                                "Want to use your phonenumber instead?"
+                                                    t("auctionPhonenumberInstead")
                                                 :
-                                                "Want to use your Instagram tag instead?"
+                                                    t("auctionIgTagInstead")
                                                 }
                                             </a>
 
 
                                         </div>
                                         <div>
-                                            <Form.Label>Username</Form.Label>
-                                            <Form.Control required type="username" placeholder='Username' value={suggestionUsername} onChange={(e)=>{setUsername(e.target.value); setSuggestionUsername(e.target.value);}} />
+                                            <Form.Label>{t("username")}</Form.Label>
+                                            <Form.Control required type="username" placeholder={t("username")} value={suggestionUsername} onChange={(e)=>{setUsername(e.target.value); setSuggestionUsername(e.target.value);}} />
                                         </div>
 
                                     </div>
                                     
                                     <div className="auctionParticipateFormBodyDiv">
                                         <div >
-                                            <Form.Label>Password</Form.Label>
+                                            <Form.Label>{t("password")}</Form.Label>
                                             <div className='auctionOfferFormPasswordDiv'>
-                                                <Form.Control required type={passwordVisibility} placeholder='Password' onBlur={(e)=>{setPassword(e.target.value);}} />
+                                                <Form.Control required type={passwordVisibility} placeholder={t("password")} onBlur={(e)=>{setPassword(e.target.value);}} />
                                                 <button type='button' className="btn btn-primary" onClick={()=>{togglePasswordVisibility();}}>
                                                     {passwordVisibility === "password" ? (
                                                         <svg
@@ -684,25 +684,25 @@ const Auction = ()=>{
                                             </div>
                                             
                                             <Form.Label className='auctionOfferFormPasswordText'>
-                                                With this password you can raise your offer later on. <br/> We recommend you store this password for the duration of the auction.
+                                                {t("auctionPasswordDisclaimer")}
                                             </Form.Label>
                                             
                                         </div>
                                         <div >
-                                            <Form.Label>Offer</Form.Label>
-                                            <Form.Control required  type="number" placeholder='Offer' onBlur={(e)=>{setPrice(e.target.value);}} />
+                                            <Form.Label>{t("offer")}</Form.Label>
+                                            <Form.Control required  type="number" placeholder={t("offer")} onBlur={(e)=>{setPrice(e.target.value);}} />
                                             <Form.Text >
-                                                The current highest offer is {highestOffer != 0 ? highestOffer : 0}€
+                                                {t("auctionCurrentHighest")} {highestOffer != 0 ? highestOffer : 0}€
                                             </Form.Text>
                                         </div>
                                     </div>
                                 </div>
                                 <div >
                                     <div>
-                                        <Button type='submit'>Save</Button>
+                                        <Button type='submit'>{t("save")}</Button>
                                         <p className='errorMessage'>{message}</p>
                                     </div>
-                                    <a href="" onClick={(e)=>{e.preventDefault(); setNewUser(false);}}>Have you already made an offer?</a>
+                                    <a href="" onClick={(e)=>{e.preventDefault(); setNewUser(false);}}>{t("auctionMadeOfferYet")}</a>
                                 </div>
                             </Form>
                         </div>
@@ -713,15 +713,15 @@ const Auction = ()=>{
                         <div  className='auctionModifyInputMainDiv' style={userOfferExists == true || userOfferExists == false ? {'maxWidth':"100%",'width':"100%"} : null}>
 
                                 <div className='auctionModifyTitleDiv'>
-                                    <h3>Raise offer</h3>
+                                    <h3>{t("auctionRaiseOffer")}</h3>
                                     {userOfferExists == false ? 
                                         <p>
-                                            Select yourself in the table above and raise your offer here. 
-                                            The current highest offer is <b>{highestOffer != 0 ? highestOffer : 0}</b>€
+                                            {t("auctionModifyDisclaimer")}
+                                            {t("auctionCurrentHighest")} <b>{highestOffer != 0 ? highestOffer : 0}</b>€
                                         </p>
                                         :
                                         <p>
-                                            Type in your offer and password to raise the offer.
+                                            {t("auctionRaiseOfferText")}
                                         </p>
                                     }
                                     {/* <Button className='auctionModifyRaiseButton' disabled={selectedRow} onClick={()=>{setShowAuctionModifyModal(true);}}>Raise</Button> */}
@@ -734,22 +734,22 @@ const Auction = ()=>{
                                         <div className="auctionParticipateFormBodyDiv">
                                         {userOfferExists == false ? 
                                             <div >
-                                                <Form.Label>Username</Form.Label>
+                                                <Form.Label>{t("username")}</Form.Label>
                                                 {/* cookies.auctioneerDefaultPrice != undefined && cookies.auctioneerDefaultPrice != 0 ? cookies.auctioneerDefaultPrice + '€': 0 + '€' */}
-                                                <Form.Control required  value={usernameModify} placeholder={"Username"} onChange={(e)=>{setUsernameModify(e.target.value);}} />
+                                                <Form.Control required  value={usernameModify} placeholder={t("username")} onChange={(e)=>{setUsernameModify(e.target.value);}} />
                                                 <Form.Text >
-                                                    Use the username you joined with, or select yourself from the list above
+                                                    {t("auctionUsernameReminder")}
                                                 </Form.Text>
                                                 <Form.Control.Feedback type="invalid">
-                                                    Please type in your username.
+                                                    {t("auctionUsernameWarning")}
                                                 </Form.Control.Feedback>
                                             </div>
                                         :null
                                         }
                                         <div>
-                                            <Form.Label>Password</Form.Label>
+                                            <Form.Label>{t("password")}</Form.Label>
                                             <div className='auctionOfferFormPasswordDiv'>
-                                                <Form.Control required  type={passwordVisibility} placeholder='Password' onBlur={(e)=>{setPasswordModify(e.target.value);}} />
+                                                <Form.Control required type={passwordVisibility} placeholder={t("password")} onBlur={(e)=>{setPasswordModify(e.target.value);}} />
                                                     <button type='button' className="btn btn-primary" onClick={()=>{togglePasswordVisibility();}}>
                                                         {passwordVisibility === "password" ? (
                                                             <svg
@@ -777,11 +777,11 @@ const Auction = ()=>{
                                                     </button>
                                                 </div>
                                                 <Form.Control.Feedback type="invalid">
-                                                    Please type in an password.
+                                                    {t("auctionPasswordWarning")}
                                                 </Form.Control.Feedback>
 
                                                 <Form.Text className="text-muted">
-                                                    Use the password you created
+                                                {t("auctionPasswordReminder")}
                                                 </Form.Text>
                                             </div>
 
@@ -789,25 +789,25 @@ const Auction = ()=>{
                                         <div className="auctionParticipateFormBodyDiv ">
 
                                             <div>
-                                                <Form.Label>Offer</Form.Label>
+                                                <Form.Label>{t("offer")}</Form.Label>
                                                 <div className='auctionFormInputs auctionModifySaveButtonDiv'>
                                                     {/* cookies.auctioneerDefaultPrice != undefined && cookies.auctioneerDefaultPrice != 0 ? cookies.auctioneerDefaultPrice + '€': 0 + '€' */}
                                                     {/* step={5} */}
                                                     <Form.Control required onWheel={(e) => e.target.blur()}  type="number" placeholder={"€"} onBlur={(e)=>{setPriceModify(e.target.value);}} />
-                                                    <Button  type="submit" > {/*onClick={()=>{modifyAuction();}}*/}Save</Button>
+                                                    <Button  type="submit" > {/*onClick={()=>{modifyAuction();}}*/}{t("save")}</Button>
                                                 </div>
                                                 <Form.Text >
-                                                    The current highest offer is <b>{highestOffer != 0 ? highestOffer : 0}</b>€
+                                                    {t("auctionCurrentHighest")} <b>{highestOffer != 0 ? highestOffer : 0}</b>€
                                                 </Form.Text>
                                                 <Form.Control.Feedback type="invalid">
-                                                    Please type in an offer higher then <b>{highestOffer != 0 ? highestOffer : 0}</b>€
+                                                    {t("auctionOfferWarning")} <b>{highestOffer != 0 ? highestOffer : 0}</b>€
                                                 </Form.Control.Feedback>
                                                 <p className='errorMessage'>{message}</p>
 
                                             </div>
                                         </div>
                                         {userOfferExists == false ? 
-                                        <a href="" onClick={(e)=>{e.preventDefault(); setNewUser(true);}}>Want to register a new offer?</a>
+                                        <a href="" onClick={(e)=>{e.preventDefault(); setNewUser(true);}}>{t("auctionRegisterOfferYet")}</a>
                                         : null}
                                     </div>
                                 </Form>
@@ -826,7 +826,7 @@ const Auction = ()=>{
     :
         <div>
             <h1>Error</h1>
-            <p>The auctionitem you were looking for dosent exist or has been unlisted by the creator</p>
+            <p>{t("auctionAuctionClosedError")}</p>
         </div>
     }
 </div>

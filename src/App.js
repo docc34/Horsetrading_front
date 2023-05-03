@@ -8,7 +8,22 @@ import '@inovua/reactdatagrid-community/index.css'
 import {HashRouter,BrowserRouter ,Routes,Route } from 'react-router-dom';
 import { UserProfile } from './UserProfile/UserProfile';
 
+import { useCookies } from 'react-cookie';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import './i18n'
+
 function App() {
+  const [cookies] = useCookies(['locale']);
+  const { t, i18n } = useTranslation();
+
+  //Checks has the local changed.
+  useEffect(async()=>{
+    if(cookies?.locale != null && cookies?.locale != ""&& cookies?.locale != undefined)
+      if(cookies.locale == "fi" ||cookies.locale == "en")
+        await i18n.changeLanguage(cookies.locale);
+
+  },[])
   return (
   <BrowserRouter>
       <Routes>
