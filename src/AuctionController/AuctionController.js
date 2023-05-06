@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 
 const AuctionController = ()=>{
     const {t} = useTranslation();
+    const [cookies, setCookie,removeCookie] = useCookies(['token']);
 
     const [loggedIn, setLoggedIn] = useState(false);
     const [auctionItems, setAuctionItems] = useState(false);
@@ -32,7 +33,6 @@ const AuctionController = ()=>{
     
     const [message, setMessage] = useState("");
 
-    const [cookies, setCookie,removeCookie] = useCookies(['token']);
     
     const [auctionItemCreateValidated, setAuctionIteCreateValidated] = useState(false);
     const [auctionItemPostModal, setAuctionItemPostModal] = useState(false);
@@ -220,7 +220,7 @@ const AuctionController = ()=>{
                     removeCookie('token',{ path: '/' });
                 }
                 else if(result?.status == "Ok"){
-                    console.log("login onnistu");
+
                     resetValues();
                     setCookie('token', result.token, { path: '/' })
                     window.location.reload();

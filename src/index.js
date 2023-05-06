@@ -5,6 +5,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '@inovua/reactdatagrid-community/index.css'
 //Importataan translaatiot
 import './i18n'
 

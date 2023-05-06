@@ -1,5 +1,6 @@
 import './CountdownTimer.css'
 import { useCountdown } from '../functions/countdown';
+import { useTranslation } from 'react-i18next';
 
 const DateTimeDisplay = ({ value, type, isDanger }) => {
     return (
@@ -11,14 +12,15 @@ const DateTimeDisplay = ({ value, type, isDanger }) => {
 };
 
 const CountdownTimer = ({targetDate}) => {
+    const {t} = useTranslation();
     const [days, hours, minutes, seconds] = useCountdown(targetDate);
     
     if (days + hours + minutes + seconds <= 0) {
         
         return (
             <div className="expired-notice">
-                <h4>Congratulations to the winner!</h4>
-                <p>Bidding on the auction has closed. Congratulations to the winner!</p>
+                <h4>{t("componentsCountdownExpiredNoticeTitle")}</h4>
+                <p>{t("componentsCountdownExpiredNoticeDescription")}</p>
             </div>
         );
     } else {

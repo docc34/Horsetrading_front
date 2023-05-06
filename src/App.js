@@ -4,7 +4,7 @@ import { AuctionController } from './AuctionController/AuctionController';
 import {Header} from './Header/Header';
 import { Footer } from './Footer/Footer';
 import './App.css';
-import '@inovua/reactdatagrid-community/index.css'
+
 import {HashRouter,BrowserRouter ,Routes,Route } from 'react-router-dom';
 import { UserProfile } from './UserProfile/UserProfile';
 

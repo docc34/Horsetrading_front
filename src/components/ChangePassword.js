@@ -5,9 +5,11 @@ import CloseButton from 'react-bootstrap/CloseButton';
 import Form from 'react-bootstrap/Form';
 import './ChangePassword.css'
 import { useCookies } from 'react-cookie';
+import { useTranslation } from 'react-i18next';
 
 const ChangePassword = ({user})=>{
     const [cookies] = useCookies(['token']);
+    const {t} = useTranslation();
     
     const [changePasswordModalVisibility,setChangePasswordModalVisibility] = useState(false);
     const [message,setMessage] = useState(false);
@@ -45,15 +47,15 @@ const ChangePassword = ({user})=>{
 
         <Modal show={changePasswordModalVisibility} >
             <Modal.Header className="ModalHeader" >
-                <Modal.Title>Change password</Modal.Title>
+                <Modal.Title>{t("componentsChangePassword")}</Modal.Title>
                 <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setChangePasswordModalVisibility(false);}}></CloseButton>
             </Modal.Header>
 
             <Modal.Body className="ModalBody">
                 <div>
-                <Form.Label>Current password</Form.Label>
+                <Form.Label>{t("componentsCurrentPassword")}</Form.Label>
                 <div className='auctionOfferFormPasswordDiv'>
-                    <Form.Control required  type={passwordVisibility} placeholder='Password' onBlur={(e)=>{setPassword(e.target.value);}} />
+                    <Form.Control required  type={passwordVisibility} placeholder={t("password")} onBlur={(e)=>{setPassword(e.target.value);}} />
                         <button type='button' className="btn btn-primary" onClick={()=>{ 
                                 if (passwordVisibility === "password") {
                                     setPasswordVisibility("text");
@@ -86,19 +88,18 @@ const ChangePassword = ({user})=>{
                             )}
                         </button>
                     </div>
-                    <Form.Control.Feedback type="invalid">
-                        Please type in an password.
-                    </Form.Control.Feedback>
-
                     <Form.Text className="text-muted">
-                        Give your current password
+                        {t("componentsCurrentPasswordDescription")}
                     </Form.Text>
+                    <Form.Control.Feedback type="invalid">
+                        {t("componentsCurrentPasswordDisclaimer")}
+                    </Form.Control.Feedback>
 
                 </div>
 
-                    <Form.Label>New password</Form.Label>
+                    <Form.Label>{t("componentsNewPassword")}</Form.Label>
                     <div className='auctionOfferFormPasswordDiv'>
-                        <Form.Control required  type={newPasswordVisibility} placeholder='Password' onBlur={(e)=>{setNewPassword(e.target.value);}} />
+                        <Form.Control required  type={newPasswordVisibility} placeholder={t("password")} onBlur={(e)=>{setNewPassword(e.target.value);}} />
                         <button type='button' className="btn btn-primary" onClick={()=>{ {
                                 if (newPasswordVisibility === "password") {
                                     setNewPasswordVisibility("text");
@@ -131,23 +132,24 @@ const ChangePassword = ({user})=>{
                             )}
                         </button>
                     </div>
+                    <Form.Text className="text-muted">
+                        {t("componentsNewPasswordDescription")}
+                    </Form.Text>
                     <Form.Control.Feedback type="invalid">
-                        Please type in an password.
+                        {t("componentsCurrentPasswordDisclaimer")}
                     </Form.Control.Feedback>
 
-                    <Form.Text className="text-muted">
-                        Give the new password
-                    </Form.Text>
+
                     {message}
             </Modal.Body>
 
             <Modal.Footer className="ModalFooter">
                 <p className='errorMessage'>{message}</p>
                 <Button variant="secondary" onClick={()=>{setChangePasswordModalVisibility(false);}}>
-                    Cancel
+                    {t("cancel")}
                 </Button>
                 <Button variant="primary" onClick={()=>{changeUserPassword()}}>
-                    Save 
+                    {t("save")} 
                 </Button>
             </Modal.Footer>
         </Modal>

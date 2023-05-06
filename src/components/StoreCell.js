@@ -1,11 +1,13 @@
 import './StoreCell.css'
 import { useCountdown } from "../functions/countdown";
 import Alert from 'react-bootstrap/Alert';
+import { useTranslation } from 'react-i18next';
 
 
 const StoreCell = (d)=>{
     const countDownDate = d.data.closingTime;
     const [days, hours, minutes, seconds] = useCountdown(countDownDate);
+    const {t} = useTranslation();
 
     const countDown = `${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`
     let countDownIsActive = true;
@@ -31,7 +33,7 @@ const StoreCell = (d)=>{
                             {/* style={d.data?.type == "Purchase" ? {backgroundColor: '#dadd0b'} : {backgroundColor: '#0437df'}} */}
                             {/* variant={d.data?.type == "Purchase" ? 'warning' : 'info'} */}
                            <Alert className='countdownContainerType' style={d.data?.type == "Purchase" ? {backgroundColor: '#3E215C', borderColor: '#3E215C'} : {backgroundColor: '#AB7E0E', borderColor: '#AB7E0E'}}  >
-                                <p>Type: {d.data?.type}</p>
+                                <p>{t("type")}: {d.data?.type}</p>
                             </Alert> 
 
                     <h2>{d.data?.title}</h2>

@@ -38,6 +38,18 @@ i18n
             ,logout:"Logout"
 
 
+            ,componentsChangePassword:"Change password"
+            ,componentsCurrentPassword:"Current password"
+            ,componentsCurrentPasswordDescription:"Give your current password"
+            ,componentsCurrentPasswordDisclaimer:"Please type in an password."
+            ,componentsNewPassword:"New password"
+            ,componentsNewPasswordDescription:"Type in the new password"
+
+
+            ,componentsCountdownExpiredNoticeTitle:"Congratulations to the winner!"
+            ,componentsCountdownExpiredNoticeDescription:"Bidding on the auction has closed. Congratulations to the winner!"
+
+
             ,homeProductionDisclaimerTitle:"Site looking empty?"
             ,homeProductionDisclaimerDescription:"In the future this site will be filled with all kinds of beautiful art works to auction, but currently the site is still in production. If you would like to become a seller on the site, contact me at antitechofficial@gmail.com. Sorry for the inconvenience."
             
