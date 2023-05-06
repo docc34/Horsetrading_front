@@ -5,11 +5,14 @@ import CardGroup from 'react-bootstrap/CardGroup';
 import { UserContainer } from '../components/UserContainer';
 import { useCookies } from 'react-cookie';
 import { StoreCell } from '../components/StoreCell';
+import { useTranslation } from 'react-i18next';
 
 const Home = ()=>{
     const [cookies] = useCookies(["recentAuctionItems"]);
     const[containerData,setContainerData] = useState([]);
     const[recentAuctionItems,setRecentAuctionItems] = useState([]);
+
+    const {t} = useTranslation();
 
     const getContainerData = async()=>{
         var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/AuctionItems/public");
@@ -93,8 +96,8 @@ const Home = ()=>{
                 }
             </div>
             <div className='homeProductionDisclaimerDiv'>
-                <h1>Site looking empty?</h1>
-                <p>In the future this site will be filled with all kinds of beautiful art works to auction, but currently the site is still in production. More items will be posted soon. Sorry for the inconvenience.</p>
+                <h1>{t("homeProductionDisclaimerTitle")}</h1>
+                <p>{t("homeProductionDisclaimerDescription")}</p>
             </div>
         </div>
     );

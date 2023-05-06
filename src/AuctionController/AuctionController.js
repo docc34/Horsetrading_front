@@ -17,8 +17,11 @@ import moment from 'moment';
 import 'moment-timezone';
 import Datetime from 'react-datetime';
 import { NavLink } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 const AuctionController = ()=>{
+    const {t} = useTranslation();
+
     const [loggedIn, setLoggedIn] = useState(false);
     const [auctionItems, setAuctionItems] = useState(false);
     const [selectedRow, setSelectedRow] = useState(true);
@@ -487,13 +490,13 @@ const AuctionController = ()=>{
     <div className='auctionControllerMainDiv'>
         {loggedIn == true ? 
             <div>
-                <h1>Auction controller</h1>
-                <a href={'user/?userId='+userId}>Go to profile</a>
+                <h1>{t("auctionControllerAuctionController")}</h1>
+                <a href={'user/?userId='+userId}>{t("auctionControllerProfileLink")}</a>
                 <div className='auctionControllerContentMainDiv'>
                     <div>
                         <Modal show={showMessageAlert}>
                             <Alert show={true} variant="success">
-                                <Alert.Heading>New message!</Alert.Heading>
+                                <Alert.Heading>{t("auctionControllerMessageTitle")}</Alert.Heading>
                                 <p>{message}</p>
                                 <br/>
                                 <p>{billsMessage}</p>
@@ -505,7 +508,7 @@ const AuctionController = ()=>{
                             </Alert>
                         </Modal>
 
-                        <h2>Auction Items</h2>
+                        <h2>{t("auctionControllerAuctionItemsTitle")}</h2>
                         <div>
                             <ReactDataGrid
                                 idProperty="id"
@@ -521,30 +524,30 @@ const AuctionController = ()=>{
                         </div>
                         <div>
                             <div className='auctionControllerButtonsDiv'>
-                                <Button variant="primary" onClick={()=>{setAuctionItemPostModal(true);}}>Add auctionitem</Button>
-                                <Button disabled={selectedRow} onClick={()=>{setAuctionItemDeleteModal(true);}}>Delete</Button>
-                                <Button disabled={selectedRow} onClick={()=>{setAuctionItemModifyModal(true);}}>Modify</Button>
-                                <Button disabled={selectedRow} onClick={()=>{setAuctionItemVisibilityModal(true);}}>Change visibility</Button>
+                                <Button variant="primary" onClick={()=>{setAuctionItemPostModal(true);}}>{t("auctionControllerAddAuctionItem")}</Button>
+                                <Button disabled={selectedRow} onClick={()=>{setAuctionItemDeleteModal(true);}}>{t("delete")}</Button>
+                                <Button disabled={selectedRow} onClick={()=>{setAuctionItemModifyModal(true);}}>{t("modify")}</Button>
+                                <Button disabled={selectedRow} onClick={()=>{setAuctionItemVisibilityModal(true);}}>{t("auctionControllerChangeVisibilityTitle")}</Button>
                             </div>
                             <div>
                                 <Modal show={auctionItemDeleteModal} >
 
                                     <Modal.Header className="ModalHeader" >
-                                        <Modal.Title>Are you sure you want to delete the auctionitem</Modal.Title>
+                                        <Modal.Title>{t("auctionControllerDeleteItemModalTitle")}</Modal.Title>
                                         <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemDeleteModal(false);}}></CloseButton>
                                     </Modal.Header>
 
                                     <Modal.Body className="ModalBody">
-                                        <h3>This will delete the auctionitem, photos and auctioneers linked to this post <b>permanently.</b></h3>
+                                        <h3>{t("auctionControllerDeleteItemModalBody")}</h3>
                                     </Modal.Body>
                                     
                                     <Modal.Footer className="ModalFooter">
                                         <p className='errorMessage'>{message}</p>
                                         <Button variant="secondary" onClick={()=>{setAuctionItemDeleteModal(false);}}>
-                                            Cancel
+                                            {t("cancel")}
                                         </Button>
                                         <Button variant="primary" onClick={()=>{deleteAuctionItem()}}>
-                                            Delete
+                                            {t("delete")}
                                         </Button>
                                     </Modal.Footer>
                                 </Modal>
@@ -555,64 +558,62 @@ const AuctionController = ()=>{
                                     <Form noValidate validated={auctionItemCreateValidated} onSubmit={handleCreateAuctionItemSubmit} >
 
                                         <Modal.Header className="ModalHeader" >
-                                            <Modal.Title>Add auctionitem</Modal.Title>
+                                            <Modal.Title>{t("auctionControllerAddAuctionItem")}</Modal.Title>
                                             <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemPostModal(false);}}></CloseButton>
                                         </Modal.Header>
 
                                         <Modal.Body className="ModalBody">
                                         <div className='controllerFormInputs'>
-                                            <Form.Label>Title</Form.Label>
-                                            <Form.Control required placeholder='Title' onBlur={(e)=>{setTitle(e.target.value);}} />
+                                            <Form.Label>{t("title")} </Form.Label>
+                                            <Form.Control required placeholder={t("title")} onBlur={(e)=>{setTitle(e.target.value);}} />
                                         </div>
 
                                         <div>
-                                            <Form.Label>Description</Form.Label>
-                                            <Form.Control required as="textarea" placeholder='Description' onBlur={(e)=>{setDescription(e.target.value);}} />
+                                            <Form.Label>{t("description")}</Form.Label>
+                                            <Form.Control required as="textarea" placeholder={t("description")} onBlur={(e)=>{setDescription(e.target.value);}} />
                                         </div>
 
                                         <div className='controllerFormInputs'>
-                                            <Form.Label >Hidden</Form.Label>
+                                            <Form.Label>{t("hidden")}</Form.Label>
                                             <Form.Select value={visible} onChange={(e)=>{setVisible(e.target.value);}} >
-                                                <option value={1}>No</option>
-                                                <option value={0}>Yes</option>
+                                                <option value={1}>{t("no")}</option>
+                                                <option value={0}>{t("yes")}</option>
                                             </Form.Select>
                                             <Form.Text>
-                                                You can also make an auction "hidden" so that its only visible to you.
+                                                {t("auctionControllerHiddenDescription")}
                                             </Form.Text>
                                         </div>
 
                                         <div className='controllerFormInputs'>
-                                            <Form.Label >Type</Form.Label>
+                                            <Form.Label >{t("type")}</Form.Label>
                                             <Form.Select value={auctionItemType} onChange={(e)=>{setAuctionItemType(e.target.value);}} >
-                                                <option value={1}>Commission</option>
-                                                <option value={2}>Purchase</option>
+                                                <option value={1}>{t("commission")}</option>
+                                                <option value={2}>{t("purchase")}</option>
                                             </Form.Select>
                                         </div>
                                         <div className='controllerFormInputs'>
-                                            <Form.Label>Starting Price</Form.Label>
+                                            <Form.Label>{t("auctionControllerStartingPrice")}</Form.Label>
                                             <Form.Control min={0}  placeholder='0€' type='number' onBlur={(e)=>{setStartingPrice(e.target.value);}} />
                                             <Form.Text>
-                                                Set the starting price of the auction.
+                                                {t("auctionControllerStartingPriceDescription")}
                                             </Form.Text>
                                         </div>
                                         <div className='controllerFormInputs'>
-                                            <Form.Label>Closing time raise period</Form.Label>
-                                            <Form.Control min={0} placeholder='0 minutes' type='number' max={60} onBlur={(e)=>{setAuctionItemRaisePeriod(e.target.value);}} />
+                                            <Form.Label>{t("auctionControllerRaisePeriod")}</Form.Label>
+                                            <Form.Control min={0} placeholder={t("auctionControllerRaisePeriodPlaceHolder")}  type='number' max={60} onBlur={(e)=>{setAuctionItemRaisePeriod(e.target.value);}} />
                                             <Form.Text>
-                                                When the auction is about to close, this amount of minutes will be added to the timer when an offer is made.
+                                                {t("auctionControllerRaisePeriodDescription")}
                                             </Form.Text>
                                         </div>
                                         <div className='controllerFormInputs'>
-                                            <Form.Label>Closing time</Form.Label>
+                                            <Form.Label>{t("auctionControllerClosingTime")}</Form.Label>
                                             <Datetime  
                                                 input={false}
                                                 displayTimeZone={"Europe/Helsinki"}
                                                 onChange={(e)=>{setClosingTime(e._d);}}
                                             />
-                                            <Form.Text 
-                                                
-                                                >
-                                                Set when the auction bidding will close.
+                                            <Form.Text>
+                                                {t("auctionControllerCloseTimeDescription")}
                                             </Form.Text>
                                         </div>
 
@@ -626,9 +627,11 @@ const AuctionController = ()=>{
                                         <Modal.Footer className="ModalFooter">
                                         <p className='errorMessage'>{message}</p>
                                             <Button variant="secondary" onClick={()=>{resetValues()}}>
-                                                Close
+                                                {t("close")}
                                             </Button>
-                                            <Button variant="primary" type="submit"> Save</Button>
+                                            <Button variant="primary" type="submit"> 
+                                                {t("save")}
+                                            </Button>
                                         </Modal.Footer>
                                     </Form>
                                 </Modal>
@@ -638,42 +641,42 @@ const AuctionController = ()=>{
                                 <Modal show={auctionItemModifyModal} >
                                     <Form noValidate validated={auctionItemModifyValidated} onSubmit={handleModifyAuctionItemSubmit} >
                                         <Modal.Header className="ModalHeader">
-                                            <Modal.Title>Modify auctionitem</Modal.Title>
+                                            <Modal.Title>{t("auctionControllerModifyAuctionItem")}</Modal.Title>
                                             <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemModifyModal(false);}}></CloseButton>
                                         </Modal.Header>
 
                                         <Modal.Body className="ModalBody">
                                         <div className='controllerFormInputs'>
-                                            <Form.Label>Title</Form.Label>
-                                            <Form.Control required type='text' value={titleModify} placeholder='Title' onChange={(e)=>{setTitleModify(e.target.value);}} />
+                                            <Form.Label>{t("title")}</Form.Label>
+                                            <Form.Control required type='text' value={titleModify} placeholder={t("title")} onChange={(e)=>{setTitleModify(e.target.value);}} />
                                         </div>
 
                                         <div>
-                                            <Form.Label>Description</Form.Label>
-                                            <Form.Control required type='text' as="textarea" value={descriptionModify} placeholder='Description' onChange={(e)=>{setDescriptionModify(e.target.value);}} />
+                                            <Form.Label>{t("description")}</Form.Label>
+                                            <Form.Control required type='text' as="textarea" value={descriptionModify} placeholder={t("description")} onChange={(e)=>{setDescriptionModify(e.target.value);}} />
                                         </div>
 
                                         <div className='controllerFormInputs'>
-                                            <Form.Label >Hidden</Form.Label>
+                                            <Form.Label >{t("hidden")}</Form.Label>
                                             <Form.Select value={visible} onChange={(e)=>{setVisible(e.target.value);}} >
-                                                <option value={1}>No</option>
-                                                <option value={0}>Yes</option>
+                                                <option value={1}>{t("no")}</option>
+                                                <option value={0}>{t("yes")}</option>
                                             </Form.Select>
                                             <Form.Text>
-                                                    You can also make an auction "hidden" so that its only visible to you.
+                                            {t("auctionControllerHiddenDescription")}
                                             </Form.Text>
                                         </div>
 
                                         <div className='controllerFormInputs'>
-                                            <Form.Label >Type</Form.Label>
+                                            <Form.Label >{t("type")}</Form.Label>
                                             <Form.Select value={auctionItemType} onChange={(e)=>{setAuctionItemType(e.target.value);}} >
-                                                <option value={1}>Commission</option>
-                                                <option value={2}>Purchase</option>
+                                                <option value={1}>{t("commission")}</option>
+                                                <option value={2}>{t("purchase")}</option>
                                             </Form.Select>
                                         </div>
 
                                         <div className='controllerFormInputs'>
-                                            <Form.Label >Closing time</Form.Label>
+                                            <Form.Label >{t("auctionControllerClosingTime")}</Form.Label>
                                             <Datetime 
                                                 input={false}
                                                 displayTimeZone={"Europe/Helsinki"}
@@ -681,7 +684,7 @@ const AuctionController = ()=>{
                                                 onChange={(e)=>{setClosingTimeModify(e._d);}}
                                             />
                                             <Form.Text>
-                                                Set when the auction bidding will close.
+                                                {t("auctionControllerCloseTimeDescription")}
                                             </Form.Text>
                                         </div>
 
@@ -697,10 +700,10 @@ const AuctionController = ()=>{
                                         <Modal.Footer className="ModalFooter">
                                         <p className='errorMessage'>{message}</p>
                                             <Button variant="secondary" onClick={()=>{setAuctionItemModifyModal(false)}}>
-                                                Close
+                                                {t("close")}
                                             </Button>
                                             <Button variant="primary" type="submit">
-                                                Save
+                                                {t("save")}
                                             </Button>
                                         </Modal.Footer>
                                     </Form>
@@ -710,24 +713,28 @@ const AuctionController = ()=>{
                             <div>
                                 <Modal show={auctionItemVisibilityModal}>
                                     <Modal.Header className="ModalHeader">
-                                        <Modal.Title>Change visibility</Modal.Title>
+                                        <Modal.Title>{t("auctionControllerChangeVisibilityTitle")}</Modal.Title>
                                         <CloseButton variant="white" className='modalCloseButton' onClick={()=>{setAuctionItemVisibilityModal(false);}}></CloseButton>
                                     </Modal.Header>
                                     <Modal.Body className="ModalBody" >
-                                        <p>Are you sure you want to change the auctionitems visibility?</p>
-                                        <p>If the auctionitem is not visible it cannot be accessed by customers, or seen on the platform.</p>
+                                        <p>{t("auctionControllerChangeVisibilityDescription1")}</p>
+                                        <p>{t("auctionControllerChangeVisibilityDescription2")}</p>
                                     </Modal.Body>
                                     <Modal.Footer className="ModalFooter">
-                                        <Button onClick={()=>{resetValues();}}>Close</Button>
-                                        <Button onClick={()=>{changeAuctionItemVisibility();}}>Save</Button>
+                                        <Button onClick={()=>{resetValues();}}>
+                                            {t("close")}
+                                        </Button>
+                                        <Button onClick={()=>{changeAuctionItemVisibility();}}>
+                                            {t("save")}
+                                        </Button>
                                     </Modal.Footer>
                                 </Modal>
                             </div>
                         </div>
                     </div>
                     <div className='auctionControllerBillsReactDataGridDiv'>
-                        <h2>Bills</h2>
-                        <p>All bills are sent to your email address</p>
+                        <h2>{t("bills")}</h2>
+                        <p>{t("auctionControllerBillsDescription")}</p>
                         <ReactDataGrid
                             idProperty="id"
                             className='auctionControllerBillsReactDataGrid'
@@ -747,20 +754,20 @@ const AuctionController = ()=>{
             </div>
             :
             <div className='auctionControllerLoginMainDiv'>
-                <h4>If your an seller, you can login here</h4>
+                <h4>{t("auctionControllerLoginTitle")}</h4>
                 <div className='auctionControllerLoginButtonDiv'>
                     <div>
                         <div>
                             <div className='loginControllerFormInputs'>
-                                <Form.Label>Email</Form.Label>
-                                <Form.Control placeholder='Email' value={email} onChange={(e)=>{setEmail(handleInputChange(e));}} />
+                                <Form.Label>{t("email")}</Form.Label>
+                                <Form.Control placeholder={t("email")} value={email} onChange={(e)=>{setEmail(handleInputChange(e));}} />
                             </div>
 
                             <div className='loginControllerFormInputs'>
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control type="password" placeholder='Password' value={password} onChange={(e)=>{setPassword(handleInputChange(e));}} />
+                                <Form.Label>{t("password")}</Form.Label>
+                                <Form.Control type="password" placeholder={t("password")} value={password} onChange={(e)=>{setPassword(handleInputChange(e));}} />
                                 <Form.Text className="text-muted">
-                                    Logging in is only available for administrators
+                                    {t("auctionControllerLoginDisclaimer")}
                                 </Form.Text>
                             
                                 <p className='errorMessage'>{message}</p>
@@ -768,7 +775,7 @@ const AuctionController = ()=>{
                         </div>
 
                         <Button variant="primary" onClick={()=>{handleLogin()}}>
-                            Login
+                            {t("login")}
                         </Button>
                     </div>
                 </div>
