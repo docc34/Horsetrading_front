@@ -3,6 +3,7 @@ import React, { useState, useCallback } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import CloseButton from 'react-bootstrap/CloseButton';
 import { useCookies } from 'react-cookie';
 
 const UserEditModal = ({user}) => {
@@ -49,10 +50,11 @@ const UserEditModal = ({user}) => {
         </Button>
 
         <Modal show={show} onHide={handleClose} centered>
-            <Modal.Header closeButton>
+            <Modal.Header className="ModalHeader" >
                 <Modal.Title>Edit profile</Modal.Title>
+                <CloseButton variant="white" className='modalCloseButton' onClick={() => {setShow(false)}}></CloseButton>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className="ModalBody">
             <Form onSubmit={handleSubmit}>
                 <Form.Group
                     className="mb-3"
@@ -89,7 +91,7 @@ const UserEditModal = ({user}) => {
                 </Form.Group>
             </Form>
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer className='ModalFooter'>
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>
