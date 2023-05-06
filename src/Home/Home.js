@@ -83,11 +83,11 @@ const Home = ()=>{
                     :
                     <CardGroup>
                     
-                        {containerData.map(container => {
+                        {containerData.map((container, i) => {
                             //Data palautuu nyt järkevämmin apista, palauttaa käyttäjän jonka alla palauttaa listassa käyttäjän auctionitemit.
                             //Tein tämän että yhdellä api kutsulla saisi kaikki tiedot näkymään
                             return (
-                                <UserContainer user={container}/>
+                                <UserContainer key={i} user={container}/>
                             )
                         })}
                         
