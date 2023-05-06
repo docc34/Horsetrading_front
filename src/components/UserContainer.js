@@ -9,10 +9,10 @@ const UserContainer = (data)=>{
     const RenderAuctionItemsCells = (cellData) => {
         return(
             <CardGroup>
-                {cellData.auctionItems.map((item) => {
+                {cellData.auctionItems.map((item, i) => {
                     console.log(item);
                     return(
-                        <div>
+                        <div key={i}>
                             <StoreCell data={item} />
                         </div>
                     )

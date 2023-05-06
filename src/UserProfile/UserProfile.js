@@ -11,9 +11,10 @@ import { ChangePassword } from "../components/ChangePassword";
 
 const UserProfile = () => {
     const search = useLocation().search;
-    const auctionId = new URLSearchParams(search).get('userId');
+    const searchParamId = new URLSearchParams(search).get('userId');
     const [loggedIn, setLoggedIn] = useState(false);
     const [cookies] = useCookies(['token']);
+    const [ownProfile, setOwnProfile] = useState(false);
 
 
     const[containerData,setContainerData] = useState([]);
@@ -38,24 +39,38 @@ const UserProfile = () => {
                 setLoggedIn(loggedIn);
             }
         }
+        
     }
+
+    const checkIfOwnProfile = async () => {
+        if(cookies.token != null){
+            const options = {
+                method: 'GET',
+                headers: { "Authorization": `Bearer ${cookies.token}`}
+            }
+            const data = await fetch(`https://horsetradingapidev.azurewebsites.net/api/Profiles/Userauthentication/${searchParamId}`, options) 
+            if (data.status === 200) {
+                setOwnProfile(true);
+            }
+        }
+    }
+    
 
     useEffect(()=>{
         getContainerData();
         checkLoginStatus();
+        checkIfOwnProfile();
     },[]);
-
 
     return (
         <div className='main-container'>
-            {loggedIn == true ? 
+            {loggedIn && ownProfile ? 
                 <div className='user-container'>
-                
                     <CardGroup>
                     {
-                        containerData.filter(item => item.id == auctionId).map(id => {
+                        containerData.filter(item => item.id == searchParamId).map((id, i) => {
                             return (
-                                <div>
+                                <div key={i}>
                                     <UserContainer user={id} />
                                     <UserEditModal user={id} />
                                     <ChangePassword user={id}/>
@@ -70,7 +85,7 @@ const UserProfile = () => {
                 <div className='user-container'>
                     <CardGroup>
                     {
-                        containerData.filter(item => item.id == auctionId).map(id => {
+                        containerData.filter(item => item.id == searchParamId).map(id => {
                             return <UserContainer user={id} />
                         })
                     }
