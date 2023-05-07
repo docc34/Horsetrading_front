@@ -71,7 +71,7 @@ const UserProfile = () => {
                         containerData.filter(item => item.id == searchParamId).map((id, i) => {
                             return (
                                 <div key={i}>
-                                    <UserContainer user={id} />
+                                    <UserContainer user={id} page='userprofile'/>
                                     <UserEditModal user={id} />
                                     <ChangePassword user={id}/>
                                     <Button href="/AuctionController">Control Page</Button>

@@ -87,7 +87,7 @@ const Home = ()=>{
                             //Data palautuu nyt järkevämmin apista, palauttaa käyttäjän jonka alla palauttaa listassa käyttäjän auctionitemit.
                             //Tein tämän että yhdellä api kutsulla saisi kaikki tiedot näkymään
                             return (
-                                <UserContainer key={i} user={container}/>
+                                <UserContainer key={i} user={container} page='home' />
                             )
                         })}
                         
