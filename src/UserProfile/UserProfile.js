@@ -5,10 +5,7 @@ import { useState, useEffect } from "react";
 import CardGroup from 'react-bootstrap/CardGroup';
 import { useCookies } from 'react-cookie';
 import { UserEditModal } from '../components/UserEditModal';
-import { Button } from 'react-bootstrap';
 import { ChangePassword } from "../components/ChangePassword";
-
-import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 
 
@@ -74,12 +71,15 @@ const UserProfile = () => {
                         containerData.filter(item => item.id == searchParamId).map((id, i) => {
                             return (
                                 <div key={i}>
-                                    <UserContainer user={id} page='userprofile'/>
+                                    
                                     <DropdownButton id="dropdown-basic-button" title="Settings">
                                         <UserEditModal user={id} />
                                         <ChangePassword user={id}/>
-                                        <a className='dropDownButton' href="/AuctionController">Control Page</a>
+                                        <div className='dropDownButton'>
+                                            <a href="/AuctionController">Control Page</a>
+                                        </div>
                                     </DropdownButton>
+                                    <UserContainer user={id} page='userprofile'/>
                                 </div>
                             )})
                     }
