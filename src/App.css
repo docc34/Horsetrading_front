@@ -88,6 +88,23 @@ p{
 }
 /* #282c34 */
 
+.dropDownButton {
+  text-align: left;
+  background-color: #ffffff;
+  color: black;
+  width: 100%;
+  color:inherit;
+  text-decoration:none;
+  padding: 6px 6px;
+  border: 0;
+}
+.dropDownButton a{
+  text-decoration:none;
+  color: black;
+}
+.dropDownButton a:hover{
+  color: black;
+}
 .form-label{
   color: white;
   margin-left: 2%;

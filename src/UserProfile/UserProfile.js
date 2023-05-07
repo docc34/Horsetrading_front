@@ -5,8 +5,8 @@ import { useState, useEffect } from "react";
 import CardGroup from 'react-bootstrap/CardGroup';
 import { useCookies } from 'react-cookie';
 import { UserEditModal } from '../components/UserEditModal';
-import { Button } from 'react-bootstrap';
 import { ChangePassword } from "../components/ChangePassword";
+import DropdownButton from 'react-bootstrap/DropdownButton';
 
 
 const UserProfile = () => {
@@ -71,12 +71,17 @@ const UserProfile = () => {
                         containerData.filter(item => item.id == searchParamId).map((id, i) => {
                             return (
                                 <div key={i}>
-                                    <UserContainer user={id} />
-                                    <UserEditModal user={id} />
-                                    <ChangePassword user={id}/>
-                                    <Button href="/AuctionController">Control Page</Button>
+                                    
+                                    <DropdownButton id="dropdown-basic-button" title="Settings">
+                                        <UserEditModal user={id} />
+                                        <ChangePassword user={id}/>
+                                        <div className='dropDownButton'>
+                                            <a href="/AuctionController">Control Page</a>
+                                        </div>
+                                    </DropdownButton>
+                                    <UserContainer user={id} page='userprofile'/>
                                 </div>
-                                )})
+                            )})
                     }
                     </CardGroup>
                     

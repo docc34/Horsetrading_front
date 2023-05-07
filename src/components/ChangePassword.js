@@ -43,7 +43,7 @@ const ChangePassword = ({user})=>{
         }
     }
     return(<div>
-        <Button onClick={()=>{setChangePasswordModalVisibility(true)}}>Change Password</Button>
+        <button className='dropDownButton' onClick={()=>{setChangePasswordModalVisibility(true)}}>Change Password</button>
 
         <Modal show={changePasswordModalVisibility} >
             <Modal.Header className="ModalHeader" >
