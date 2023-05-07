@@ -45,3 +45,12 @@
   margin: 1rem;
 
 }
+
+
+.homeDescriptionDiv{
+  width: 98%;
+  margin: 1rem;
+}
+.homeDescriptionDiv p{
+  max-width: 780px;
+}

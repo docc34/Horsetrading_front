@@ -74,6 +74,10 @@ const Home = ()=>{
                 </CardGroup>
                 </div>
             </div> */}
+            <div className="homeDescriptionDiv">
+                <h1>Horsetrading</h1>
+                <p>{t("homeDescription")}</p> {/* your interested in some */}
+            </div>
             <div className='homeCellsDiv'>
                 { 
                     containerData == null || containerData?.length == 0 ? 

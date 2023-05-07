@@ -1,16 +1,58 @@
-@media (max-width: 379.98px) {
+@media (max-width: 409.98px) {
     .headerTitleDiv{
         margin-top: 10px;
     }
     .headerMainDiv{
-        height: 100px;
+        display: flex;
+        flex-direction: column;
+        height: 160px;
+
+    }
+
+    .headerButtonGroupDiv{
+        width: 100%;
+        margin-bottom: 1rem;
+        margin-left: 2rem;
     }
 }
-@media (min-width: 380px) {
+@media (min-width: 410px) {
+    .headerMainDiv{
+        height: 100px;
+    }
+
+}
+@media (max-width: 499.98px) {
+
+    .headerMainDiv h1{
+        font-size: small;
+    }
+    .headerButtonGroup Button{
+        height: 35px;
+        width: 50px;
+        font-size: small;
+    }
+    .headerCountryIcons{
+        width: 1.5rem;
+    }
+}
+@media (min-width: 500px) {
+    .headerCountryIcons{
+        width: 2.3rem;
+        height:30px;
+    }
+    .headerButtonGroup Button{
+        height: 44px;
+    }
+    .headerButtonGroup{
+        max-width: 265px;
+    }
     .headerMainDiv{
         height: 90px;
     }
+}
 
+.headerButtonGroup{
+    margin-right: 1rem;
 }
 .headerMainDiv{
     background-color: #111111;
@@ -50,3 +92,6 @@
 .headerLogoutButton{
     margin-right: 1rem;
 }
+
+
+

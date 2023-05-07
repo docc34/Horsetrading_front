@@ -14,25 +14,27 @@ const Header = ()=>{
             <a href='/' className='headerTitle'>Horsetrading</a>
             <a href='/' className='headerDefinition'>"Unofficial discussion in which people make agreements that provide both sides with advantages"</a>
         </div>
-        <ButtonGroup>
-            <Button variant="outline-primary" onClick={()=>{
-                setCookie('locale',"fi",{ path: '/' }); 
-                window.location.reload();}}>
-                    Finnish
-            </Button>
-            <Button variant="outline-primary" onClick={()=>{
-                setCookie('locale',"en",{ path: '/' }); 
-                window.location.reload();}}>
-                    English
-            </Button>
-            {
-                cookies?.token != null && cookies?.token != undefined ?
-                    <Button className='headerLogoutButton' variant="primary" onClick={()=>{removeCookie('token',{ path: '/' }); window.location.reload();}}>{t("logout")}</Button>
-                : null
-            }
-        </ButtonGroup>
-
-
+        <div className='headerButtonGroupDiv'>
+            <ButtonGroup className='headerButtonGroup'>
+                <Button variant="outline-primary" onClick={()=>{
+                    setCookie('locale',"fi",{ path: '/' }); 
+                    window.location.reload();}}>
+                        <img className='headerCountryIcons' src='https://huutokauppstorage.blob.core.windows.net/huutokauppaimages/fi.svg'/>
+                </Button>
+                <Button variant="outline-primary" onClick={()=>{
+                    setCookie('locale',"en",{ path: '/' }); 
+                    window.location.reload();}}>
+                        <img className='headerCountryIcons' src='https://huutokauppstorage.blob.core.windows.net/huutokauppaimages/gb.svg'/>
+                </Button>
+                {
+                    cookies?.token != null && cookies?.token != undefined ?
+                        <Button className='headerLogoutButton' variant="primary" onClick={()=>{removeCookie('token',{ path: '/' }); window.location.reload();}}> 
+                        <img className='headerCountryIcons' src='https://huutokauppstorage.blob.core.windows.net/huutokauppaimages/logout_icon.png'/>
+                        </Button>
+                    : null
+                }
+            </ButtonGroup>
+        </div>
     </div>)
 }
 
