@@ -8,6 +8,9 @@ import { UserEditModal } from '../components/UserEditModal';
 import { Button } from 'react-bootstrap';
 import { ChangePassword } from "../components/ChangePassword";
 
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+
 
 const UserProfile = () => {
     const search = useLocation().search;
@@ -72,11 +75,13 @@ const UserProfile = () => {
                             return (
                                 <div key={i}>
                                     <UserContainer user={id} page='userprofile'/>
-                                    <UserEditModal user={id} />
-                                    <ChangePassword user={id}/>
-                                    <Button href="/AuctionController">Control Page</Button>
+                                    <DropdownButton id="dropdown-basic-button" title="Settings">
+                                        <UserEditModal user={id} />
+                                        <ChangePassword user={id}/>
+                                        <a className='dropDownButton' href="/AuctionController">Control Page</a>
+                                    </DropdownButton>
                                 </div>
-                                )})
+                            )})
                     }
                     </CardGroup>
                     

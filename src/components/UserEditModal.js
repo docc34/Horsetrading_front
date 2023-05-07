@@ -45,9 +45,9 @@ const UserEditModal = ({user}) => {
 
     return (
         <>
-        <Button variant="primary" onClick={handleShow}>
+        <button className='dropDownButton' onClick={handleShow}>
             Edit profile
-        </Button>
+        </button>
 
         <Modal show={show} onHide={handleClose} centered>
             <Modal.Header className="ModalHeader" >
