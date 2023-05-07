@@ -87,3 +87,8 @@ p{
   margin-bottom:0px !important; 
 }
 /* #282c34 */
+
+.form-label{
+  color: white;
+  margin-left: 2%;
+}
