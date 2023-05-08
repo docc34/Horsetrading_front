@@ -699,7 +699,7 @@ const Auction = ()=>{
                                 </div>
                                 <div >
                                     <div>
-                                        <Button type='submit'>{t("save")}</Button>
+                                        <Button className='auctionRegisterButton' type='submit'>{t("save")}</Button>
                                         <p className='errorMessage'>{message}</p>
                                     </div>
                                     <a href="" onClick={(e)=>{e.preventDefault(); setNewUser(false);}}>{t("auctionMadeOfferYet")}</a>

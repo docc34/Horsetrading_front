@@ -71,8 +71,8 @@ const AuctionController = ()=>{
         {name:"title" , header:"Title",  defaultFlex:1},
         {name:"description" , header:"Description", defaultVisible: false},
         {name:"visible" , header:"Visible"},
-        {name:"type" , header:"Type", defaultFlex:1 },
-        {name:"typeId" , header:"typeId", defaultVisible: false },
+        {name:"saleType" , header:"Saletype", defaultFlex:1 },
+        {name:"saleTypeId" , header:"saleTypeId", defaultVisible: false },
         {name:"raiseClosingTimeInterval" , header:"Closing time interval" ,  defaultFlex:1},
         {name: 'closingTime',header: 'Closing Time', defaultFlex:2,},
         {name:"url" , header:"Url", defaultFlex:1, render: ({value}) => {
@@ -166,7 +166,7 @@ const AuctionController = ()=>{
         setVisible(e.data.visible);
         setClosingTimeModify(e.data.closingTime);
         setPastClosingTimeModify(e.data.closingTime);
-        setAuctionItemTypeModify(e.data.typeId);
+        setAuctionItemTypeModify(e.data.saleTypeId);
         setSelectedRowValue(e.data);
         setSelectedRow(false);
     }, [])
@@ -290,7 +290,7 @@ const AuctionController = ()=>{
                     description: description,
                     closingTime: closingTime,
                     visible: visible,
-                    typeId: auctionItemType,
+                    saleTypeId: auctionItemType,
                     startingPrice: startingPrice != "" && startingPrice != null ? startingPrice : 0,
                     raiseClosingTimeInterval: auctionItemRaisePeriod != "" ? auctionItemRaisePeriod : 0//moment(closingTime).format('D.M.YYYY HH.MM.s')
                 })
@@ -356,7 +356,7 @@ const AuctionController = ()=>{
                         Description:descriptionModify,
                         ClosingTime: closingTimeModify,
                         Visible: visible,
-                        typeId: auctionItemTypeModify,
+                        saleypeId: auctionItemTypeModify,
                         raiseClosingTimeInterval: selectedRowValue.raiseClosingTimeInterval
                         
                     })

@@ -75,7 +75,7 @@ const Home = ()=>{
                 </div>
             </div> */}
             <div className="homeDescriptionDiv">
-                <h1>Horsetrading</h1>
+                <h1>{t("homeDescriptionTitle")}</h1>
                 <p>{t("homeDescription")}</p> {/* your interested in some */}
             </div>
             <div className='homeCellsDiv'>

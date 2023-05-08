@@ -49,7 +49,7 @@ i18n
             ,componentsCountdownExpiredNoticeTitle:"Congratulations to the winner!"
             ,componentsCountdownExpiredNoticeDescription:"Bidding on the auction has closed. Congratulations to the winner!"
 
-
+            ,homeDescriptionTitle:"Hobbyhorses for auction"
             ,homeDescription:"Here you can browse all the creators on the site and their top auctions. If your interested in some creator you can view their profile and all their auctions by clicking their name. "
             ,homeProductionDisclaimerTitle:"Site looking empty?"
             ,homeProductionDisclaimerDescription:"In the future this site will be filled with all kinds of beautiful art works to auction, but currently the site is still in production. If you would like to become a seller on the site, contact me at antitechofficial@gmail.com. Sorry for the inconvenience."
@@ -150,6 +150,7 @@ i18n
             ,componentsCountdownExpiredNoticeDescription:"Huutokauppaan osallistuminen on sulkeutunut. Onnittelut voittajalle!"
 
 
+            ,homeDescriptionTitle:"Keppihevosia kaupan"
             ,homeDescription:"Täällä voit selailla sivun päällimäisiä huutokauppoja ja heidän pitäjiä, jos haluat nähdä pitäjän kaikki huutokaupat, voit siirtyä heidän profiiliin painamalla heidän nimeä. Siellä on listattu kaikki pitäjän huutokaupat."
             ,homeProductionDisclaimerTitle:"Näyttääkö sivu tyhjältä?"
             ,homeProductionDisclaimerDescription:"Tulevaisuudessa sivulle tulee olemaan enemmän myyjiä myymässä mahtavia teoksiaan. Tällä hetkellä sivu on vielä kehityksessä, joten emme ole tavoitelleet mahdollisia myyjiä, jos haluat liittyä mukaan myymään omia teoksiasi sivuilla ole yhteydessä antitechofficial@gmail.com"

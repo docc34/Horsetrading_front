@@ -62,8 +62,8 @@ Hallintasivun korjaus.*
 Tarjoushistoria*
 
 	Muista vaihtaa tuotantokäyttäjään ennen minkäänlaista julkaisua!!!!!
-dotnet user-secrets set ConnectionStrings:Auction "Data Source=localhost;Initial Catalog=auction; user=root; password=88544Z#Edu75246;"
-Scaffold-DbContext "Data Source=localhost;Initial Catalog=auction; user=root; password=88544Z#Edu75246;" MySql.EntityFrameworkCore -OutputDir Models -Context AuctionDbContext -DataAnnotations -Force
+dotnet user-secrets set ConnectionStrings:Auction "Data Source=localhost;Initial Catalog=auction; user=root; password=;"
+Scaffold-DbContext "Data Source=localhost;Initial Catalog=auction; user=root; password=;" MySql.EntityFrameworkCore -OutputDir Models -Context AuctionDbContext -DataAnnotations -Force
 
 Näin tallenetaan turvallisesti. 
 dotnet user-secrets init

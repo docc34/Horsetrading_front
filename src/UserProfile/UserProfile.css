@@ -28,4 +28,9 @@
     justify-content: center;
     align-items: center;
   }
+  .main-container hr{
+    height: 1px;
+    width: 100%;
+    color: white;
+  }
   

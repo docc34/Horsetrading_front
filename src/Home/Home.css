@@ -48,6 +48,10 @@
 
 
 .homeDescriptionDiv{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
   width: 98%;
   margin: 1rem;
 }
