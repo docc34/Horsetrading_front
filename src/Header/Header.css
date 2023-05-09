@@ -5,12 +5,15 @@
     .headerMainDiv{
         display: flex;
         flex-direction: column;
+        justify-content: left;
         height: 160px;
 
     }
 
     .headerButtonGroupDiv{
         width: 100%;
+    }
+    .headerButtonGroup{
         margin-bottom: 1rem;
         margin-left: 2rem;
     }

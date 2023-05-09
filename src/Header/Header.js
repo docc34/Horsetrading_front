@@ -3,7 +3,7 @@ import { useCookies } from 'react-cookie';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { useTranslation } from 'react-i18next';
-
+import {PrivacyPolicy} from '../components/PrivacyPolicy'
 const Header = ()=>{
     const {t} = useTranslation();
     const [cookies, setCookie,removeCookie] = useCookies(['token']);
@@ -11,6 +11,7 @@ const Header = ()=>{
     return(
     <div className="headerMainDiv">
         <div className='headerTitleDiv'>
+            <PrivacyPolicy/>
             <a href='/' className='headerTitle'>Horsetrading</a>
             <a href='/' className='headerDefinition'>"Unofficial discussion in which people make agreements that provide both sides with advantages"</a>
         </div>

@@ -36,6 +36,13 @@ i18n
             ,bills:"Bills"
             ,login:"Login"
             ,logout:"Logout"
+            ,understood:"Understood"
+
+
+            ,privacyPolicyTitle:"Privacy Policy"
+            ,privacyPolicyDescription1:"If you participate in an auction we will collect your Phonenumber or Instagram username, username, offer amount and password for the offer."
+            ,privacyPolicyDescription2:"Offers amount and username are publicly visible while the phonenumber and instagram username can be viewed only by the creator of the auction and site administrators. Password is only visible to the site administrators. All aforementioned data is used for the functionality of the site. Phonenumber, Instagram username, username and offer amount can be used to contact participants off the auction, by the auction holder regarding the auction."
+            ,privacyPolicyDescription3:"All aforementioned data will be kept stored for a year after the sale has completed for the purposes of documentating and completing the sale. If you want your data to be removed earlier than that be in contact with the site administrators. Their contact info can be found at the bottom of the page. This site uses cookies for functionality."
 
 
             ,componentsChangePassword:"Change password"
@@ -136,7 +143,13 @@ i18n
             ,bills:"Laskut"
             ,login:"Kirjaudu"
             ,logout:"Kirjaudu ulos"
+            ,understood:"Ymmärretty"
 
+
+            ,privacyPolicyTitle:"Tietosuojakäytäntö"
+            ,privacyPolicyDescription1:"Jos osallistutte huutokauppaan teiltä kerätään Instagram käyttäjätunnus tai puhelinnumero, käyttäjänimi, tarjouksen summa ja salasana tarjoukselle."
+            ,privacyPolicyDescription2:"Tarjouksen summa ja käyttäjätunnus ovat näkyvillä kaikille sivulla kävijöille. Puhelinnumero ja Instagram käyttäjätunnus ovat näkyviä pelkästään sivun hallitsijoille ja huutokaupan pitäjälle. Salasana on näkyvillä vain sivun hallitsijoille. Kaikkia edellä mainittuja tietoja paitsi salasanaa käytetään mahdolliseen yhteydenottoon liittyen huutokauppaan huutokaupan pitäjän puolesta. Kaikkia edellä mainittuja tietoja käytetään huutokaupan toiminnallisuuden mahdollistamiseen."
+            ,privacyPolicyDescription3:"Kaikki edellä mainitut tiedot pysyvät tallessa sivun hallitsijoilla ja huutokaupan pitäjillä kaupan dokumentoinnin ja suorittamisen takia vuoden ajan kaupasta, jos haluat että tietojasi poistetaan ennen sitä, ole yhteydessä sivun hallitsijoihin. Yhteystiedot löydät sivun lopusta. Sivumme käyttää keksejä toiminnallisuuden mahdollistamiseen."
 
             ,componentsChangePassword:"Muuta salasanaasi"
             ,componentsCurrentPassword:"Nykyinen salasana"

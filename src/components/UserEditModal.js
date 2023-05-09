@@ -28,7 +28,7 @@ const UserEditModal = ({user}) => {
                         Description: descriptionModify,
                     })
                 }
-                await fetch("https://horsetradingapidev.azurewebsites.net/api/Profiles/"+user.id, options);
+                await fetch("https://horsetradingapi.azurewebsites.net/api/Profiles/"+user.id, options);
                 window.location.reload();
             }
         }

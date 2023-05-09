@@ -31,7 +31,7 @@ const ChangePassword = ({user})=>{
                 })
             }
 
-            var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/Profiles/ChangePassword",options);
+            var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Profiles/ChangePassword",options);
             var result = await search.json();
             if(await result?.status == "Ok" ){
 
