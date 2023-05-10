@@ -37,6 +37,25 @@ i18n
             ,login:"Login"
             ,logout:"Logout"
             ,understood:"Understood"
+            ,companyname:"Company name"
+            ,name:"Name"
+            ,address:"Address"
+            ,postalcode:"Postalcode"
+            ,city:"City"
+            ,shortdescription:"Short description"
+            ,registeration:"Registeration"
+
+            
+            ,registerationTitle:"Register your seller account here"
+            ,registerationWarning:"Please fill in the missing field"
+            ,registerationNameDescription:"Enter your first name and last name"
+            ,registerationAddressDescription:"Enter your billing address"
+            ,registerationYtunnusDescription:"YTunnus is not an mandatory field"
+            ,registerationDescriptionDescription:"Give an description of your company, which will be displayed on your seller profile."
+            ,registerationShortDescriptionDescription:"Give a slogan or a short sentence wich describe´s your company. It will be displayed under your company name on the home page."
+            ,registerationPasswordDescription:"Type in an password for your seller account, with atleast 8 characters, 1 number and 1 special character"
+            ,registerationPasswordWarning:"Password does not fill requirements"
+            ,registerationEmailDescription:"Sähköpostiin lähetetään kaikki laskut valmistuneista kaupoista."
 
 
             ,privacyPolicyTitle:"Privacy Policy"
@@ -144,6 +163,25 @@ i18n
             ,login:"Kirjaudu"
             ,logout:"Kirjaudu ulos"
             ,understood:"Ymmärretty"
+            ,companyname:"Yrityksen nimi"
+            ,name:"Nimi"
+            ,address:"Osoite"
+            ,postalcode:"Postinumero"
+            ,city:"Kaupunki"
+            ,shortdescription:"Lyhyt kuvaus"
+            ,registeration:"Rekisteröityminen"
+
+            
+            ,registerationTitle:"Rekisteröidy myyjäksi"
+            ,registerationWarning:"Täytä puuttuva kenttä"
+            ,registerationNameDescription:"Kirjoita etunimesi ja sukunimesi"
+            ,registerationAddressDescription:"Kirjoita laskutusosoitteesi"
+            ,registerationYtunnusDescription:"YTunnus ei ole pakollinen"
+            ,registerationDescriptionDescription:"Anna kuvaus yrityksestäsi. Kuvaus näkyy profiilissasi."
+            ,registerationShortDescriptionDescription:"Anna lyhyt slogan tai lause joka kuvaa yritystäsi, se näytetään nimesi alla kotisivuilla."
+            ,registerationPasswordDescription:"Kirjoita salasana joka on vähintään 8 merkkiä pitkä ja vähintään 1 numeron ja erikoismerkin."
+            ,registerationPasswordWarning:"Salasana ei täytä vaatimuksia"
+            ,registerationEmailDescription:"Sähköpostiin lähetetään kaikki laskut valmistuneista kaupoista."
 
 
             ,privacyPolicyTitle:"Tietosuojakäytäntö"

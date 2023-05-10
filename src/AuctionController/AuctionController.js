@@ -18,6 +18,7 @@ import 'moment-timezone';
 import Datetime from 'react-datetime';
 import { NavLink } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { PasswordVisibilityButton} from '../components/PasswordVisibilityButton'
 
 const AuctionController = ()=>{
     const {t} = useTranslation();
@@ -65,6 +66,7 @@ const AuctionController = ()=>{
     const [billsMessage, setBillsMessage] = useState("");
     
     const [userId, setUserId] = useState("");
+    const [passwordVisibility, setPasswordVisibility] = useState("password");
     
     const auctionItemsColumns = [
         {name:"id", header: "Id",  defaultVisible: false},
@@ -765,7 +767,10 @@ const AuctionController = ()=>{
 
                             <div className='loginControllerFormInputs'>
                                 <Form.Label>{t("password")}</Form.Label>
-                                <Form.Control type="password" placeholder={t("password")} value={password} onChange={(e)=>{setPassword(handleInputChange(e));}} />
+                                <div className='auctionOfferFormPasswordDiv'>
+                                <Form.Control type={passwordVisibility} placeholder={t("password")} value={password} onChange={(e)=>{setPassword(handleInputChange(e));}} />
+                                <PasswordVisibilityButton passwordVisibility={passwordVisibility} setPasswordVisibility={(e)=>{setPasswordVisibility(e)}}/>
+                            </div>
                                 <Form.Text className="text-muted">
                                     {t("auctionControllerLoginDisclaimer")}
                                 </Form.Text>
