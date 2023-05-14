@@ -44,9 +44,19 @@ i18n
             ,city:"City"
             ,shortdescription:"Short description"
             ,registeration:"Registeration"
+            ,questions:"Questions"
+            ,normalUsers:"Normal users"
+            ,dataCollection:"Data collection"
+            ,dataUsage:"Data usage"
+            ,dataStorage:"Data storage"
+            ,sellerAccounts:"Seller accounts"
+            ,auctions:"Auctions"
+            ,contactInfo:"Contact info"
+            ,addressInfo:"Address info"
+            ,companyInfo:"Company info"
 
             
-            ,registerationTitle:"Register your seller account here"
+            ,registerationTitle:"Register your account"
             ,registerationWarning:"Please fill in the missing field"
             ,registerationNameDescription:"Enter your first name and last name"
             ,registerationAddressDescription:"Enter your billing address"
@@ -55,13 +65,20 @@ i18n
             ,registerationShortDescriptionDescription:"Give a slogan or a short sentence wich describe´s your company. It will be displayed under your company name on the home page."
             ,registerationPasswordDescription:"Type in an password for your seller account, with atleast 8 characters, 1 number and 1 special character"
             ,registerationPasswordWarning:"Password does not fill requirements"
-            ,registerationEmailDescription:"Sähköpostiin lähetetään kaikki laskut valmistuneista kaupoista."
-
+            ,registerationEmailDescription:"All bills are sent to your email address."
+            ,registerationLogInLink:"Log in to the control page."
+            ,registerationDisclaimer:"Collected data is used for billing and the functionality of the site."
+            
 
             ,privacyPolicyTitle:"Privacy Policy"
-            ,privacyPolicyDescription1:"If you participate in an auction we will collect your Phonenumber or Instagram username, username, offer amount and password for the offer."
-            ,privacyPolicyDescription2:"Offers amount and username are publicly visible while the phonenumber and instagram username can be viewed only by the creator of the auction and site administrators. Password is only visible to the site administrators. All aforementioned data is used for the functionality of the site. Phonenumber, Instagram username, username and offer amount can be used to contact participants off the auction, by the auction holder regarding the auction."
-            ,privacyPolicyDescription3:"All aforementioned data will be kept stored for a year after the sale has completed for the purposes of documentating and completing the sale. If you want your data to be removed earlier than that be in contact with the site administrators. Their contact info can be found at the bottom of the page. This site uses cookies for functionality."
+            ,privacyPolicyCollection:"If you participate in an auction we will collect your Phonenumber or Instagram username, username, offer amount and password for the offer."
+            ,privacyPolicyUsage:"Offers amount and username are publicly visible while the phonenumber and instagram username can be viewed only by the creator of the auction and site administrators. Password is only visible to the site administrators. All aforementioned data is used for the functionality of the site. Phonenumber, Instagram username, username and offer amount can be used to contact participants off the auction, by the auction holder regarding the auction."
+            ,privacyPolicyStorage:"All aforementioned data will be kept stored for a year after the sale has completed for the purposes of documentating and completing the sale. If you want your data to be removed earlier than that be in contact with the site administrators. Their contact info can be found at the bottom of the page. This site uses cookies for functionality."
+            ,privacyPolicySellersUsage:"All the information gathered during registeration is used for billing or the functionality of the site. Company name and Descriptions are publicly visible on the site. All the other information are only visible to the administrators of the site and the owner of the account."
+            ,privacyPolicySellersAuctions:"All Auctions are stored for one year unless deleted by the owner. Auctions cannot be deleted by the owner if the auction has gone through and a bill is linked to the auction."
+            ,privacyPolicySellersBills:"If bills are not paid in time the site administrators can lock or permanently delete a sellers account and all auctions connected to it. All bills are sent to your accounts email address and are due 14 days from creation. Bills are automatically created when and sent when you go to your accounts control panel after an closed sale. If a bill is due the administrators may contact you regarding the bill. When bills are paid administrators will mark them as paid."
+            ,privacyPolicyQuestions:"If there are any questions or request regarding data storage or the privacy policy. Be in contact with the site administrators, Contacts can be found at the bottom of the page "
+            ,privacyPolicyModalStatement:"I have read our privacy policy statement and agree to the terms." 
 
 
             ,componentsChangePassword:"Change password"
@@ -170,8 +187,18 @@ i18n
             ,city:"Kaupunki"
             ,shortdescription:"Lyhyt kuvaus"
             ,registeration:"Rekisteröityminen"
+            ,questions:"Kysymyksiä"
+            ,normalUsers:"Tavalliset käyttäjät"
+            ,dataCollection:"Tiedon keräys"
+            ,dataUsage:"Tiedon käyttö"
+            ,dataStorage:"Tiedon tallennus"
+            ,sellerAccounts:"Myyjä tilit"
+            ,auctions:"Huutokaupat"
+            ,contactInfo:"Yhteystiedot"
+            ,addressInfo:"Osoitetiedot"
+            ,companyInfo:"Yrityksen tiedot"
 
-            
+
             ,registerationTitle:"Rekisteröidy myyjäksi"
             ,registerationWarning:"Täytä puuttuva kenttä"
             ,registerationNameDescription:"Kirjoita etunimesi ja sukunimesi"
@@ -182,12 +209,20 @@ i18n
             ,registerationPasswordDescription:"Kirjoita salasana joka on vähintään 8 merkkiä pitkä ja vähintään 1 numeron ja erikoismerkin."
             ,registerationPasswordWarning:"Salasana ei täytä vaatimuksia"
             ,registerationEmailDescription:"Sähköpostiin lähetetään kaikki laskut valmistuneista kaupoista."
-
+            ,registerationLogInLink:"Kirjaudu sisään hallintasivulle."
+            ,registerationDisclaimer:"Tietoja käytetään laskutukseen ja sivun toiminnallisuuden mahdollistamiseen."
+            
 
             ,privacyPolicyTitle:"Tietosuojakäytäntö"
-            ,privacyPolicyDescription1:"Jos osallistutte huutokauppaan teiltä kerätään Instagram käyttäjätunnus tai puhelinnumero, käyttäjänimi, tarjouksen summa ja salasana tarjoukselle."
-            ,privacyPolicyDescription2:"Tarjouksen summa ja käyttäjätunnus ovat näkyvillä kaikille sivulla kävijöille. Puhelinnumero ja Instagram käyttäjätunnus ovat näkyviä pelkästään sivun hallitsijoille ja huutokaupan pitäjälle. Salasana on näkyvillä vain sivun hallitsijoille. Kaikkia edellä mainittuja tietoja paitsi salasanaa käytetään mahdolliseen yhteydenottoon liittyen huutokauppaan huutokaupan pitäjän puolesta. Kaikkia edellä mainittuja tietoja käytetään huutokaupan toiminnallisuuden mahdollistamiseen."
-            ,privacyPolicyDescription3:"Kaikki edellä mainitut tiedot pysyvät tallessa sivun hallitsijoilla ja huutokaupan pitäjillä kaupan dokumentoinnin ja suorittamisen takia vuoden ajan kaupasta, jos haluat että tietojasi poistetaan ennen sitä, ole yhteydessä sivun hallitsijoihin. Yhteystiedot löydät sivun lopusta. Sivumme käyttää keksejä toiminnallisuuden mahdollistamiseen."
+            ,privacyPolicyCollection:"Jos osallistutte huutokauppaan teiltä kerätään Instagram käyttäjätunnus tai puhelinnumero, käyttäjänimi, tarjouksen summa ja salasana tarjoukselle."
+            ,privacyPolicyUsage:"Tarjouksen summa ja käyttäjätunnus ovat näkyvillä kaikille sivulla kävijöille. Puhelinnumero ja Instagram käyttäjätunnus ovat näkyviä pelkästään sivun hallitsijoille ja huutokaupan pitäjälle. Salasana on näkyvillä vain sivun hallitsijoille. Kaikkia edellä mainittuja tietoja paitsi salasanaa käytetään mahdolliseen yhteydenottoon liittyen huutokauppaan huutokaupan pitäjän puolesta. Kaikkia edellä mainittuja tietoja käytetään huutokaupan toiminnallisuuden mahdollistamiseen."
+            ,privacyPolicyStorage:"Kaikki edellä mainitut tiedot pysyvät tallessa sivun hallitsijoilla ja huutokaupan pitäjillä kaupan dokumentoinnin ja suorittamisen takia vuoden ajan kaupasta, jos haluat että tietojasi poistetaan ennen sitä, ole yhteydessä sivun hallitsijoihin. Yhteystiedot löydät sivun lopusta. Sivumme käyttää keksejä toiminnallisuuden mahdollistamiseen."
+            ,privacyPolicySellersUsage:"Kaikkia rekisteröinnin aikana kerättyjä tietoja käytetään joko laskutukseen tai sivun toiminnallisuuteen. Yrityksen nimi ja kuvaukset ovat julkisesti näkyvillä sivuilla. Loput tiedot ovat näkyvissä vain sivun ylläpitäjille ja tilin luojalle."
+            ,privacyPolicySellersAuctions:"Kaikki huutokauppat tallennetaan vuodeksi ellei myyjä poista huutokauppaa. Huutokauppaa ei voida poistaa jos siihen on liitetty lasku."
+            ,privacyPolicySellersBills:"Jos laskuja ei makseta ajallaan sivun ylläpitäjät voivat lukita tai poistaa käyttäjän tilin ja kaikki liitetyt tiedot pysyvästi. Kaikki laskut lähetetään tilin sähköpostiin, laskun eräpäivä on 14 päivän päässä luontihetkestä. Laskut luodaan ja lähetetään automaattisesti kun käyttäjä palaa hallintasivulle, sulkeutuneen kaupan jälkeen. Jos laskun eräpäivä on mennyt sivun ylläpitäjät voivat olla teihin yhteydessä laskuun liittyen. Kun laskut maksetaan sivun ylläpitäjät merkkaavat ne maksetuiksi."
+            ,privacyPolicyQuestions:"Jos teillä on yhtään kysymyksiä tai pyyntöjä koskien datan tallennusta tai tietosuojakäytäntöä, olkaa yhteydessä sivun ylläpitäjiin. Ylläpitäjien yhteystiedot löytyvät sivun lopusta."
+            ,privacyPolicyModalStatement:"Olen lukenut tietosuojakäytännön ja hyväksyn sen ehdot."
+
 
             ,componentsChangePassword:"Muuta salasanaasi"
             ,componentsCurrentPassword:"Nykyinen salasana"

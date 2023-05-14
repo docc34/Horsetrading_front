@@ -23,6 +23,7 @@ const Footer = ()=>{
                 <Nav  className="flex-column">
                     <Nav.Link href="/">{t("home")}</Nav.Link>
                     <Nav.Link href="/AuctionController">{t("footerControlPage")}</Nav.Link>
+                    <Nav.Link href="/Privacypolicy">{t("privacyPolicyTitle")}</Nav.Link>
                 </Nav>
             </div>
             <div>
@@ -32,7 +33,7 @@ const Footer = ()=>{
         </div>
         
         <div className='footerPlugDiv'>
-            <p>{t("footerProduct")} <a href="https://www.antitech.fi">AntiTech</a></p>
+            <Nav><p>{t("footerProduct")} </p><Nav.Link className='FooterAntiTechLink' href="https://www.antitech.fi">AntiTech</Nav.Link ></Nav>
         </div>
     </div>)
 }

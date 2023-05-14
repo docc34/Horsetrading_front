@@ -5,6 +5,7 @@ import { useState,useEffect } from 'react';
 import { PasswordVisibilityButton} from '../components/PasswordVisibilityButton'
 import { useTranslation } from 'react-i18next';
 import { useLocation } from "react-router-dom";
+import { Nav } from 'react-bootstrap';
 
 const Registeration = ()=>{
     const {t} = useTranslation();
@@ -34,8 +35,10 @@ const Registeration = ()=>{
         }
         else{
             event.preventDefault();
-            event.target.reset(); 
             registerUser();
+            if(message != "Error"){
+                event.target.reset(); 
+            }
             setRegisterationValidated(false);
         }
     };
@@ -70,9 +73,11 @@ const Registeration = ()=>{
 
     return(<div className='registerationMainDiv'>
         <h1>{t('registerationTitle')}</h1>
-        <p>Kerättyjä tietoja käytetään laskutukseen ja sivun toiminnallisuuden mahdollistamiseen.</p>
+        <p>{t("registerationDisclaimer")}</p>
         <Form className='registerationForm'noValidate validated={registerationValidated} onSubmit={handleRegisterationSubmit}>
+            <h4>{t("companyInfo")}</h4>
             <div className='registerationFormDiv'>
+                
                 <div className='registerationFormInputs'>
                     <Form.Label>{t("companyname")}</Form.Label>
                     <Form.Control required autoFocus onBlur={(e)=>{setCompanyName(e.target.value)}}/>
@@ -96,6 +101,8 @@ const Registeration = ()=>{
                     </Form.Text>
                 </div>
             </div>
+
+            <h4>{t("addressInfo")}</h4>
             <div className='registerationFormDiv'>
                 <div className='registerationFormInputs'>
                     <Form.Label>{t("address")}</Form.Label>
@@ -124,6 +131,7 @@ const Registeration = ()=>{
                 </div>
             </div>
 
+            <h4>{t("Description")}</h4>
             <div className='registerationFormDiv'>
                 <div className='registerationFormInputs registerationTextFields'>
                     <Form.Label>{t("description")}</Form.Label>
@@ -147,7 +155,8 @@ const Registeration = ()=>{
                     </Form.Control.Feedback>
                 </div>
             </div>
-                
+
+            <h4>{t("contactInfo")}</h4>
             <div className='registerationFormDiv'>
                 <div className='registerationFormInputs'>
                     <Form.Label>{t("email")}</Form.Label>
@@ -160,7 +169,7 @@ const Registeration = ()=>{
                     </Form.Control.Feedback>
                 </div>
 
-                <div className='registerationFormInputs'>
+                <div className='registerationFormInput'>
                     <Form.Label>{t("password")}</Form.Label>
                     <div className='auctionOfferFormPasswordDiv'>
                         <Form.Control required type={passwordVisibility} placeholder={t("password")} onBlur={(e)=>{setPassword(e.target.value);}} />
@@ -173,10 +182,15 @@ const Registeration = ()=>{
                         {t("registerationPasswordWarning")}
                     </Form.Control.Feedback>
                 </div>
-                <div>
-                    <Button type="submit">{t("save")}</Button>
-                    <p>{message}</p>
-                </div>
+            </div>
+            <div>
+                <Button type="submit">{t("save")}</Button>
+                <p>{message}</p>
+                {message == "New user created succesfully" ? 
+                    <Nav>
+                        <Nav.Link href="/AuctionController">{t("registerationLogInLink")}</Nav.Link>
+                    </Nav>
+                : null}
             </div>
         </Form>
 

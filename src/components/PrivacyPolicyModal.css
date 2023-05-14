@@ -1,0 +1,13 @@
+.PrivacyPolicyDescriptionDiv{
+    font-size: small;
+}
+.PrivacyPolicyModal{
+    margin-top: 10rem;
+    width: 100%;
+}
+
+.PrivacyPolicyModalLink{
+    font-size: large !important;
+    color: var(--bs-link-color) !important;
+    text-decoration: underline !important;
+}

@@ -1,0 +1,15 @@
+@media (max-width:1200px) {
+    .PrivacyPolicyContentMainDiv{
+        flex-direction: column;
+    }
+}
+.PrivacyPolicyContentMainDiv{
+    display: flex;
+    padding: 2rem;
+    width: 100%;
+}
+.PrivacyPolicyTitle{
+    padding-left: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 0px;
+}

@@ -4,6 +4,7 @@ import { AuctionController } from './AuctionController/AuctionController';
 import {Header} from './Header/Header';
 import { Footer } from './Footer/Footer';
 import { Registeration } from './Registeration/Registeration';
+import {PrivacyPolicy} from './PrivacyPolicy/PrivacyPolicy';
 import './App.css';
 import './i18n'
 
@@ -37,6 +38,7 @@ function App() {
           <Route path="/AuctionController" element={<AuctionController />} exact />
           <Route path={"/User"} element={<UserProfile />} />
           <Route path="/Registeration" element={<Registeration />} />
+          <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
         </Routes>
       </div>
       <Routes>
