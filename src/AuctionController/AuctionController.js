@@ -358,7 +358,7 @@ const AuctionController = ()=>{
                         Description:descriptionModify,
                         ClosingTime: closingTimeModify,
                         Visible: visible,
-                        saleypeId: auctionItemTypeModify,
+                        saleTypeId: auctionItemTypeModify,
                         raiseClosingTimeInterval: selectedRowValue.raiseClosingTimeInterval
                         
                     })
@@ -501,7 +501,7 @@ const AuctionController = ()=>{
                                 <Alert.Heading>{t("auctionControllerMessageTitle")}</Alert.Heading>
                                 <p>{message}</p>
                                 <br/>
-                                <p>{billsMessage}</p>
+                                <p>{t("auctionControllerBillsMessage")}</p>
                                 <hr />
 
                                 <div className="d-flex justify-content-end">

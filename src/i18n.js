@@ -100,6 +100,7 @@ i18n
 
             ,auctionControllerAuctionController:"Auction controller"
             ,auctionControllerMessageTitle:"New message!"
+            ,auctionControllerBillsMessage:"New bill arrived, check your email address. It may take atleast 5 minutes to arrive."
             ,auctionControllerAuctionItemsTitle:"Auction Items"
             ,auctionControllerAddAuctionItem:"Add auctionitem"
             ,auctionControllerChangeVisibilityTitle:"Change visibility"
@@ -244,6 +245,7 @@ i18n
             
             ,auctionControllerAuctionController:"Huutokaupan hallinta"
             ,auctionControllerMessageTitle:"Uusi viesti!"
+            ,auctionControllerBillsMessage:"Uusi lasku saapui, tarkista sähköpostiosoitteesi. Huom laskulla saattaa kestää pari minuuttia saapua."
             ,auctionControllerAuctionItemsTitle:"Huutokaupattavat esineet"
             ,auctionControllerAddAuctionItem:"Lisää myytävä esine"
             ,auctionControllerChangeVisibilityTitle:"Muuta näkyvyyttä"

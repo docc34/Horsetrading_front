@@ -15,8 +15,8 @@ const Footer = ()=>{
             <div className='footerContactsDiv'>
                 <h3>{t("footerContacts")}</h3>
                 <p>{t("footerCEO")}: Eemeli Antikainen</p>
-                <p>{t("phonenumber")}: +358409606973</p>
                 <p>{t("email")}: antitechofficial@gmail.com</p>
+                <p>Instagram: @antitechofficial</p>
             </div>
             <div className='footerLinksDiv'>
                 <h3 className='footerLinksTitle'>{t("footerLinks")}</h3>
