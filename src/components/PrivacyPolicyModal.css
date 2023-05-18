@@ -2,9 +2,16 @@
     font-size: small;
 }
 .PrivacyPolicyModal{
-    margin-top: 10rem;
-    width: 100%;
+    min-height: 215px;
 }
+
+.PrivacyPolicyButtonsDiv{
+    margin-top: 0.5rem;
+}
+.PrivacyPolicyButtons{
+    margin-left: 1rem;
+}
+
 
 .PrivacyPolicyModalLink{
     font-size: large !important;

@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
-import Modal from 'react-bootstrap/Modal';
+import Offcanvas from 'react-bootstrap/Offcanvas';
 import Button from 'react-bootstrap/Button';
 import { useCookies } from 'react-cookie';
 import { useTranslation } from 'react-i18next';
 import './PrivacyPolicyModal.css';
 import Nav from 'react-bootstrap/Nav'
-import { useLocation } from "react-router-dom";
-
+import { useLocation,useNavigate } from "react-router-dom";
 const PrivacyPolicyModal = ()=>{
-    const [cookies, setCookie,removeCookie] = useCookies(['token']);
+    const [cookies, setCookie] = useCookies(['token']);
     const [show, setShow] = useState(false);
     const {t} = useTranslation();
     const search = useLocation().pathname;
+    let navigate = useNavigate();
 
     useEffect(()=>{
         const CheckPrivacyNotice = async ()=>{
-            if(await cookies.privacyNoticeRead == "true" ||search.toString() == "/Privacypolicy" ){
+            if(await cookies.privacyNoticeRead == "true" ||search.toString() == "/Privacypolicy" || search.toString() == "/"|| search.toString() == "/user"){
                 setShow(false);
             }
             else{
@@ -25,32 +25,37 @@ const PrivacyPolicyModal = ()=>{
         CheckPrivacyNotice();
     },[]);
     return(              
-    <Modal
+    <Offcanvas 
         show={show}
-        size="sm"
-        backdrop="static"
-        className='PrivacyPolicyModal'
+        placement="bottom"
+        scroll={true}
+        backdrop={true}
         keyboard={false}
+        className="PrivacyPolicyModal"
         >
-        <Modal.Header className='ModalHeader' >
-        <Modal.Title>{t("privacyPolicyTitle")}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className='ModalBody'>
+        <Offcanvas.Header className='ModalHeader' >
+            <Offcanvas.Title><h1>{t("privacyPolicyTitle")}</h1></Offcanvas.Title>
+        </Offcanvas.Header>
+
+        <Offcanvas.Body className='ModalBody'>
             <div className='PrivacyPolicyDescriptionDiv'>
                 <p>{t("privacyPolicyModalStatement")}</p>
                 <Nav.Link className='PrivacyPolicyModalLink' href="/Privacypolicy">{t("privacyPolicyTitle")}</Nav.Link>
             </div>
-        </Modal.Body>
-        <Modal.Footer className='ModalFooter'>
-        <Button variant="secondary" onClick={()=>{window.location.reload("/PrivacyPolicy")}}>
-            {t("no")}
-        </Button>
-        <Button variant="primary" onClick={()=>{
-            setCookie("privacyNoticeRead",true, { path: '/' });
-            setShow(false);
-            }}>{t("yes")}</Button>
-        </Modal.Footer>
-    </Modal>
+            <div className='PrivacyPolicyButtonsDiv'>
+                <Button  variant="secondary" onClick={()=>{navigate("/"); window.location.reload();}}>
+                    {t("no")}
+                </Button>
+                <Button className='PrivacyPolicyButtons' variant="primary" onClick={()=>{
+                    setCookie("privacyNoticeRead",true, { path: '/' });
+                    setShow(false);
+                    }}>{t("yes")}
+                </Button>
+            </div>
+        </Offcanvas.Body>
+
+
+    </Offcanvas >
     )
 }
 

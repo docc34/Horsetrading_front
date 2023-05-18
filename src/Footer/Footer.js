@@ -6,7 +6,7 @@ const Footer = ()=>{
     const {t} = useTranslation();
 
     return(
-    <div className="footerMainDiv">
+    <div className="footerMainDiv" >
         <div className='footerTitleDiv'>
             <a href='/' className='footerTitle'>Horsetrading</a>
         </div>

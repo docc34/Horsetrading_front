@@ -32,7 +32,7 @@ const ChangePassword = ({user})=>{
                 })
             }
 
-            var search = await fetch("https://horsetradingapi.azurewebsites.net/api/Profiles/ChangePassword",options);
+            var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/Profiles/ChangePassword",options);
             var result = await search.json();
             if(await result?.status == "Ok" ){
 
@@ -71,7 +71,7 @@ const ChangePassword = ({user})=>{
                     <Form.Label>{t("componentsNewPassword")}</Form.Label>
                     <div className='auctionOfferFormPasswordDiv'>
                         <Form.Control required  type={newPasswordVisibility} placeholder={t("password")} onBlur={(e)=>{setNewPassword(e.target.value);}} />
-                        <PasswordVisibilityButton passwordVisibility={passwordVisibility} setPasswordVisibility={(e)=>{setPasswordVisibility(e)}}/>
+                        <PasswordVisibilityButton passwordVisibility={newPasswordVisibility} setPasswordVisibility={(e)=>{setNewPasswordVisibility(e)}}/>
                     </div>
                     <Form.Text className="text-muted">
                         {t("componentsNewPasswordDescription")}
@@ -79,7 +79,6 @@ const ChangePassword = ({user})=>{
                     <Form.Control.Feedback type="invalid">
                         {t("componentsCurrentPasswordDisclaimer")}
                     </Form.Control.Feedback>
-
 
                     {message}
             </Modal.Body>

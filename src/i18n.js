@@ -78,7 +78,7 @@ i18n
             ,privacyPolicySellersAuctions:"All Auctions are stored for one year unless deleted by the owner. Auctions cannot be deleted by the owner if the auction has gone through and a bill is linked to the auction."
             ,privacyPolicySellersBills:"If bills are not paid in time the site administrators can lock or permanently delete a sellers account and all auctions connected to it. All bills are sent to your accounts email address and are due 14 days from creation. Bills are automatically created when and sent when you go to your accounts control panel after an closed sale. If a bill is due the administrators may contact you regarding the bill. When bills are paid administrators will mark them as paid."
             ,privacyPolicyQuestions:"If there are any questions or request regarding data storage or the privacy policy. Be in contact with the site administrators, Contacts can be found at the bottom of the page "
-            ,privacyPolicyModalStatement:"I have read our privacy policy statement and agree to the terms." 
+            ,privacyPolicyModalStatement:"I have read the privacy policy statement and agree to the terms." 
 
 
             ,componentsChangePassword:"Change password"

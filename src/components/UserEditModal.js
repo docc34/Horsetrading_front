@@ -28,7 +28,7 @@ const UserEditModal = ({user}) => {
                         Description: descriptionModify,
                     })
                 }
-                await fetch("https://horsetradingapi.azurewebsites.net/api/Profiles/"+user.id, options);
+                await fetch("https://horsetradingapidev.azurewebsites.net/api/Profiles/"+user.id, options);
                 window.location.reload();
             }
         }
@@ -65,6 +65,7 @@ const UserEditModal = ({user}) => {
                         as="textarea" 
                         type="username"
                         autoFocus
+                        value={usernameModify}
                         onChange={(event) =>
                             setUsernameModify(event.target.value)
                         }
@@ -82,6 +83,7 @@ const UserEditModal = ({user}) => {
                         as="textarea" 
                         type="description"
                         rows={3}
+                        value={descriptionModify}
                         onChange={(event) =>
                             setDescriptionModify(event.target.value)
                         }

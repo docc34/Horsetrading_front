@@ -71,7 +71,7 @@ const UserProfile = () => {
                     <p>{containerData.description}</p>
                     {loggedIn && ownProfile ? 
                         <DropdownButton id="dropdown-basic-button" title="Settings">
-                            <UserEditModal user={containerData.id} />
+                            <UserEditModal user={containerData} />
                             <ChangePassword user={containerData.id}/>
                             <div className='dropDownButton'>
                                 <a href="/AuctionController">Control Page</a>

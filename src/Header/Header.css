@@ -17,12 +17,23 @@
         margin-bottom: 1rem;
         margin-left: 2rem;
     }
+    .headerTitle{
+        font-size: 30px;
+    }
+    .headerDefinition{
+        font-size: 10.5px;
+    }
 }
 @media (min-width: 410px) {
     .headerMainDiv{
         height: 100px;
     }
-
+    .headerTitle{
+        font-size: 40px;
+    }
+    .headerDefinition{
+        font-size: 11.5px;
+    }
 }
 @media (max-width: 499.98px) {
 
@@ -74,7 +85,6 @@
 }
 .headerTitle{
     color: rgb(255, 255, 255);
-    font-size: 40px;
     text-decoration: none;
 }
 .headerTitle:hover{
@@ -82,7 +92,6 @@
 }
 .headerDefinition{
     color: rgb(255, 255, 255);
-    font-size: 11.5px;
     font-family: cursive;
     font-style: italic; 
     text-decoration: none;
