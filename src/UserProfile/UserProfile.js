@@ -66,7 +66,7 @@ const UserProfile = () => {
     return (
         <div className='main-container'>
             <div className='user-container'>
-                <div>
+                <div className='user-data-container'>
                     <h1>{containerData.companyName}</h1>
                     <p>{containerData.description}</p>
                     {loggedIn && ownProfile ? 

@@ -1,4 +1,4 @@
-@media (max-width: 409.98px) {
+@media (max-width: 429.98px) {
     .headerTitleDiv{
         margin-top: 10px;
     }
@@ -24,7 +24,7 @@
         font-size: 10.5px;
     }
 }
-@media (min-width: 410px) {
+@media (min-width: 430px) {
     .headerMainDiv{
         height: 100px;
     }

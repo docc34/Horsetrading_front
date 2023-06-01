@@ -4,7 +4,6 @@ import {RenderAuctionItemsCells} from './RenderAuctionItemsCells';
 const UserContainer = (data)=>{
     //Data palautuu nyt järkevämmin apista, palauttaa käyttäjän jonka alla palauttaa listassa käyttäjän auctionitemit.
 
-
     const UserHeader = () => {
         return (
             <div className='userCellLinkDiv'>
@@ -12,13 +11,14 @@ const UserContainer = (data)=>{
                     <div>
                         <a href={"/user?userId="+data?.user?.id} className='userCellLink'>
                             <h1>{data?.user?.companyName}</h1>
+                            <p>{data?.user?.shortDescription}</p>  
                         </a>
                     </div>
                     :
                     <div>
                         <a href={"/user?userId="+data?.user?.id} className='userCellLink'>
                             <h1>{data?.user?.companyName}</h1>
-                            <p>{data.user.description}</p>  
+                            <p>{data?.user?.description}</p>  
                         </a>
                     </div>
 

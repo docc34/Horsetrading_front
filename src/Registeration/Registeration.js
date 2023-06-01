@@ -80,7 +80,7 @@ const Registeration = ()=>{
                 
                 <div className='registerationFormInputs'>
                     <Form.Label>{t("companyname")}</Form.Label>
-                    <Form.Control required autoFocus onBlur={(e)=>{setCompanyName(e.target.value)}}/>
+                    <Form.Control type='text' required autoFocus onBlur={(e)=>{setCompanyName(e.target.value)}}/>
                     <Form.Control.Feedback type="invalid">
                         {t("registerationWarning")}
                     </Form.Control.Feedback>
@@ -88,14 +88,14 @@ const Registeration = ()=>{
 
                 <div className='registerationFormInputs'>
                     <Form.Label>{t("name")}</Form.Label>
-                    <Form.Control required  onBlur={(e)=>{setName(e.target.value)}}/>
+                    <Form.Control type='text' required  onBlur={(e)=>{setName(e.target.value)}}/>
                     <Form.Text className="text-muted">
                         {t("registerationNameDescription")}
                     </Form.Text>
                 </div>
                 <div className='registerationFormInputs'>
                     <Form.Label>YTunnus</Form.Label>
-                    <Form.Control maxLength={9} onBlur={(e)=>{setYTunnus(e.target.value)}}/>
+                    <Form.Control type='text' maxLength={9} onBlur={(e)=>{setYTunnus(e.target.value)}}/>
                     <Form.Text className="text-muted">
                         {t("registerationYtunnusDescription")}
                     </Form.Text>
@@ -106,7 +106,7 @@ const Registeration = ()=>{
             <div className='registerationFormDiv'>
                 <div className='registerationFormInputs'>
                     <Form.Label>{t("address")}</Form.Label>
-                    <Form.Control required  onBlur={(e)=>{setAddress(e.target.value)}}/>
+                    <Form.Control type='text' required  onBlur={(e)=>{setAddress(e.target.value)}}/>
                     <Form.Text className="text-muted">
                         {t("registerationAddressDescription")}
                     </Form.Text>
@@ -124,7 +124,7 @@ const Registeration = ()=>{
 
                 <div className='registerationFormInputs'>
                     <Form.Label>{t("city")}</Form.Label>
-                    <Form.Control required onBlur={(e)=>{setCity(e.target.value)}}/>
+                    <Form.Control type='text' required onBlur={(e)=>{setCity(e.target.value)}}/>
                     <Form.Control.Feedback type="invalid">
                         {t("registerationWarning")}
                     </Form.Control.Feedback>
@@ -160,7 +160,7 @@ const Registeration = ()=>{
             <div className='registerationFormDiv'>
                 <div className='registerationFormInputs'>
                     <Form.Label>{t("email")}</Form.Label>
-                    <Form.Control required onBlur={(e)=>{setEmail(e.target.value)}}/>
+                    <Form.Control type='text' required onBlur={(e)=>{setEmail(e.target.value)}}/>
                     <Form.Text className="text-muted">
                         {t("registerationEmailDescription")}
                     </Form.Text>
@@ -183,7 +183,7 @@ const Registeration = ()=>{
                     </Form.Control.Feedback>
                 </div>
             </div>
-            <div>
+            <div className='registerationButtonDiv'>
                 <Button type="submit">{t("save")}</Button>
                 <p>{message}</p>
                 {message == "New user created succesfully" ? 

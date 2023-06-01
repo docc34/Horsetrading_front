@@ -322,7 +322,7 @@ const AuctionController = ()=>{
             }
             else if(auctionItems != null && auctionItems != undefined && auctionItems != []&& auctionItems?.length != 0 ){
                 setAuctionItems(await auctionItems);
-                console.log(await auctionItems[1]);
+                
                 setUserId(await auctionItems[0]?.userId);
             }
             
