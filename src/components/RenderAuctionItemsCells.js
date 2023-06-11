@@ -7,7 +7,7 @@ const RenderAuctionItemsCells = (cellData) => {
         return(
             <CardGroup>
                 {cellData.auctionItems.map((item, i) => {
-                    console.log(item);
+                    
                     return(
                         <div key={i}>
                             <StoreCell data={item} />

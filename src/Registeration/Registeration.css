@@ -17,8 +17,20 @@
     .registerationFormInputs{
         margin-right:1rem;
     }
+    .registerationFormInputs{
+        min-height: 142px;
+    }
+    .registerationTextFields{
+        min-height: 200px;
+    }
 }
 @media (max-width: 768.98px ) {
+    .registerationFormInputs{
+        min-height: 94px;
+    }
+    .registerationTextFields{
+        min-height: 150px;
+    }
     .registerationFormDiv{
         flex-direction: column;
         align-items: start;
@@ -35,7 +47,7 @@
         width: 250px;
     }
     .registerationTextFields{
-        width: 350px;
+        width: 350px !important;
     }
 }
 @media (max-width: 429.98px ) {
@@ -59,6 +71,7 @@
 }
 .registerationFormDiv{
     display: flex;
+    
 }
 .registerationFormDivRow{
     display: flex;
@@ -71,12 +84,6 @@
     display: flex;
     flex-direction: column;
 }
-.registerationFormInputs{
-    min-height: 94px;
-}
-.registerationTextFields{
-    min-height: 142px;
-}
 
 .auctionOfferFormPasswordDiv{
     width: 250px;
@@ -84,4 +91,16 @@
 
 .registerationButtonDiv{
     margin-top: 1rem;
+}
+
+.registrationMessage{
+    margin-top: 0.5rem;
+}
+
+.registrationLink{
+    padding: 0% !important;
+}
+
+.registrationDescriptionDiv{
+    min-height: 200px;
 }

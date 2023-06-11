@@ -527,7 +527,7 @@ const Auction = ()=>{
                                     sortable={false}
                                     onSelectionChange={onSelectionChange}
                                     enableKeyboardNavigation={false}
-                                    toggleRowSelectOnClick={cookies?.auctioneerDefaultUsername?.length > 3 ? false : true}
+                                    toggleRowSelectOnClick={cookies?.auctioneerDefaultUsername?.length < 3 || isCreator == true? true : false }
                                     defaultSelected={datagridDefaultSelected != undefined && datagridDefaultSelected != 0 ? datagridDefaultSelected : null}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
                                     selected={selectedRowId == 0 ? cookies.auctioneerId : selectedRowId}
                                     rowClassName="auctionReactDataGridRows"
@@ -549,7 +549,7 @@ const Auction = ()=>{
                                     sortable={false}
                                     onSelectionChange={onSelectionChange}
                                     enableKeyboardNavigation={false}
-                                    toggleRowSelectOnClick={false}//
+                                    toggleRowSelectOnClick={cookies?.auctioneerDefaultUsername?.length < 3 || isCreator == true? true : false }
                                     defaultSelected={datagridDefaultSelected != undefined && datagridDefaultSelected != 0 ? datagridDefaultSelected : null}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
                                     selected={selectedRowId == 0 ? cookies.auctioneerId : selectedRowId}
                                     rowClassName="auctionReactDataGridRows"

@@ -12,7 +12,7 @@ import CloseButton from 'react-bootstrap/CloseButton';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
-import {handleInputChange} from  '../functions/handleInputChange'
+
 import moment from 'moment';
 import 'moment-timezone';
 import Datetime from 'react-datetime';
@@ -24,6 +24,7 @@ const AuctionController = ()=>{
     const {t} = useTranslation();
     const [cookies, setCookie,removeCookie] = useCookies(['token']);
 
+    const [loginValidated, setLoginValidated] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
     const [auctionItems, setAuctionItems] = useState(false);
     const [selectedRow, setSelectedRow] = useState(true);
@@ -95,6 +96,28 @@ const AuctionController = ()=>{
         //     return <a href={value}>Auction</a>
         // }}
     ]
+
+    const handleLoginSubmit = (event) => {
+        console.log(event);
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+            setLoginValidated(true);
+        }
+        else{
+            event.preventDefault();
+            //Take userdata from form using the name attribute given to inputs.
+            //This is done to enable use of autofill
+            handleLogin({
+                email: event.target.email.value,
+                password: event.target.password.value
+            });
+
+            setLoginValidated(false);
+        }
+    };
+
 
     const handleCreateAuctionItemSubmit = (event) => {
         const form = event.currentTarget;
@@ -204,34 +227,33 @@ const AuctionController = ()=>{
         }
     }
 
-    const handleLogin = async() => {
-        if(email != "" && password != ""){
-            try{
-                let data = await fetch("https://horsetradingapidev.azurewebsites.net/api/Login",{
-                        method:'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body:JSON.stringify({email: email, password: password})
-                    });
-    
-                let result = await data.json();
-                
-                if (result?.status == "Error") {
-                    setMessage(result.message);
-                    setPassword("");
-                    setEmail("");            
-                    removeCookie('token',{ path: '/' });
-                }
-                else if(result?.status == "Ok"){
+    const handleLogin = async(loginBody) => {
+        try{
+            let data = await fetch("https://horsetradingapidev.azurewebsites.net/api/Login",{
+                    method:'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:JSON.stringify(loginBody)
+                });
 
-                    resetValues();
-                    setCookie('token', result.token, { path: '/' })
-                    window.location.reload();
-                }
+            let result = await data.json();
+            
+            if (result?.status == "Error") {
+                setMessage(result.message);
+                setPassword("");
+                setEmail("");            
+                removeCookie('token',{ path: '/' });
             }
-            catch{
-                setMessage("Error");
+            else if(result?.status == "Ok"){
+
+                resetValues();
+                setCookie('token', result.token, { path: '/' })
+                window.location.reload();
             }
-        }  
+        }
+        catch{
+            setMessage("Error");
+        }
+        
     }
 
 //Bills CR
@@ -759,29 +781,31 @@ const AuctionController = ()=>{
                 <h4>{t("auctionControllerLoginTitle")}</h4>
                 <div className='auctionControllerLoginButtonDiv'>
                     <div>
-                        <div>
-                            <div className='loginControllerFormInputs'>
-                                <Form.Label>{t("email")}</Form.Label>
-                                <Form.Control placeholder={t("email")} value={email} onChange={(e)=>{setEmail(handleInputChange(e));}} />
+                        <Form noValidate validated={loginValidated} onSubmit={handleLoginSubmit}>
+                            <div>
+                                    <div className='loginControllerFormInputs'>
+                                        <Form.Label>{t("email")}</Form.Label>
+                                        <Form.Control required name='email' placeholder={t("email")}/>
+                                    </div>
+
+                                    <div className='loginControllerFormInputs'>
+                                        <Form.Label>{t("password")}</Form.Label>
+                                        <div className='auctionOfferFormPasswordDiv'>
+                                        <Form.Control required name='password' type={passwordVisibility} placeholder={t("password")} />
+                                        <PasswordVisibilityButton passwordVisibility={passwordVisibility} setPasswordVisibility={(e)=>{setPasswordVisibility(e)}}/>
+                                    </div>
+                                        <Form.Text className="text-muted">
+                                            {t("auctionControllerLoginDisclaimer")}
+                                        </Form.Text>
+                                    
+                                        <p className='errorMessage'>{message}</p>
+                                    </div>
                             </div>
 
-                            <div className='loginControllerFormInputs'>
-                                <Form.Label>{t("password")}</Form.Label>
-                                <div className='auctionOfferFormPasswordDiv'>
-                                <Form.Control type={passwordVisibility} placeholder={t("password")} value={password} onChange={(e)=>{setPassword(handleInputChange(e));}} />
-                                <PasswordVisibilityButton passwordVisibility={passwordVisibility} setPasswordVisibility={(e)=>{setPasswordVisibility(e)}}/>
-                            </div>
-                                <Form.Text className="text-muted">
-                                    {t("auctionControllerLoginDisclaimer")}
-                                </Form.Text>
-                            
-                                <p className='errorMessage'>{message}</p>
-                            </div>
-                        </div>
-
-                        <Button variant="primary" onClick={()=>{handleLogin()}}>
-                            {t("login")}
-                        </Button>
+                            <Button variant="primary" type='submit'>
+                                {t("login")}
+                            </Button>
+                        </Form>
                     </div>
                 </div>
             </div>}

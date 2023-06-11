@@ -32,7 +32,7 @@ const StoreCell = (d)=>{
                 <div className='storeCellContentDiv rounded-bottom ' >
                             {/* style={d.data?.type == "Purchase" ? {backgroundColor: '#dadd0b'} : {backgroundColor: '#0437df'}} */}
                             {/* variant={d.data?.type == "Purchase" ? 'warning' : 'info'} */}
-                           <Alert className='countdownContainerType' style={d.data?.type == "Purchase" ? {backgroundColor: '#3E215C', borderColor: '#3E215C'} : {backgroundColor: '#AB7E0E', borderColor: '#AB7E0E'}}  >
+                           <Alert className='countdownContainerType' style={d.data?.saleType == "Purchase" ? {backgroundColor: '#3E215C', borderColor: '#3E215C'} : {backgroundColor: '#AB7E0E', borderColor: '#AB7E0E'}}  >
                                 <p>{t("type")}: {d.data?.saleTypeId == 1 ? t("commission") : t("purchase")}</p>
                             </Alert> 
 
