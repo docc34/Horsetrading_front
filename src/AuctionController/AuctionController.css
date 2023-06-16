@@ -30,7 +30,7 @@
 .auctionControllerLoginButtonDiv{
   display: flex;
   justify-content: left;
-  align-items: start;
+  align-items: flex-start;
 }
 
 

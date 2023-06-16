@@ -43,7 +43,7 @@ i18n
             ,postalcode:"Postalcode"
             ,city:"City"
             ,shortdescription:"Short description"
-            ,registeration:"Registeration"
+            ,registeration:"Registration"
             ,questions:"Questions"
             ,normalUsers:"Normal users"
             ,dataCollection:"Data collection"
@@ -56,7 +56,7 @@ i18n
             ,companyInfo:"Company info"
 
             
-            ,registerationTitle:"Register your account"
+            ,registrationTitle:"Register your account"
             ,registerationWarning:"Please fill in the missing field"
             ,registerationNameDescription:"Enter your first name and last name"
             ,registerationAddressDescription:"Enter your billing address"
@@ -200,7 +200,7 @@ i18n
             ,companyInfo:"Yrityksen tiedot"
 
 
-            ,registerationTitle:"Rekisteröidy myyjäksi"
+            ,registrationTitle:"Rekisteröidy myyjäksi"
             ,registerationWarning:"Täytä puuttuva kenttä"
             ,registerationNameDescription:"Kirjoita etunimesi ja sukunimesi"
             ,registerationAddressDescription:"Kirjoita laskutusosoitteesi"

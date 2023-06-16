@@ -32,7 +32,7 @@ const Home = ()=>{
                 body:JSON.stringify(list)
             }
 
-            console.log(list);
+            
             var search = await fetch(`https://horsetradingapidev.azurewebsites.net/api/AuctionItems/Recent`,options);
             var data = await search.json();
             
@@ -42,7 +42,7 @@ const Home = ()=>{
             else{
                 setRecentAuctionItems(data);
                 console.log(data);
-                console.log("data");
+                
                 //TODO: tee graafinen liittymä recent auctionitemsseille
             }
         }

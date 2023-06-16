@@ -37,7 +37,7 @@ function App() {
           <Route path="/Auction" element={<Auction />} exact />
           <Route path="/AuctionController" element={<AuctionController />} exact />
           <Route path={"/User"} element={<UserProfile />} />
-          <Route path="/Registeration" element={<Registeration />} />
+          <Route path="/Registration" element={<Registeration />} />
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
         </Routes>
       </div>

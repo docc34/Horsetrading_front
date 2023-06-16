@@ -98,7 +98,7 @@ const AuctionController = ()=>{
     ]
 
     const handleLoginSubmit = (event) => {
-        console.log(event);
+        
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.preventDefault();
@@ -204,7 +204,7 @@ const AuctionController = ()=>{
             Array.from(e.target.files).forEach(file => {
                 files.push(file);
             });
-            console.log(files);
+            
             setImageFiles(files);
         }
         else{
@@ -267,7 +267,7 @@ const AuctionController = ()=>{
 
             var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/Bills/CheckUsersBills",options);
             var result = await search.json();
-            console.log(result);
+            
             if(result?.status == "Error" && result?.message == "No new billable items found"&& result?.object?.value != null){
                 setUsersBills(result?.object?.value);
                 setBillsMessage(result?.message);

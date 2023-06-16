@@ -69,7 +69,7 @@ const Registeration = ()=>{
     }
 
     return(<div className='registerationMainDiv'>
-        <h1>{t('registerationTitle')}</h1>
+        <h1>{t('registrationTitle')}</h1>
         <p>{t("registerationDisclaimer")}</p>
         <Form className='registerationForm'noValidate validated={registerationValidated} onSubmit={handleRegisterationSubmit}>
             <h4>{t("companyInfo")}</h4>
