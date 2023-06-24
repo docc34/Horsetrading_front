@@ -1,5 +1,6 @@
 import './Footer.css';
 import Nav from 'react-bootstrap/Nav'
+import {Link} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 const Footer = ()=>{
@@ -21,9 +22,9 @@ const Footer = ()=>{
             <div className='footerLinksDiv'>
                 <h3 className='footerLinksTitle'>{t("footerLinks")}</h3>
                 <Nav  className="flex-column">
-                    <Nav.Link href="/">{t("home")}</Nav.Link>
-                    <Nav.Link href="/AuctionController">{t("footerControlPage")}</Nav.Link>
-                    <Nav.Link href="/Privacypolicy">{t("privacyPolicyTitle")}</Nav.Link>
+                    <Nav.Link><Link to="/">{t("home")}</Link></Nav.Link>
+                    <Nav.Link><Link to="/AuctionController">{t("footerControlPage")}</Link></Nav.Link>
+                    <Nav.Link><Link to="/Privacypolicy">{t("privacyPolicyTitle")}</Link></Nav.Link>
                 </Nav>
             </div>
             <div>

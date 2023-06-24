@@ -1,5 +1,6 @@
 import './UserContainer.css';
 import {RenderAuctionItemsCells} from './RenderAuctionItemsCells';
+import {Link} from 'react-router-dom';
 
 const UserContainer = (data)=>{
     //Data palautuu nyt järkevämmin apista, palauttaa käyttäjän jonka alla palauttaa listassa käyttäjän auctionitemit.
@@ -9,17 +10,17 @@ const UserContainer = (data)=>{
             <div className='userCellLinkDiv'>
                 {   (data.page === 'home') ?
                     <div>
-                        <a href={"/user?userId="+data?.user?.id} className='userCellLink'>
+                        <Link to={"/user?userId="+data?.user?.id} className='userCellLink'>
                             <h1>{data?.user?.companyName}</h1>
-                            <p>{data?.user?.shortDescription}</p>  
-                        </a>
+                            <p className='userCellDescription'>{data?.user?.shortDescription}</p>  
+                        </Link>
                     </div>
                     :
                     <div>
-                        <a href={"/user?userId="+data?.user?.id} className='userCellLink'>
+                        <Link to={"/user?userId="+data?.user?.id} className='userCellLink'>
                             <h1>{data?.user?.companyName}</h1>
                             <p>{data?.user?.description}</p>  
-                        </a>
+                        </Link>
                     </div>
 
                 }

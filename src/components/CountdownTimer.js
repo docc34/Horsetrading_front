@@ -1,5 +1,5 @@
 import './CountdownTimer.css'
-import { useCountdown } from '../functions/countdown';
+import { useCountdown } from '../functions/Countdown';
 import { useTranslation } from 'react-i18next';
 
 const DateTimeDisplay = ({ value, type, isDanger }) => {

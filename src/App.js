@@ -19,13 +19,27 @@ function App() {
   const [cookies] = useCookies(['locale']);
   const { t, i18n } = useTranslation();
 
-  //Checks has the local changed.
-  useEffect(async()=>{
-    if(cookies?.locale != null && cookies?.locale != ""&& cookies?.locale != undefined)
-      if(cookies.locale == "fi" ||cookies.locale == "en")
-        await i18n.changeLanguage(cookies.locale);
+  //search the users countrycode, if its finand default the language to finnish else its english
+  const setLocale = async ()=>{
+    let fetchLocale = await fetch("https://ipapi.co/json/",{
+      method: 'GET'
+    });
 
+    let userLocationInfo = await fetchLocale.json();
+    
+    if(cookies?.locale != null && cookies?.locale != ""&& cookies?.locale != undefined){
+      if(cookies.locale == "fi" || cookies.locale == "en")
+        await i18n.changeLanguage(cookies.locale);
+    }
+    else if(userLocationInfo?.country_code == "FI")
+      await i18n.changeLanguage("fi");
+  }
+
+  //Checks has the local changed.
+  useEffect(()=>{
+    setLocale();
   },[])
+
   return (
   <BrowserRouter>
       <Routes>

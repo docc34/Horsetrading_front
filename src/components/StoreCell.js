@@ -1,8 +1,8 @@
 import './StoreCell.css'
-import { useCountdown } from "../functions/countdown";
+import { useCountdown } from "../functions/Countdown";
 import Alert from 'react-bootstrap/Alert';
 import { useTranslation } from 'react-i18next';
-
+import {Link} from 'react-router-dom';
 
 const StoreCell = (d)=>{
     const countDownDate = d.data.closingTime;
@@ -23,12 +23,12 @@ const StoreCell = (d)=>{
     }
     return(
         <div className="storeCellMainDiv square rounded">
-            <a href={url}>
+            <Link to={url}>
                 <div className='storeCellImgDiv'>
                     <img className="storeCellImg" src={d.data?.imageLink}/>
                 </div>
-            </a>
-            <a href={url} className={storeCellContentClassName}>
+            </Link>
+            <Link to={url} className={storeCellContentClassName}>
                 <div className='storeCellContentDiv rounded-bottom ' >
                             {/* style={d.data?.type == "Purchase" ? {backgroundColor: '#dadd0b'} : {backgroundColor: '#0437df'}} */}
                             {/* variant={d.data?.type == "Purchase" ? 'warning' : 'info'} */}
@@ -42,7 +42,7 @@ const StoreCell = (d)=>{
                         <h4>{countDownOutput}</h4>
                     </div>
                 </div>
-            </a>
+            </Link>
            
         </div>
     )

@@ -4,6 +4,8 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { useTranslation } from 'react-i18next';
 import {PrivacyPolicyModal} from '../components/PrivacyPolicyModal'
+import {Link} from 'react-router-dom';
+
 const Header = ()=>{
     const {t} = useTranslation();
     const [cookies, setCookie,removeCookie] = useCookies(['token']);
@@ -12,8 +14,8 @@ const Header = ()=>{
     <div className="headerMainDiv">
         <div className='headerTitleDiv'>
             <PrivacyPolicyModal/>
-            <a href='/' className='headerTitle'>Horsetrading</a>
-            <a href='/' className='headerDefinition'>"Unofficial discussion in which people make agreements that provide both sides with advantages"</a>
+            <Link to='/' className='headerTitle'>Horsetrading</Link>
+            <Link to='/' className='headerDefinition'>"Unofficial discussion in which people make agreements that provide both sides with advantages"</Link>
         </div>
         <div className='headerButtonGroupDiv'>
             <ButtonGroup className='headerButtonGroup'>
