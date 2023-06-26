@@ -113,7 +113,7 @@ const Registeration = ()=>{
                 </div>
                 <div className='registerationFormInputs'>
                     <Form.Label>{t("postalcode")}</Form.Label>
-                    <Form.Control name="postalCode" required type='number'/>
+                    <Form.Control name="postalCode" type='text' required />
                     <Form.Control.Feedback type="invalid">
                         {t("registerationWarning")}
                     </Form.Control.Feedback>

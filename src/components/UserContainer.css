@@ -1,3 +1,20 @@
+@media (max-width: 991.98px) {
+  .userCellDescription{
+    max-width: 350px;
+  }
+}
+@media (min-width: 992px) {
+  .userCellDescription{
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 399.98px) {
+  .userCellDescription{
+    max-width: 250px;
+  }
+}
+
   .user-cell {
     display: flex;
     flex-direction: column;
@@ -6,7 +23,11 @@
     margin-left: 1rem;
   }
   .userCellDescription{
-    max-width: 600px;
+    margin-left: 2px;
+    margin-bottom: 0px;
+    font-size: medium;
+    height: 75px;
+    font-size: 15px;
   }
   .userCellLinkDiv{
     width: 100%;
@@ -17,4 +38,9 @@
     display: flex;
     align-items:flex-start;
     flex-direction: column;
+  }
+  .userCellHr{
+    height: 2px;
+    width: 96%;
+    color: white;
   }

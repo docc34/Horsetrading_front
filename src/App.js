@@ -21,17 +21,17 @@ function App() {
 
   //search the users countrycode, if its finand default the language to finnish else its english
   const setLocale = async ()=>{
-    let fetchLocale = await fetch("https://ipapi.co/json/",{
+    let fetchLocale = await fetch("https://ipapi.co/country_code",{
       method: 'GET'
     });
 
-    let userLocationInfo = await fetchLocale.json();
-    
+    let userLocationInfo = await fetchLocale.text();
+
     if(cookies?.locale != null && cookies?.locale != ""&& cookies?.locale != undefined){
       if(cookies.locale == "fi" || cookies.locale == "en")
         await i18n.changeLanguage(cookies.locale);
     }
-    else if(userLocationInfo?.country_code == "FI")
+    else if(userLocationInfo == "FI")
       await i18n.changeLanguage("fi");
   }
 

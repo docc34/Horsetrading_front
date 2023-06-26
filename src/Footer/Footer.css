@@ -12,12 +12,12 @@
         margin-left: 2rem;
     }
 }
-@media (max-width: 429.98px){
+@media (max-width: 529.98px){
     .footerContentMainDiv{
         flex-direction: column;
     }
     .footerMainDiv{
-        height: 40rem;
+        height: 38rem;
     }
     .footerLinksDiv a{
         padding-left: 0px !important;
@@ -26,7 +26,7 @@
         margin-left: 0px ;
     }
 }
-@media (min-width: 430px){
+@media (min-width: 530px){
     .footerContentMainDiv{
         flex-direction: row;
     }

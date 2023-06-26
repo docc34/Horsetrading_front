@@ -1,6 +1,6 @@
 @media (max-width: 1699.98px) {
   .homeCellsDiv {
-    max-width: 1300px;
+    max-width: 1450px;
   }
 }
 @media (min-width: 1700px) {
@@ -8,12 +8,12 @@
     max-width: 1750px;
   }
 }
-@media (max-width: 1299.98px) {
+@media (max-width: 1349.98px) {
   .homeCellsDiv {
     max-width: 880px;
   }
 }
-@media (min-width: 1300px) {
+@media (min-width: 1350px) {
 }
 @media (max-width: 767.98px) {
   .homeCellsDiv {
@@ -57,4 +57,9 @@
 }
 .homeDescriptionDiv p{
   max-width: 780px;
+}
+
+.homeUserContainerDiv{
+  justify-content: space-around;
+  margin-bottom:80px ;
 }

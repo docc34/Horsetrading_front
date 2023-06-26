@@ -17,7 +17,8 @@
 
 .storeCellMainDiv {
   flex-direction: column;
-  margin: 1rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
   width: 100%;
   height: min-content;
   border: 2px solid black;

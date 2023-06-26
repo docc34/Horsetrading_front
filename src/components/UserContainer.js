@@ -8,22 +8,20 @@ const UserContainer = (data)=>{
     const UserHeader = () => {
         return (
             <div className='userCellLinkDiv'>
-                {   (data.page === 'home') ?
-                    <div>
+                <div>
+                    { (data.page === 'home') ?
                         <Link to={"/user?userId="+data?.user?.id} className='userCellLink'>
                             <h1>{data?.user?.companyName}</h1>
                             <p className='userCellDescription'>{data?.user?.shortDescription}</p>  
                         </Link>
-                    </div>
-                    :
-                    <div>
+                        :
                         <Link to={"/user?userId="+data?.user?.id} className='userCellLink'>
                             <h1>{data?.user?.companyName}</h1>
                             <p>{data?.user?.description}</p>  
                         </Link>
-                    </div>
-
-                }
+                    }
+                <hr className='userCellHr'/>
+                </div>
             </div>
             
         )
@@ -33,7 +31,6 @@ const UserContainer = (data)=>{
         <div>
             <div className='user-cell'>
                 <UserHeader />
-                
                 <RenderAuctionItemsCells auctionItems={data.user.userAuctionItems} /> 
                 
             </div>

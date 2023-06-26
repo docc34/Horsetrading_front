@@ -15,7 +15,6 @@ const Footer = ()=>{
         <div className="footerContentMainDiv">
             <div className='footerContactsDiv'>
                 <h3>{t("footerContacts")}</h3>
-                <p>{t("footerCEO")}: Eemeli Antikainen</p>
                 <p>{t("email")}: antitechofficial@gmail.com</p>
                 <p>Instagram: @antitechofficial</p>
             </div>

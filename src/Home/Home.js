@@ -85,7 +85,7 @@ const Home = ()=>{
                             <Spinner variant="light" animation="border" />
                         </div> 
                     :
-                    <CardGroup>
+                    <CardGroup className='homeUserContainerDiv'>
                     
                         {containerData.map((container, i) => {
                             //Data palautuu nyt järkevämmin apista, palauttaa käyttäjän jonka alla palauttaa listassa käyttäjän auctionitemit.
