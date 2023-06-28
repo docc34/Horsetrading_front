@@ -2,6 +2,10 @@ import './Home.css';
 import { useEffect, useState } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
 import CardGroup from 'react-bootstrap/CardGroup';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+
 import { UserContainer } from '../components/UserContainer';
 import { useCookies } from 'react-cookie';
 import { StoreCell } from '../components/StoreCell';
@@ -11,11 +15,52 @@ const Home = ()=>{
     const [cookies] = useCookies(["recentAuctionItems"]);
     const[containerData,setContainerData] = useState([]);
     const[recentAuctionItems,setRecentAuctionItems] = useState([]);
+    const[searchBarValidated,setSearchBarValidated] = useState(false);
 
     const {t} = useTranslation();
 
-    const getContainerData = async()=>{
-        var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/AuctionItems/public");
+    const handleSearchBarSubmit = (event) => {
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+            setSearchBarValidated(true);
+        }
+        else{
+            event.preventDefault();
+            console.log(event.target.companyName.value);
+            getContainerData({
+                companyName: event.target.companyName.value
+            });
+            setSearchBarValidated(false);
+        }
+    };
+
+    const getContainerData = async(searchData)=>{
+        let url = "https://horsetradingapidev.azurewebsites.net/api/AuctionItems/public";
+        let params = [10];
+
+        //Add all the possible filters to the list
+        if(searchData?.companyName != null && searchData?.companyName != "")
+            params[params.length] = "CreatorName="+searchData?.companyName;
+            //Auction item type here
+        // if(searchData?.companyName != null && searchData?.companyName != "")
+        //     params[params.length] = "CreatorName="+searchData?.companyName;
+
+        //Add the filter values to the query
+        if(params?.length > 0){
+            params?.map((e,i)=>{
+                if(i == 0){
+                    url = url +"?"+ e;
+                }
+                else{
+                    url = url +"&"+ e;
+                }
+            });
+        }
+
+        
+        var search = await fetch(url);
         var data = await search.json();
         if(data != null || data != undefined){
             setContainerData(data);
@@ -48,6 +93,7 @@ const Home = ()=>{
         }
     }
 
+
     useEffect(()=>{
         getContainerData();
         getRecentAuctionItems();
@@ -77,6 +123,18 @@ const Home = ()=>{
             <div className="homeDescriptionDiv">
                 <h1>{t("homeDescriptionTitle")}</h1>
                 <p>{t("homeDescription")}</p> {/* your interested in some */}
+                <Form noValidate validated={(searchBarValidated)} onSubmit={handleSearchBarSubmit}>
+                    <InputGroup className="mb-3">
+                        <Button type='submit' id="basic-addon2">Search</Button>
+                        <Form.Control
+                        name='companyName'
+                        placeholder="Search for creators"
+                        aria-label="Search"
+                        aria-describedby="basic-addon2"
+                        />
+                    </InputGroup>
+                </Form>
+
             </div>
             <div className='homeCellsDiv'>
                 { 

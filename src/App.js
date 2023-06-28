@@ -16,7 +16,7 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 function App() {
-  const [cookies] = useCookies(['locale']);
+  const [cookies,setCookie] = useCookies(['locale']);
   const { t, i18n } = useTranslation();
 
   //search the users countrycode, if its finand default the language to finnish else its english
@@ -31,8 +31,11 @@ function App() {
       if(cookies.locale == "fi" || cookies.locale == "en")
         await i18n.changeLanguage(cookies.locale);
     }
-    else if(userLocationInfo == "FI")
+    else if(userLocationInfo == "FI"){
+      setCookie('locale',"fi",{ path: '/' }); 
       await i18n.changeLanguage("fi");
+    }
+
   }
 
   //Checks has the local changed.
