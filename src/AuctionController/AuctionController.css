@@ -71,3 +71,12 @@
 .loginControllerFormInputs{
   max-width: 250px;
 }
+
+
+.auctionControllerPostCheckbox{
+  display: flex;
+  flex-direction: row;
+}
+.auctionControllerPostCheckbox label{
+ margin-right: 5px;
+}

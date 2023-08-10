@@ -40,13 +40,21 @@ const AuctionController = ()=>{
     const [auctionItemPostModal, setAuctionItemPostModal] = useState(false);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [closingTime, setClosingTime] = useState("");
+    const [openBiddingTime, setOpenBiddingTime] = useState(null);
     const [startingPrice, setStartingPrice] = useState("");
     const [imageFiles, setImageFiles] = useState(null);
     const [errors, setErrors] = useState([]);
     const [auctionItemType, setAuctionItemType] = useState(1);
     const [auctionItemRaisePeriod, setAuctionItemRaisePeriod] = useState(0);
+    const [auctionItemHours, setAuctionItemHours] = useState(0);
+    const [auctionItemMinutes, setAuctionItemMinutes] = useState(0);
     
+    const [auctionItemNowDisabled, setAuctionItemNowDisabled] = useState(false);
+    const [auctionItemOfferDisabled, setAuctionItemOfferDisabled] = useState(false);
+    const [auctionItemTimerDisabled, setAuctionItemTimerDisabled] = useState(false);
+    const [startClosingTimeOnBid, setStartClosingTimeOnBid] = useState(null);
+    
+
     const [showMessageAlert, setShowMessageAlert] = useState(false);
 
     const [auctionItemDeleteModal, setAuctionItemDeleteModal] = useState(false);
@@ -165,7 +173,7 @@ const AuctionController = ()=>{
         setImageFiles(null);
 
         setAuctionItemPostModal(false);
-        setClosingTime("");
+        setOpenBiddingTime("");
         setDescription("");
         setTitle("");
         setStartingPrice("");
@@ -305,14 +313,18 @@ const AuctionController = ()=>{
 
 //Auctionitem CRUD
     const postAuctionItem = async ()=>{
-        if(title !== "" && description !== "" && closingTime !== "" && imageFiles!==null){
+        
+        var auctionItemTotalMinutes = Number.parseInt(auctionItemHours) * 60 + Number.parseInt(auctionItemMinutes);
+        if(title !== "" && description !== ""&& auctionItemTotalMinutes > 0&& imageFiles!==null){
             const options = {
                 method: 'POST',
                 headers: {"Authorization": `Bearer ${cookies.token}`, 'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     title: title, 
                     description: description,
-                    closingTime: closingTime,
+                    auctionDurationMinutes: auctionItemTotalMinutes,
+                    startClosingTimeOnBid: startClosingTimeOnBid,
+                    openBiddingTime: openBiddingTime,
                     visible: visible,
                     saleTypeId: auctionItemType,
                     startingPrice: startingPrice != "" && startingPrice != null ? startingPrice : 0,
@@ -622,6 +634,19 @@ const AuctionController = ()=>{
                                                 {t("auctionControllerStartingPriceDescription")}
                                             </Form.Text>
                                         </div>
+
+                                        <div className='controllerFormInputs'>
+                                            <Form.Label>How long will the auction last once its started</Form.Label>
+                                            
+                                            <Form.Control required min={0} placeholder={"0 Hours"}  type='number'  onBlur={(e)=>{setAuctionItemHours(e.target.value);}} />
+                                            <Form.Text>
+                                                Defines how many hours the auction will last, once its been opened.
+                                            </Form.Text>
+                                            <Form.Control min={0} placeholder={t("auctionControllerRaisePeriodPlaceHolder")}  type='number' max={60} onBlur={(e)=>{setAuctionItemMinutes(e.target.value);}} />
+                                            <Form.Text>
+                                                Defines how many minutes the auction will last, once its been opened.
+                                            </Form.Text>
+                                        </div>
                                         <div className='controllerFormInputs'>
                                             <Form.Label>{t("auctionControllerRaisePeriod")}</Form.Label>
                                             <Form.Control min={0} placeholder={t("auctionControllerRaisePeriodPlaceHolder")}  type='number' max={60} onBlur={(e)=>{setAuctionItemRaisePeriod(e.target.value);}} />
@@ -630,16 +655,83 @@ const AuctionController = ()=>{
                                             </Form.Text>
                                         </div>
                                         <div className='controllerFormInputs'>
-                                            <Form.Label>{t("auctionControllerClosingTime")}</Form.Label>
-                                            <Datetime  
-                                                input={false}
-                                                displayTimeZone={"Europe/Helsinki"}
-                                                onChange={(e)=>{setClosingTime(e._d);}}
-                                            />
-                                            <Form.Text>
-                                                {t("auctionControllerCloseTimeDescription")}
-                                            </Form.Text>
+                                            <h3>When will the timer start to go down?</h3>
+                                            <div className='auctionControllerPostCheckbox'>
+                                                <Form.Label>Now</Form.Label>
+                                                <Form.Check disabled={auctionItemNowDisabled} onClick={(e)=>{ 
+                                                    var checked = e.target.checked; 
+                                                    if(checked == false){
+                                                        setAuctionItemNowDisabled(false);
+                                                        setAuctionItemOfferDisabled(false);
+                                                        setAuctionItemTimerDisabled(false);
+                                                    }
+                                                    else{
+                                                        setAuctionItemNowDisabled(false);
+                                                        setAuctionItemOfferDisabled(true);
+                                                        setAuctionItemTimerDisabled(true);
+                                                    }
+                                                }}></Form.Check>
+                                            </div>
+
+                                            <div  className='auctionControllerPostCheckbox'>
+                                                <Form.Label>After the first offer is made</Form.Label>
+                                                <Form.Check disabled={auctionItemOfferDisabled} onClick={(e)=>{ 
+                                                    var checked = e.target.checked;
+                                                     
+                                                    if(checked == false){
+                                                        setAuctionItemNowDisabled(false);
+                                                        setAuctionItemOfferDisabled(false);
+                                                        setAuctionItemTimerDisabled(false);
+
+                                                        setStartClosingTimeOnBid(null);
+                                                    }
+                                                    else{
+                                                        setAuctionItemNowDisabled(true);
+                                                        setAuctionItemOfferDisabled(false);
+                                                        setAuctionItemTimerDisabled(true);
+
+                                                        setStartClosingTimeOnBid(1);
+                                                    }
+                                                }}></Form.Check>
+                                            </div>
+                                            <div>
+                                                <div className='auctionControllerPostCheckbox'>
+                                                    <Form.Label>After this date</Form.Label>
+                                                    <Form.Check disabled={auctionItemTimerDisabled} onClick={(e)=>{ 
+                                                        var checked = e.target.checked; 
+                                                        if(checked == false){
+                                                            setAuctionItemNowDisabled(false);
+                                                            setAuctionItemOfferDisabled(false);
+                                                            setAuctionItemTimerDisabled(false);
+
+                                                            setOpenBiddingTime(null);
+                                                        }
+                                                        else{
+                                                            setAuctionItemNowDisabled(true);
+                                                            setAuctionItemOfferDisabled(true);
+                                                            setAuctionItemTimerDisabled(false);
+                                                        }
+                                                    }}></Form.Check>
+                                                </div>
+
+                                                <div className='controllerFormInputs' style={auctionItemTimerDisabled == false && auctionItemNowDisabled == true && auctionItemOfferDisabled == true? {}: {"pointerEvents": "none", "opacity":0.7}}>
+                                                <Form.Label>{t("auctionControllerClosingTime")}</Form.Label>
+                                                <Datetime  
+                                                    
+                                                    input={false}
+                                                    displayTimeZone={"Europe/Helsinki"}
+                                                    onChange={(e)=>{setOpenBiddingTime(e._d);}}
+                                                />
+                                                <Form.Text>
+                                                    {t("auctionControllerCloseTimeDescription")}
+                                                </Form.Text>
+                                            </div>
+                                            </div>
+                                            
+                                            
+                                            
                                         </div>
+                                        
 
 
                                         <div className='controllerFormImageInputDiv'>
