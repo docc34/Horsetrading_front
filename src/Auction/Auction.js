@@ -512,9 +512,7 @@ const Auction = ()=>{
                             fill
                         >
                             <Tab eventKey="Top5" title={t("auctionTop5")} onClick={()=>{fetchAuctioneers(5);}}>
-                                <div className='auctionDataGridTitleDiv'>
-                                    <h3>{t("auctionTop5")}</h3>
-                                </div>
+
                                 {ignored}
                                 <ReactDataGrid
                                     idProperty="id"
@@ -535,9 +533,7 @@ const Auction = ()=>{
                                 />
                             </Tab>
                             <Tab eventKey="allOffers" title={t("auctionAllOffers")} onClick={()=>{fetchAuctioneers(0)}} href="#">
-                                <div className='auctionDataGridTitleDiv'>
-                                    <h3>{t("auctionAllOffers")}</h3>
-                                </div>
+
                                 <ReactDataGrid
                                     idProperty="id"
                                     className='auctionReactDataGrid'
@@ -594,12 +590,9 @@ const Auction = ()=>{
                     {userOfferExists == false && newUser == true ? 
                         <div className='auctionParticipateMainDiv'>
                             <div>
-
-
                             </div>
-
-                        
-                            <Form noValidate validated={participateValidated} onSubmit={handleParticipateSubmit} >
+                            
+                            <Form noValidate validated={participateValidated} onSubmit={handleParticipateSubmit} className='auctionParticipateForm'>
                                 <div>
                                     <h3>{t("auctionCurrentHighest")}  {highestOffer != 0 ? highestOffer : 0}€</h3>
                                     <p>{t("auctionJoinAuction")}</p>
@@ -614,6 +607,7 @@ const Auction = ()=>{
                                                         onBlur={(e)=>{ 
                                                             if(username == "")
                                                                 setSuggestionUsername(e.target.value); 
+                                                            
                                                             setIgTag(e.target.value);}
                                                         } 
                                                     />
@@ -633,7 +627,6 @@ const Auction = ()=>{
                                                     t("auctionIgTagInstead")
                                                 }
                                             </a>
-
 
                                         </div>
                                         <div>
@@ -665,9 +658,9 @@ const Auction = ()=>{
                                         </div>
                                     </div>
                                 </div>
-                                <div >
+                                <div className='auctionRegisterButtonDiv'>
                                     <div>
-                                        <Button className='auctionRegisterButton' type='submit'>{t("save")}</Button>
+                                        <Button type='submit'>{t("save")}</Button>
                                         <p className='errorMessage'>{message}</p>
                                     </div>
                                     <a href="" onClick={(e)=>{e.preventDefault(); setNewUser(false);}}>{t("auctionMadeOfferYet")}</a>
@@ -696,7 +689,7 @@ const Auction = ()=>{
                                 </div>
 
                             <div className='auctionModifyInputDiv'>
-                                <Form noValidate validated={modifyValidated} onSubmit={handleModifySubmit} >
+                                <Form noValidate validated={modifyValidated} onSubmit={handleModifySubmit} className='auctionParticipateForm' >
                                     <div className='auctionModifyFormInputs' style={userOfferExists == true ? {"display":"flex","flex-direction":"row","width":"100%"} : null}>
 
                                         <div className="auctionParticipateFormBodyDiv">

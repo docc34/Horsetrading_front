@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import './PrivacyPolicyModal.css';
 import Nav from 'react-bootstrap/Nav'
 import { useLocation,useNavigate } from "react-router-dom";
+import {Link} from 'react-router-dom';
+
 const PrivacyPolicyModal = ()=>{
     const [cookies, setCookie] = useCookies(['token']);
     const [show, setShow] = useState(false);
@@ -13,7 +15,12 @@ const PrivacyPolicyModal = ()=>{
     const search = useLocation().pathname;
     let navigate = useNavigate();
 
+    //On url change
     useEffect(()=>{
+        //scrolls user to the top of the page
+        window.scrollTo(0, 0);
+
+        //checks should the privacy policy be showed
         const CheckPrivacyNotice = async ()=>{
             if(await cookies.privacyNoticeRead == "true" ||search.toString() == "/Privacypolicy" || search.toString() == "/"|| search.toString() == "/user"){
                 setShow(false);
@@ -23,7 +30,9 @@ const PrivacyPolicyModal = ()=>{
             }
         }
         CheckPrivacyNotice();
-    },[]);
+
+    },[search]);
+
     return(              
     <Offcanvas 
         show={show}
@@ -40,10 +49,10 @@ const PrivacyPolicyModal = ()=>{
         <Offcanvas.Body className='ModalBody'>
             <div className='PrivacyPolicyDescriptionDiv'>
                 <p>{t("privacyPolicyModalStatement")}</p>
-                <Nav.Link className='PrivacyPolicyModalLink' href="/Privacypolicy">{t("privacyPolicyTitle")}</Nav.Link>
+                <Link className='PrivacyPolicyModalLink' to='/Privacypolicy' >{t("privacyPolicyTitle")}</Link>
             </div>
             <div className='PrivacyPolicyButtonsDiv'>
-                <Button  variant="secondary" onClick={()=>{navigate("/"); window.location.reload();}}>
+                <Button  variant="secondary" onClick={()=>{navigate("/"); }}>
                     {t("no")}
                 </Button>
                 <Button className='PrivacyPolicyButtons' variant="primary" onClick={()=>{

@@ -19,29 +19,34 @@ function App() {
   const [cookies,setCookie] = useCookies(['locale']);
   const { t, i18n } = useTranslation();
 
-  //search the users countrycode, if its finand default the language to finnish else its english
+
+  //search the users countrycode, if its finland default the language to finnish else its english
   const setLocale = async ()=>{
-    let fetchLocale = await fetch("https://ipapi.co/country_code",{
-      method: 'GET'
-    });
 
-    let userLocationInfo = await fetchLocale.text();
-
-    if(cookies?.locale != null && cookies?.locale != ""&& cookies?.locale != undefined){
+    if(cookies?.locale != null && cookies?.locale != "" && cookies?.locale != undefined){
       if(cookies.locale == "fi" || cookies.locale == "en")
         await i18n.changeLanguage(cookies.locale);
     }
-    else if(userLocationInfo == "FI"){
-      setCookie('locale',"fi",{ path: '/' }); 
-      await i18n.changeLanguage("fi");
-    }
+    else {
+      //If the countrycode is not determined by the cookies checks should it be changed from default english to finnish
+      let fetchLocale = await fetch("https://ipapi.co/country_code",{
+        method: 'GET'
+      });
+  
+      let userLocationInfo = await fetchLocale.text();
 
+      if(userLocationInfo == "FI"){
+        setCookie('locale',"fi",{ path: '/' }); 
+        await i18n.changeLanguage("fi");
+      }
+    }
   }
 
-  //Checks has the local changed.
+  //Checks has the local changed on page load.
   useEffect(()=>{
     setLocale();
   },[])
+
 
   return (
   <BrowserRouter>
@@ -55,7 +60,7 @@ function App() {
           <Route path="/AuctionController" element={<AuctionController />} exact />
           <Route path={"/User"} element={<UserProfile />} />
           <Route path="/Registration" element={<Registeration />} />
-          <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+          <Route path="/PrivacyPolicy" element={<PrivacyPolicy/>} />
         </Routes>
       </div>
       <Routes>

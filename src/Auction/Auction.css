@@ -1,16 +1,3 @@
-@media (max-width: 1399.98px) { 
-    .carouselImage{
-        max-height: 40rem;
-        max-width: 40rem;
-    }
- }
- @media (min-width: 1400px) { 
-    .carouselImage{
-        max-height: 50rem;
-        max-width: 50rem;
-    }
- }
-
 @media (max-width: 999.98px) { 
     .auctionMainDiv{
         display: flex;
@@ -32,17 +19,11 @@
     .auctionContentMainDiv{
         margin-right: 0rem;
     }
- }
-
- @media (max-width: 991.98px) {
-    .carouselImage{
-        max-height: 30rem;
-        max-width: 20rem;
+    .auctionCarouselMainDiv{
+        min-width: 450px;
     }
+ }
 
- }
- @media (min-width: 992px) {
- }
 
 @media (max-width: 767.98px) {
 
@@ -53,9 +34,6 @@
         font-size: smaller;
     }
 
-    .auctionCarouselMainDiv{
-        margin-left:2%;
-    }
     .auctionModifyInputMainDiv{
         width: 100%;
         max-width:768px;
@@ -91,8 +69,11 @@
     .auctionParticipateFormBodyDiv{
         flex-direction: column;
     }
+    .auctionParticipateForm{
+        padding: 1%;
+     }
  }
- @media(min-width:569.98px){
+ @media(min-width:570px){
     .auctionParticipateFormBodyDiv{
         flex-direction: row;
     }
@@ -139,10 +120,6 @@
     .auctionCarouselMainDiv{
         max-width: 250px ;
     }
-    .carouselImage{
-        max-height: 22rem;
-        max-width: 22rem;
-    }
     
     .auctionParticipateFormBodyDiv input{
         width: 150px !important;
@@ -150,14 +127,13 @@
 
 
     .auctionReactDataGridDiv{
-        max-width: 250px;
+        width:90%;
         margin: 0%;
     }
     .auctionReactDataGrid{
-        min-width: 250px;
+        width: 90%;
     }
     .auctionReactDataGridSingle{
-        min-width: 250px;
     }
     .auctionReactDataGridSingleDiv{
         display: flex;
@@ -170,6 +146,9 @@
 
     .auctionModifyInputMainDiv{
         max-width: 250px !important;
+    }
+    .auctionTitle{
+        font-size: 35px;
     }
  }
  @media (min-width: 380px) {
@@ -184,7 +163,9 @@
     .auctionReactDataGridDiv{
         margin-right: 1.5rem;
     }
-
+    .auctionTitle{
+        font-size: 40px;
+    }
  }
 
 .auctionMainDiv{
@@ -195,12 +176,13 @@
 .auctionCarouselMainDiv{
     flex: 2;
     max-width: 800px;
-    margin-left: 2%;
+    width: 100%;
+    padding: 1%;
 }
 
 .auctionContentMainDiv{
     flex:2;
-    max-width:52rem;
+    max-width:51rem;
 }
 
 
@@ -208,9 +190,7 @@
     display: flex;
     justify-content: center;
 }
-.auctionTitle{
-    font-size: 40px;
-}
+
 
 
 .OfferDiv{
@@ -286,7 +266,7 @@
 }
 .auctionReactDataGrid{
     /* background-color: #1b1e24 !important; */
-    min-width: 250px;
+    min-width: 262px;
     width: 100%;
     color:#1b1e24 !important;
     /* border-color: #1b1e24  !important; */
@@ -311,7 +291,10 @@
     justify-content: center;
     align-items: center;
 }
-
+.carouselImage{
+    max-height: 100%;
+    max-width: 100%;
+}
 
 .phonenumberCollapseTitle{
     margin: 1%;
@@ -343,7 +326,8 @@
 
 .auctionOfferFormPasswordText{
     margin-top: 3%;
-    margin-left: 0%;
+    margin-left: 0% !important;
+    margin-right: 1%;
 }
 .auctionOfferFormPasswordDiv{
     display: flex;
@@ -356,6 +340,7 @@
     align-items: center;
  }
 
- .auctionRegisterButton{
-    margin-left: 1.5%;
+ .auctionRegisterButtonDiv{
+    margin-left: 1%;
  }
+
