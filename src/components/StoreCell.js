@@ -3,18 +3,38 @@ import { useCountdown } from "../functions/Countdown";
 import Alert from 'react-bootstrap/Alert';
 import { useTranslation } from 'react-i18next';
 import {Link} from 'react-router-dom';
+import moment from 'moment';
 
 const StoreCell = (d)=>{
-    const countDownDate = d.data.closingTime;
-    const [days, hours, minutes, seconds] = useCountdown(countDownDate);
     const {t} = useTranslation();
-
-    const countDown = `${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`
-    let countDownIsActive = true;
-    if (seconds < 0) {
-        countDownIsActive = false;
+    var countDownDate = d.data.closingTime;
+    //Checks which date to use
+    if(d.data.openBiddingTime != null && moment(new Date().getTime()).isBefore(moment(d.data.openBiddingTime))){
+        countDownDate = d.data.openBiddingTime;
     }
-    const countDownOutput = countDownIsActive ? countDown : 'Auction has ended' // muokataanko loppuneet pois näkyvistä? //Tähän vaan se että api palauttaa auctionitemit uusin ensin ja kotisivu näyttää 4 uusinta -> vanhat suodattuu itestään pois kun sille tarve
+    const [days, hours, minutes, seconds] = useCountdown(countDownDate);
+
+    var countDownOutput ="";
+    if(d.data.closingTime == null){
+        countDownOutput = t("auctionStartsAfterOffer");
+    }
+    else if(d.data.openBiddingTime != null && moment(new Date().getTime()).isBefore(moment(d.data.openBiddingTime))){
+        // const countDown = `Bidding opens after: ${openDays} days ${openHours} hours ${openMinutes} minutes ${openSeconds} seconds`;
+        const countDown = `${t("auctionStartsAfterTimer")}: ${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`;
+        let countDownIsActive = true;
+        if (seconds < 0) {
+            countDownIsActive = false;
+        }
+        countDownOutput = countDownIsActive ? countDown : t("auctionEnded");
+    }
+    else{
+        const countDown = `${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`;
+        let countDownIsActive = true;
+        if (seconds < 0) {
+            countDownIsActive = false;
+        }
+        countDownOutput = countDownIsActive ? countDown : t("auctionEnded");
+    }
 
     var url = "/Auction?auctionId="+d.data?.id
     var storeCellContentClassName = "fade-out "

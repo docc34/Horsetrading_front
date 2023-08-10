@@ -502,7 +502,7 @@ const Auction = ()=>{
                         <h1 className='auctionTitle'>{t("auctionAuction")}</h1>
                     </div>
                     <div className='auctionCountdownDiv'>
-                        <CountdownTimer targetDate={auctionClosingTime} />
+                        <CountdownTimer closingTime={auctionClosingTime} openBiddingTime={currentAuctionItem?.openBiddingTime} />
                     </div>
                     <div className='auctionReactDataGridTabsDiv'>
                         <Tabs

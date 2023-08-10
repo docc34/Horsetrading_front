@@ -89,8 +89,17 @@ i18n
             ,componentsNewPasswordDescription:"Type in the new password"
 
 
+            ,componentsCountdownWaitingNoticeTitle:"Make the first offer!"
             ,componentsCountdownExpiredNoticeTitle:"Congratulations to the winner!"
+            ,componentsCountdownWaitingNoticeDescription:"The auctions countdown starts when the first offer is made"
             ,componentsCountdownExpiredNoticeDescription:"Bidding on the auction has closed. Congratulations to the winner!"
+
+
+            ,auctionStartsAfterOffer:"Auction starts after first bid"
+            ,auctionStartsAfterTimer:"Bidding opens after"
+            ,auctionStartsAfterTimerTitle:"Bidding opens after"
+            ,auctionEnded:"Auction has ended"
+
 
             ,homeDescriptionTitle:"Hobbyhorses for auction"
             ,homeDescription:"Here you can browse all the creators on the site and their top auctions. If your interested in some creator you can view their profile and all their auctions by clicking their name. "
@@ -232,9 +241,15 @@ i18n
             ,componentsNewPassword:"Uusi salasana"
             ,componentsNewPasswordDescription:"Kirjoittakaa uusi salasanne"
 
-
+            ,componentsCountdownWaitingNoticeTitle:"Ole ensimmäinen tarjoaja!"
             ,componentsCountdownExpiredNoticeTitle:"Onnittelut voittajalle!"
+            ,componentsCountdownWaitingNoticeDescription:"Huutokaupan ajastin alkaa, kun ensimmäinen tarjous tehdään."
             ,componentsCountdownExpiredNoticeDescription:"Huutokauppaan osallistuminen on sulkeutunut. Onnittelut voittajalle!"
+
+            ,auctionStartsAfterOffer:"Huutokauppa alkaa ensimmäisen tarjouksen jälkeen"
+            ,auctionStartsAfterTimer:"Huutokauppa aukeaa"
+            ,auctionStartsAfterTimerTitle:"Huutaminen avautuu"
+            ,auctionEnded:"Huutaminen on sulkeutunut"
 
 
             ,homeDescriptionTitle:"Keppihevosia kaupan"
