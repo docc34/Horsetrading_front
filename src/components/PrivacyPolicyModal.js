@@ -19,7 +19,6 @@ const PrivacyPolicyModal = ()=>{
     useEffect(()=>{
         //scrolls user to the top of the page
         window.scrollTo(0, 0);
-
         //checks should the privacy policy be showed
         const CheckPrivacyNotice = async ()=>{
             if(await cookies.privacyNoticeRead == "true" ||search.toString() == "/Privacypolicy" || search.toString() == "/"|| search.toString() == "/user"){

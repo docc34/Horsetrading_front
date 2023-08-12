@@ -423,7 +423,7 @@ const AuctionController = ()=>{
                             <div>
                                     <div className='loginControllerFormInputs'>
                                         <Form.Label>{t("email")}</Form.Label>
-                                        <Form.Control required name='email' placeholder={t("email")}/>
+                                        <Form.Control autoFocus required name='email' placeholder={t("email")}/>
                                     </div>
 
                                     <div className='loginControllerFormInputs'>
@@ -440,7 +440,7 @@ const AuctionController = ()=>{
                                     </div>
                             </div>
 
-                            <Button variant="primary" type='submit'>
+                            <Button autoFocus variant="primary" type='submit'>
                                 {t("login")}
                             </Button>
                         </Form>

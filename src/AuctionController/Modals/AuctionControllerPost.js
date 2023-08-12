@@ -114,13 +114,13 @@ const AuctionControllerPost=(e)=>{
         var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/AuctionItems",options);
         var result = await search.json();
         if(result.status == "Error" || result == null){
+            setLoading(false);
             setMessage(result?.message);
         }
         else{
             await e.postImages(result?.message, imageFiles);
             resetValues();
         }
-        
     }
 
     return(<div>
@@ -166,7 +166,7 @@ const AuctionControllerPost=(e)=>{
 
                 <div className='controllerFormInputs'>
                     <Form.Label>{t("auctionControllerStartingPrice")}</Form.Label>
-                    <Form.Control min={0}  placeholder='0€' type='number' name='startingPrice' />
+                    <Form.Control onWheel={(e)=>{e.target.blur()}} min={0}  placeholder='0€' type='number' name='startingPrice' />
                     <Form.Text>
                         {t("auctionControllerStartingPriceDescription")}
                     </Form.Text>
@@ -175,11 +175,11 @@ const AuctionControllerPost=(e)=>{
                 <div className='controllerFormInputs'>
                     <Form.Label>How long will the auction last once its started.</Form.Label>
                     
-                    <Form.Control required min={0} placeholder={"0 Hours"}  type='number'  name='auctionItemHours' />
+                    <Form.Control required onWheel={(e)=>{e.target.blur()}} min={0} placeholder={"0 Hours"}  type='number'  name='auctionItemHours' />
                     <Form.Text>
                         Defines how many hours the auction will last, once its been opened.
                     </Form.Text>
-                    <Form.Control min={0} placeholder={t("auctionControllerRaisePeriodPlaceHolder")}  type='number' max={60} name='auctionItemMinutes' />
+                    <Form.Control onWheel={(e)=>{e.target.blur()}} min={0} placeholder={t("auctionControllerRaisePeriodPlaceHolder")}  type='number' max={60} name='auctionItemMinutes' />
                     <Form.Text>
                         Defines how many minutes the auction will last, once its been opened.
                     </Form.Text>
@@ -187,7 +187,7 @@ const AuctionControllerPost=(e)=>{
 
                 <div className='controllerFormInputs'>
                     <Form.Label>{t("auctionControllerRaisePeriod")}</Form.Label>
-                    <Form.Control min={0} placeholder={t("auctionControllerRaisePeriodPlaceHolder")}  type='number' max={60} name='auctionItemRaisePeriod' />
+                    <Form.Control onWheel={(e)=>{e.target.blur()}} min={0} placeholder={t("auctionControllerRaisePeriodPlaceHolder")}  type='number' max={60} name='auctionItemRaisePeriod' />
                     <Form.Text>
                         {t("auctionControllerRaisePeriodDescription")}
                     </Form.Text>

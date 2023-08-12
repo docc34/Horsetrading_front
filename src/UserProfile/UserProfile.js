@@ -4,8 +4,8 @@ import { UserContainer } from "../components/UserContainer";
 import { useState, useEffect } from "react";
 import CardGroup from 'react-bootstrap/CardGroup';
 import { useCookies } from 'react-cookie';
-import { UserEditModal } from '../components/UserEditModal';
-import { ChangePassword } from "../components/ChangePassword";
+import { UserEditModal } from './Components/UserEditModal';
+import { ChangePassword } from "./Components/ChangePassword";
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { RenderAuctionItemsCells } from "../components/RenderAuctionItemsCells";
 

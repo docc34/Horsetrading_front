@@ -1,26 +1,26 @@
 import './UserContainer.css';
 import {RenderAuctionItemsCells} from './RenderAuctionItemsCells';
 import {Link} from 'react-router-dom';
+import { UserCallingCard } from './UserCallingCard';
 
 const UserContainer = (data)=>{
     //Data palautuu nyt järkevämmin apista, palauttaa käyttäjän jonka alla palauttaa listassa käyttäjän auctionitemit.
 
     const UserHeader = () => {
+        var url = "/user?userId="+data?.user?.id;
         return (
             <div className='userCellLinkDiv'>
                 <div>
-                    { (data.page === 'home') ?
-                        <Link to={"/user?userId="+data?.user?.id} className='userCellLink'>
-                            <h1>{data?.user?.companyName}</h1>
-                            <p className='userCellDescription'>{data?.user?.shortDescription}</p>  
-                        </Link>
-                        :
-                        <Link to={"/user?userId="+data?.user?.id} className='userCellLink'>
-                            <h1>{data?.user?.companyName}</h1>
-                            <p>{data?.user?.description}</p>  
-                        </Link>
-                    }
+                    <Link to={url} className='userCellLink'>
+                        <h1>{data?.user?.companyName}</h1>
+                        {data.page === 'home' ? 
+                            <p className='userCellDescription'>{data?.user?.shortDescription}</p>
+                            : 
+                            <p>{data?.user?.description}</p>
+                        }
+                    </Link>
                 <hr className='userCellHr'/>
+                <UserCallingCard user={data?.user}/>
                 </div>
             </div>
             

@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import './ChangePassword.css'
 import { useCookies } from 'react-cookie';
 import { useTranslation } from 'react-i18next';
-import { PasswordVisibilityButton} from './PasswordVisibilityButton'
+import { PasswordVisibilityButton} from '../../components/PasswordVisibilityButton'
 
 const ChangePassword = ({user})=>{
     const [cookies] = useCookies(['token']);

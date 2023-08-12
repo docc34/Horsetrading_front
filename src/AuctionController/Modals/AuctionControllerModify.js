@@ -121,6 +121,7 @@ const AuctionControllerModify = (e)=>{
 
         //Tarkistaa että auctionitem joka on jo ei tule enään muokatuksi
         if( moment(new Date().getTime()).isAfter(moment(pastClosingTime))){
+            setLoading(false);
             setMessage("Cannot modify closed auctionitem");
         }
         else{
@@ -166,6 +167,8 @@ const AuctionControllerModify = (e)=>{
     useEffect(()=>{
         if(auctionItemModifyModal == true){
             fetchImages();
+            setLoading(false);
+
             setTitle(e.selectedRowValue?.title);
             setDescription(e.selectedRowValue?.description);
             setVisible(e.selectedRowValue.visible);
@@ -206,6 +209,7 @@ const AuctionControllerModify = (e)=>{
             console.log(e.selectedRowValue);
         }
     },[auctionItemModifyModal]);
+
 
     //Rendering functions
     const renderImages = selectedImages.map((e)=>{
