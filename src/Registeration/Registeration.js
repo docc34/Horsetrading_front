@@ -16,7 +16,25 @@ const Registeration = ()=>{
     const [passwordVisibility, setPasswordVisibility] = useState("password");
     const [registerationValidated, setRegisterationValidated] = useState(false);
     const [message, setMessage] = useState("");
+    const [imageFile, setImageFile] = useState(null);
+    const [errors, setErrors] = useState([]);
     
+    const applyErrorClass= field =>((field in errors && errors[field]===false)?' invalid-field':'');
+    const setFileFromInput = e =>{
+        if(e.target.files && e.target.files[0]){
+            var files = [];
+            Array.from(e.target.files).forEach(file => {
+                files.push(file);
+            });
+            console.log(e.target.files[0]);
+            console.log(files);
+            setImageFile(e.target.files[0]);
+        }
+        else{
+            setImageFile(null);
+        }
+    }
+
     const handleRegisterationSubmit = (event) => {
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
@@ -26,21 +44,25 @@ const Registeration = ()=>{
         }
         else{
             event.preventDefault();
-            
+
+            //Formdata type is used to pass the imagefile to the api.
+            const formData = new FormData();
             //Take userdata from form using the name attribute given to inputs.
             //This is done to enable use of autofill
-            registerUser({
-                name: event.target.name.value,
-                email: event.target.email.value,
-                passwordhash: event.target.password.value,
-                companyName: event.target.companyName.value,
-                address: event.target.address.value,
-                postalCode: event.target.postalCode.value,
-                city: event.target.city.value,
-                description: event.target.description.value ,
-                shortDescription: event.target.shortDescription.value,
-                yTunnus: event.target.yTunnus.value,
-            });
+            formData.append("Name",event.target.name.value);
+            formData.append("Email",event.target.email.value);
+            formData.append("Passwordhash",event.target.password.value);
+            formData.append("CompanyName",event.target.companyName.value);
+            formData.append("Address",event.target.address.value);
+            formData.append("PostalCode",event.target.postalCode.value);
+            formData.append("City",event.target.city.value);
+            formData.append("Description",event.target.description.value);
+            formData.append("ShortDescription",event.target.shortDescription.value);
+            formData.append("YTunnus",event.target.yTunnus.value);
+            formData.append("ProfilePicture",imageFile);
+
+            registerUser(formData);
+
 
             if(message != "Error"){
                 event.target.reset(); 
@@ -50,10 +72,10 @@ const Registeration = ()=>{
     };
 
     const registerUser = async(userData)=>{
+
         const options = {
             method:'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:JSON.stringify(userData)
+            body:userData
         }
 
         var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/Register/?Link="+registerationLink,options);
@@ -151,6 +173,8 @@ const Registeration = ()=>{
                         {t("registerationWarning")}
                     </Form.Control.Feedback>
                 </div>
+
+
             </div>
 
             <h4>{t("contactInfo")}</h4>
@@ -180,6 +204,14 @@ const Registeration = ()=>{
                     </Form.Control.Feedback>
                 </div>
             </div>
+
+            <h4>{t("profilePicture")}</h4>
+            <div className='registrationFormDiv'>
+                <div className='registrationFormImageInputDiv'>
+                    <input required onChange={(e)=>{setFileFromInput(e);}} type={"file"} accept={'image/*'} id={"image-uploader"} className={"form-control"+applyErrorClass("imageSource")}></input>
+                </div>
+            </div>
+
             <div className='registerationButtonDiv'>
                 <Button type="submit">{t("save")}</Button>
                 <p className='registrationMessage'>{message}</p>

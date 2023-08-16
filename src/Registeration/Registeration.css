@@ -104,3 +104,8 @@
 .registrationDescriptionDiv{
     min-height: 200px;
 }
+
+.registrationFormImageInputDiv{
+    margin-top: 1%;
+    max-width: 350px;
+}

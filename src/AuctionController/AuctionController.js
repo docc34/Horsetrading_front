@@ -268,14 +268,14 @@ const AuctionController = ()=>{
 
                 const formData = new FormData();
                     formData.append("ImageFile",file);
-
+                
                 const options = {
                     method: 'POST',
                     headers: {"Authorization": `Bearer ${cookies.token}`},
                     body:formData
                 }
 
-                var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/Images/"+auctionItemId,options);
+                var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/Images/Auctionitem/"+auctionItemId,options);
             });
 
             Promise.all(uploadPromises).then(async ()=>{

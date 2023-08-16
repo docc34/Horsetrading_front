@@ -54,7 +54,7 @@ i18n
             ,contactInfo:"Contact info"
             ,addressInfo:"Address info"
             ,companyInfo:"Company info"
-
+            ,profilePicture:"Profile picture"
             
             ,registrationTitle:"Register your account"
             ,registerationWarning:"Please fill in the missing field"
@@ -207,6 +207,7 @@ i18n
             ,contactInfo:"Yhteystiedot"
             ,addressInfo:"Osoitetiedot"
             ,companyInfo:"Yrityksen tiedot"
+            ,profilePicture:"Profiilikuva"
 
 
             ,registrationTitle:"Rekisteröidy myyjäksi"

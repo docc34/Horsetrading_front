@@ -1,6 +1,6 @@
 .callingCardImage{
-    max-width: 60px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
 }
 .callingCardMainDiv{
     display: flex;

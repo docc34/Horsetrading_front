@@ -54,8 +54,11 @@ const StoreCell = (d)=>{
                             {/* variant={d.data?.type == "Purchase" ? 'warning' : 'info'} */}
                            <Alert className='countdownContainerType' style={d.data?.saleType == "Purchase" ? {backgroundColor: '#3E215C', borderColor: '#3E215C'} : {backgroundColor: '#AB7E0E', borderColor: '#AB7E0E'}}  >
                                 <p>{t("type")}: {d.data?.saleTypeId == 1 ? t("commission") : t("purchase")}</p>
+                                {d.data?.currentPrice != null && d.data?.currentPrice != undefined ?
+                                <p>{d.data?.currentPrice} €</p>
+                                :
+                                null}
                             </Alert> 
-
                     <h2>{d.data?.title}</h2>
                     <p>{d.data?.description}</p>
                     <div className='countdown-container'>

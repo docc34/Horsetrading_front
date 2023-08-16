@@ -59,6 +59,8 @@
 
 /* 231, 231, 231 */
 .countdownContainerType{
+  display: flex;
+  justify-content: space-between;
   text-align: left;
   margin-bottom: 0.5rem;
   margin-top: 0.2rem;
