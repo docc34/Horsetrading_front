@@ -11,10 +11,11 @@ const UserCallingCard = (data)=>{
         <Link to={url} className='callingCardMainDiv'>
             <div>
                 {/* <img src={data?.user?.profilePicUrl}/>     */}
-                <Image className='callingCardImage' src={data?.user?.profilePicUrl != null && data?.user?.profilePicUrl != "" ? data?.user?.profilePicUrl : "https://huutokauppstorage.blob.core.windows.net/huutokauppaimages/AirBrush_2235232937.jpg"} roundedCircle  />
+                <Image className='callingCardImage' src={data?.user?.profilePicUrl != null && data?.user?.profilePicUrl != "" ? data?.user?.profilePicUrl : "https://huutokauppstorage.blob.core.windows.net/huutokauppaimages/DefaultPro230035042.png"} roundedCircle  />
             </div>
-            <div>
+            <div className='callingCardTextDiv'>
                 <h1>{data?.user?.companyName}</h1>
+                <p>{data?.user?.shortDescription}</p>
             </div>
         </Link>
     </div>)

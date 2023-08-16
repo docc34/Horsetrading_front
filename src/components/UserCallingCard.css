@@ -9,7 +9,17 @@
     text-decoration: none;
 }
 
-.callingCardMainDiv h1{
+.callingCardTextDiv h1{
     padding-left: 5px;
     font-size: 2rem;
+}
+
+.callingCardTextDiv p{
+    padding-left: 10px;
+    font-size: 16px;
+}
+.callingCardTextDiv{
+    display: flex;
+    flex-direction: column;
+    margin-left: 5px;
 }

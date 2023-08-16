@@ -1,10 +1,10 @@
 import './UserContainer.css';
-import {RenderAuctionItemsCells} from './RenderAuctionItemsCells';
 import {Link} from 'react-router-dom';
 import { UserCallingCard } from './UserCallingCard';
+import { CardGroup } from 'react-bootstrap';
+import { StoreCell } from './StoreCell';
 
 const UserContainer = (data)=>{
-    //Data palautuu nyt järkevämmin apista, palauttaa käyttäjän jonka alla palauttaa listassa käyttäjän auctionitemit.
 
     const UserHeader = () => {
         var url = "/user?userId="+data?.user?.id;
@@ -13,14 +13,9 @@ const UserContainer = (data)=>{
                 <div>
                     <Link to={url} className='userCellLink'>
                         <h1>{data?.user?.companyName}</h1>
-                        {data.page === 'home' ? 
-                            <p className='userCellDescription'>{data?.user?.shortDescription}</p>
-                            : 
-                            <p>{data?.user?.description}</p>
-                        }
+                        <p className='userCellDescription'>{data?.user?.shortDescription}</p>
                     </Link>
                 <hr className='userCellHr'/>
-                <UserCallingCard user={data?.user}/>
                 </div>
             </div>
             
@@ -29,11 +24,21 @@ const UserContainer = (data)=>{
 
     return(
         <div>
-            <div className='user-cell'>
-                <UserHeader />
-                <RenderAuctionItemsCells auctionItems={data.user.userAuctionItems} /> 
-                
-            </div>
+            {/* <div className='user-cell'> */}
+                {/* <UserHeader /> */}
+                {data.user.userAuctionItems != null?
+                    <CardGroup>
+                        {data.user.userAuctionItems.map((item, i) => {
+                            return(
+                                <div key={i}>
+                                    <UserCallingCard user={data?.user}/>
+                                    <StoreCell data={item} />
+                                </div>
+                            )
+                        })}
+                    </CardGroup>
+                : null}
+            {/* </div> */}
         </div>
     )
 }

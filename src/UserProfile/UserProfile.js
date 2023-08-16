@@ -7,7 +7,7 @@ import { useCookies } from 'react-cookie';
 import { UserEditModal } from './Components/UserEditModal';
 import { ChangePassword } from "./Components/ChangePassword";
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { RenderAuctionItemsCells } from "../components/RenderAuctionItemsCells";
+import { StoreCell } from '../components/StoreCell';
 
 
 const UserProfile = () => {
@@ -83,9 +83,19 @@ const UserProfile = () => {
                     <hr/>
                 </div>
 
+                {containerData.userAuctionItems != null?
                 <CardGroup>
-                    <RenderAuctionItemsCells auctionItems={containerData.userAuctionItems} page='userprofile'/>
+                    {containerData.userAuctionItems.map((item, i) => {
+                        
+                        return(
+                            <div key={i}>
+                                <StoreCell data={item} />
+                            </div>
+                        )
+                    })}
                 </CardGroup>
+                : null}
+                    
             </div>
         </div>
     )
