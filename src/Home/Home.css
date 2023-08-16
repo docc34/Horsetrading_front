@@ -60,6 +60,10 @@
 }
 
 .homeUserContainerDiv{
-  justify-content: center;
+  justify-content: start;
   margin-bottom:80px ;
+}
+
+.homeStoreCellMainDiv{
+  margin-left: 1rem;
 }

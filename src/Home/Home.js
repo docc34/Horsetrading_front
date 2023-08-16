@@ -7,6 +7,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 import { UserContainer } from '../components/UserContainer';
+import { UserCallingCard } from '../components/UserCallingCard';
 import { useCookies } from 'react-cookie';
 import { StoreCell } from '../components/StoreCell';
 import { useTranslation } from 'react-i18next';
@@ -148,9 +149,18 @@ const Home = ()=>{
                         {containerData.map((container, i) => {
                             //Data palautuu nyt järkevämmin apista, palauttaa käyttäjän jonka alla palauttaa listassa käyttäjän auctionitemit.
                             //Tein tämän että yhdellä api kutsulla saisi kaikki tiedot näkymään
-                            return (
-                                <UserContainer key={i} user={container}/>
-                            )
+                            console.log(container);
+                            return container.userAuctionItems.map((item, i) => {
+                                return(
+                                    <div key={i} className='homeStoreCellMainDiv'>
+                                        <UserCallingCard user={container}/>
+                                        <StoreCell data={item} />
+                                    </div>
+                                )
+                            })
+
+                                // <UserContainer key={i} user={container}/>
+                            
                         })}
                         
                     </CardGroup>

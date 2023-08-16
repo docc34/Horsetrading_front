@@ -45,6 +45,7 @@ i18n
             ,shortdescription:"Short description"
             ,registeration:"Registration"
             ,questions:"Questions"
+            ,settings:"settings"
             ,normalUsers:"Normal users"
             ,dataCollection:"Data collection"
             ,dataUsage:"Data usage"
@@ -55,14 +56,19 @@ i18n
             ,addressInfo:"Address info"
             ,companyInfo:"Company info"
             ,profilePicture:"Profile picture"
+            ,editProfile:"Edit profile"
             
+
+            ,profileDescriptionText:"Short description is limited to only 40 characters"
+
+
             ,registrationTitle:"Register your account"
             ,registerationWarning:"Please fill in the missing field"
             ,registerationNameDescription:"Enter your first name and last name"
             ,registerationAddressDescription:"Enter your billing address"
             ,registerationYtunnusDescription:"YTunnus is not mandatory. Give it if you have one."
             ,registerationDescriptionDescription:"Give an description of your company, which will be displayed on your seller profile."
-            ,registerationShortDescriptionDescription:"Give a slogan or a short sentence wich describe´s your company. It will be displayed under your company name on the home page."
+            ,registerationShortDescriptionDescription:"Give a slogan or a short sentence wich describe´s your company. It will be displayed under your company name on the home page. Limited to 40 characters."
             ,registerationPasswordDescription:"Type in an password for your seller account, with atleast 8 characters, 1 number and 1 special character"
             ,registerationPasswordWarning:"Password does not fill requirements"
             ,registerationEmailDescription:"All bills are sent to your email address."
@@ -198,6 +204,7 @@ i18n
             ,shortdescription:"Lyhyt kuvaus"
             ,registeration:"Rekisteröityminen"
             ,questions:"Kysymyksiä"
+            ,settings:"asetukset"
             ,normalUsers:"Tavalliset käyttäjät"
             ,dataCollection:"Tiedon keräys"
             ,dataUsage:"Tiedon käyttö"
@@ -208,6 +215,10 @@ i18n
             ,addressInfo:"Osoitetiedot"
             ,companyInfo:"Yrityksen tiedot"
             ,profilePicture:"Profiilikuva"
+            ,editProfile:"Muokkaa profiilia"
+            
+            
+            ,profileDescriptionText:"Lyhyt kuvaus on rajoitettu 40 merkkiin"
 
 
             ,registrationTitle:"Rekisteröidy myyjäksi"
@@ -216,7 +227,7 @@ i18n
             ,registerationAddressDescription:"Kirjoita laskutusosoitteesi"
             ,registerationYtunnusDescription:"Anna YTunnus jos sinulla on sellainen."
             ,registerationDescriptionDescription:"Anna kuvaus yrityksestäsi. Kuvaus näkyy profiilissasi."
-            ,registerationShortDescriptionDescription:"Anna lyhyt slogan tai lause joka kuvaa yritystäsi, se näytetään nimesi alla kotisivuilla."
+            ,registerationShortDescriptionDescription:"Anna lyhyt slogan tai lause joka kuvaa yritystäsi, se näytetään nimesi alla kotisivuilla. Rajoitettu 40 merkkiin"
             ,registerationPasswordDescription:"Kirjoita salasana joka on vähintään 8 merkkiä pitkä ja vähintään 1 numeron ja erikoismerkin."
             ,registerationPasswordWarning:"Salasana ei täytä vaatimuksia"
             ,registerationEmailDescription:"Sähköpostiin lähetetään kaikki laskut valmistuneista kaupoista."

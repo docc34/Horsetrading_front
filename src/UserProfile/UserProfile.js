@@ -8,11 +8,14 @@ import { UserEditModal } from './Components/UserEditModal';
 import { ChangePassword } from "./Components/ChangePassword";
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { StoreCell } from '../components/StoreCell';
+import { useTranslation } from 'react-i18next';
 
 
 const UserProfile = () => {
     const search = useLocation().search;
     const searchParamId = new URLSearchParams(search).get('userId');
+    const {t} = useTranslation();
+
     const [loggedIn, setLoggedIn] = useState(false);
     const [cookies] = useCookies(['token']);
     const [ownProfile, setOwnProfile] = useState(false);
@@ -70,11 +73,11 @@ const UserProfile = () => {
                     <h1>{containerData.companyName}</h1>
                     <p>{containerData.description}</p>
                     {loggedIn && ownProfile ? 
-                        <DropdownButton id="dropdown-basic-button" title="Settings">
+                        <DropdownButton id="dropdown-basic-button" title={t("settings")}>
                             <UserEditModal user={containerData} />
                             <ChangePassword user={containerData.id}/>
                             <div className='dropDownButton'>
-                                <a href="/AuctionController">Control Page</a>
+                                <a href="/AuctionController">{t("footerControlPage")}</a>
                             </div>
                         </DropdownButton> 
                     :
@@ -84,16 +87,16 @@ const UserProfile = () => {
                 </div>
 
                 {containerData.userAuctionItems != null?
-                <CardGroup>
-                    {containerData.userAuctionItems.map((item, i) => {
-                        
-                        return(
-                            <div key={i}>
-                                <StoreCell data={item} />
-                            </div>
-                        )
-                    })}
-                </CardGroup>
+                    <CardGroup>
+                        {containerData.userAuctionItems.map((item, i) => {
+                            
+                            return(
+                                <div key={i}>
+                                    <StoreCell data={item} />
+                                </div>
+                            )
+                        })}
+                    </CardGroup>
                 : null}
                     
             </div>

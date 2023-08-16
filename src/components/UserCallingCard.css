@@ -1,7 +1,36 @@
-.callingCardImage{
-    width: 60px;
-    height: 60px;
-}
+@media (max-width: 399.98px) {
+    .callingCardTextDiv h1{
+        padding-left: 5px;
+        font-size: 22px;
+    }
+    
+    .callingCardTextDiv p{
+        padding-left: 10px;
+        font-size: 14px;
+    }
+    .callingCardImage{
+        width: 45px;
+        height: 45px;
+    }
+  }
+@media (min-width: 400px) {
+    .callingCardTextDiv h1{
+        padding-left: 5px;
+        font-size: 32px;
+    }
+    
+    .callingCardTextDiv p{
+        padding-left: 10px;
+        font-size: 16px;
+    }
+    .callingCardImage{
+        width: 60px;
+        height: 60px;
+    }
+  }
+  
+  
+
 .callingCardMainDiv{
     display: flex;
     align-items: center;
@@ -9,15 +38,7 @@
     text-decoration: none;
 }
 
-.callingCardTextDiv h1{
-    padding-left: 5px;
-    font-size: 2rem;
-}
 
-.callingCardTextDiv p{
-    padding-left: 10px;
-    font-size: 16px;
-}
 .callingCardTextDiv{
     display: flex;
     flex-direction: column;
