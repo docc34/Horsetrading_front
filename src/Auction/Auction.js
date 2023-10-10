@@ -73,21 +73,14 @@ const Auction = ()=>{
     //Test to fix react update
     const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
     
-    //Defines witch columns are visible dependad on if the user is logged in or not
-    var auctioneerColumns = []
-    { isCreator == false ?        
-    auctioneerColumns =[{name:"id", header: "Id",  defaultVisible: false},
-        {name:"igTag" , header:t("igTag"),  defaultVisible: false,  defaultFlex:2},
-        {name:"phonenumber" , header:t("phonenumber"), defaultVisible: false, defaultFlex:2},
+    //Defines witch columns are visible dependent on if the user is logged in or not
+    const auctioneerColumns = [
+        {name:"id", header: "Id",  defaultVisible: false},
+        {name:"igTag" , header:t("igTag"),  visible: isCreator,  defaultFlex:2},
+        {name:"phonenumber" , header:t("phonenumber"), visible: isCreator, defaultFlex:2},
         {name:"username" , header:t("username"), defaultFlex:2},
-        {name:"price" , header:t("offer"), type: "number", defaultFlex:1}]
-        :
-    auctioneerColumns =[{name:"id", header: "Id",  defaultVisible: false},
-        {name:"igTag" , header:t("igTag"),    defaultFlex:2},
-        {name:"phonenumber" , header:t("phonenumber"), defaultFlex:2},
-        {name:"username" , header:t("username"), defaultFlex:2},
-        {name:"price" , header:t("offer"), type: "number", defaultFlex:1}]
-    }
+        {name:"price" , header:t("offer"), type: "number", defaultFlex:1}
+    ];
 
     const currentAuctioneerColumns = [
         {name:"id", header: "Id",  defaultVisible: false},
@@ -233,7 +226,7 @@ const Auction = ()=>{
 
     const postAuctioneer = async ()=>{
         try{
-            if(igTag != "@" || phonenumber != ""&&  price != 0 &&  price != ""&&  password != ""){
+            if(igTag != "@" || phonenumber != "" &&  price != 0 &&  price != "" &&  password != ""){
                 var body = null;
                 if(igTagCollapse == true){
                     body = {
@@ -264,6 +257,8 @@ const Auction = ()=>{
                 if(await result?.status == "Ok" ){
                     setCookie('auctioneerPassword', await result.message, { path: '/Auction' });
                     setCookies(await result);
+                    
+                    fetchCurrentAuctioneer();
                 }
                 else{
                     setMessage(result?.message);
@@ -297,7 +292,10 @@ const Auction = ()=>{
                 result = await search.json();
             }
             else if(result?.length > 0){
+                //Opens administrative tools on frontend
                 setIsCreator(true);
+                
+                //Puts empty string instead of null, so the datagrid looks better.
                 result.map((e)=>{
                     if(e.phonenumber == 0){
                         e.phonenumber = "";
@@ -336,7 +334,8 @@ const Auction = ()=>{
 
             var search = await fetch("https://horsetradingapidev.azurewebsites.net/api/Auctioneers/Current/?auctionItemId="+auctionId+"&auctioneerId="+id+"&password="+password);
             var result = await search.json();
-            
+            console.log(result);
+
             if(result?.status != "Error" && result != null){
                 if( JSON.stringify(currentAuctioneer) !== JSON.stringify([result])){
                     setCurrentAuctioneer([result]);
@@ -480,6 +479,16 @@ const Auction = ()=>{
         )
     });
     
+    const handleTabSelection = (tab) =>{
+        //Searches the correct amount of auctioneers, once the tab header is changed
+        
+         if(tab == "top5")
+            fetchAuctioneers(5);
+
+        else if(tab = "allOffers")
+            fetchAuctioneers(0);
+    }
+
     return(
 <div >
     { auctionVisible == 1 ?  
@@ -510,9 +519,10 @@ const Auction = ()=>{
                             id="fill-tab"
                             className="mb-3"
                             fill
+                            onSelect={(e)=>{handleTabSelection(e)}}
                         >
-                            <Tab eventKey="Top5" title={t("auctionTop5")} onClick={()=>{fetchAuctioneers(5);}}>
-
+                            <Tab eventKey="Top5" title={t("auctionTop5")} >
+                               
                                 {ignored}
                                 <ReactDataGrid
                                     idProperty="id"
@@ -520,7 +530,7 @@ const Auction = ()=>{
                                     style={{minHeight: 243}}
                                     columns={auctioneerColumns}
                                     dataSource={auctioneers?.slice(0, 5)}
-                                    enableSelection={userOfferExists == true ? false : true}
+                                    enableSelection={userOfferExists == true && isCreator == false ? false: true}
                                     defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
                                     sortable={false}
                                     onSelectionChange={onSelectionChange}
@@ -531,8 +541,9 @@ const Auction = ()=>{
                                     rowClassName="auctionReactDataGridRows"
                                     showColumnMenuTool={false}
                                 />
+
                             </Tab>
-                            <Tab eventKey="allOffers" title={t("auctionAllOffers")} onClick={()=>{fetchAuctioneers(0)}} href="#">
+                            <Tab eventKey="allOffers" title={t("auctionAllOffers")} href="#">
 
                                 <ReactDataGrid
                                     idProperty="id"
@@ -540,12 +551,12 @@ const Auction = ()=>{
                                     style={{minHeight: 43+ 40 * auctioneers?.length}}
                                     columns={auctioneerColumns}
                                     dataSource={auctioneers}
-                                    enableSelection={userOfferExists == true ? false : true}
+                                    enableSelection={userOfferExists == true && isCreator == false? false : true}
                                     defaultSortInfo={{name: "price",  dir: -1, type: 'number'}}
                                     sortable={false}
                                     onSelectionChange={onSelectionChange}
                                     enableKeyboardNavigation={false}
-                                    toggleRowSelectOnClick={cookies?.auctioneerDefaultUsername?.length < 3 || isCreator == true? true : false }
+                                    toggleRowSelectOnClick={true}//{cookies?.auctioneerDefaultUsername?.length < 3 || isCreator == true? true : false }
                                     defaultSelected={datagridDefaultSelected != undefined && datagridDefaultSelected != 0 ? datagridDefaultSelected : null}// cookies?.auctioneerId != null ? cookies?.auctioneerId  : 0}
                                     selected={selectedRowId == 0 ? cookies.auctioneerId : selectedRowId}
                                     rowClassName="auctionReactDataGridRows"

@@ -333,7 +333,7 @@ const AuctionController = ()=>{
                                 style={{minHeight: 43+ 40 * auctionItems?.length, minWidth: 500 }}
                                 columns={auctionItemsColumns}
                                 dataSource={auctionItems}
-                                defaultSortInfo={[{name: "closingTime",  dir: -1, type: 'date'},{name: "visible",  dir: -1, type: 'date'}]}
+                                defaultSortInfo={[{name: "visible",  dir: -1, type: 'number'},{name: "id",  dir: -1, type: 'number'}]} //{name: "closingTime",  dir: -1, type: 'date'} Kommenteissa koska closing time ei aina sisällä arvoa enään.
                                 onSelectionChange={onSelectionChange}
                                 enableSelection={true}
                                 sortable={false}
