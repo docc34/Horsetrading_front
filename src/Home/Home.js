@@ -66,6 +66,7 @@ const Home = ()=>{
         if(data != null || data != undefined){
             setContainerData(data);
         }
+        console.log(data);
     }
 
     //Asettaa home sivulla seurattavien viimeksi vierailtujen auctionitemien id:n 

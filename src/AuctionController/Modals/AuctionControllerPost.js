@@ -19,7 +19,6 @@ const AuctionControllerPost=(e)=>{
     const [cookies] = useCookies(['token']);
     const [message, setMessage] = useState("");
     const [errors, setErrors] = useState([]);
-
     const [auctionItemCreateValidated, setAuctionItemCreateValidated] = useState(false);
     const [auctionItemPostModal, setAuctionItemPostModal] = useState(false);
 
@@ -91,7 +90,8 @@ const AuctionControllerPost=(e)=>{
             postAuctionItem({
                 title: event.target.title.value, 
                 description: event.target.description.value,
-                auctionDurationMinutes: auctionItemTotalMinutes,
+                auctionDurationMinutes: auctionItemTotalMinutes, 
+                utcOffset:moment().utcOffset(),//This is done for the date to be correct in the backend and to set the creators local time as the auction items local time
                 startClosingTimeOnBid: startClosingTimeOnBid,
                 openBiddingTime: openBiddingTime,
                 visible: visible,
@@ -139,7 +139,7 @@ const AuctionControllerPost=(e)=>{
                     <Form.Label>{t("title")} </Form.Label>
                     <Form.Control required placeholder={t("title")} name='title' />
                 </div>
-
+                
                 <div>
                     <Form.Label>{t("description")}</Form.Label>
                     <Form.Control required as="textarea" placeholder={t("description")} name='description' />
@@ -184,7 +184,7 @@ const AuctionControllerPost=(e)=>{
                         Defines how many minutes the auction will last, once its been opened.
                     </Form.Text>
                 </div>
-
+                
                 <div className='controllerFormInputs'>
                     <Form.Label>{t("auctionControllerRaisePeriod")}</Form.Label>
                     <Form.Control onWheel={(e)=>{e.target.blur()}} min={0} placeholder={t("auctionControllerRaisePeriodPlaceHolder")}  type='number' max={60} name='auctionItemRaisePeriod' />

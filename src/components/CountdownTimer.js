@@ -19,8 +19,8 @@ const CountdownTimer = ({closingTime, openBiddingTime}) => {
     if(openBiddingTime != null && moment(new Date().getTime()).isBefore(moment(openBiddingTime))){
         countDownDate = openBiddingTime;
     }
-    const [days, hours, minutes, seconds] = useCountdown(countDownDate);
-    
+    const [days, hours, minutes, seconds] = useCountdown(moment(countDownDate));
+
     if(countDownDate == null){
         return (
             <div className="expired-notice">

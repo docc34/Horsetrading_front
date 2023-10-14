@@ -371,7 +371,7 @@ const AuctionController = ()=>{
                                 </Modal>
                             </div>
 
-
+                            
                             <div>
                                 <Modal show={auctionItemVisibilityModal}>
                                     <Modal.Header className="ModalHeader">

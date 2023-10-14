@@ -100,6 +100,7 @@ const AuctionControllerModify = (e)=>{
                 Description:event.target.description.value,
                 auctionDurationMinutes: auctionItemTotalMinutes,
                 startClosingTimeOnBid: startClosingTimeOnBid,
+                utcOffset:moment().utcOffset(),//This is done for the date to be correct in the backend and to set the creators local time as the auction items local time
                 openBiddingTime: openBiddingTime,
                 Visible: visible,
                 saleTypeId: auctionItemType,

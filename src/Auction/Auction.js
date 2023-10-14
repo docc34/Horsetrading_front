@@ -97,6 +97,7 @@ const Auction = ()=>{
             //päivitetään highest offer
             var addedAuctioneer = auctioneers[0];
             setHighestOffer(addedAuctioneer?.price);
+            console.log(AuctionClosingTime);
             setAuctionClosingTime(AuctionClosingTime);
             forceUpdate();
         }
@@ -701,7 +702,7 @@ const Auction = ()=>{
 
                             <div className='auctionModifyInputDiv'>
                                 <Form noValidate validated={modifyValidated} onSubmit={handleModifySubmit} className='auctionParticipateForm' >
-                                    <div className='auctionModifyFormInputs' style={userOfferExists == true ? {"display":"flex","flex-direction":"row","width":"100%"} : null}>
+                                    <div className='auctionModifyFormInputs' style={userOfferExists == true ? {"display":"flex","flexDirection":"row","width":"100%"} : null}>
 
                                         <div className="auctionParticipateFormBodyDiv">
                                         {userOfferExists == false ? 

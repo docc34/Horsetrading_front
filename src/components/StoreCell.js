@@ -12,6 +12,7 @@ const StoreCell = (d)=>{
     if(d.data.openBiddingTime != null && moment(new Date().getTime()).isBefore(moment(d.data.openBiddingTime))){
         countDownDate = d.data.openBiddingTime;
     }
+    
     const [days, hours, minutes, seconds] = useCountdown(countDownDate);
 
     var countDownOutput ="";
