@@ -1,14 +1,9 @@
-Julkasin tietokannan ja apin azureen toistaseks.
-Api on julkastu osotteeseen:
-https://horsetradingapidev.azurewebsites.net/
-jos ei toimi oo yhteydessä. korvaat fronttikoordin localhost urlit tolla nii pitäs tulla dataa.
+Horsetrading.fi verkkosivujen frontti. Olen ottanut verkkosivut alas netistä kustannus syistä, ja julkaisin koodit tänne työn näytteeksi.
 
-Jos voisit tehdä sen auctionin jäljellä olevan ajan näyttämisen jotenkin kotiruudussa.
-Ja auctionitems hallinta sivulle en ole tehnyt yhtään muotoiluja, sinne saat vapaat kädet.
+Tein projektin AntiTech yritykselleni React:tilla ja käytin tyylittelyyn pääosin React Bootstrappia.
 
-Kanssa sinne ois hyvä olla ominaisuus jossa maksettujen laskujen riviväri olisi vihree ja maksamattomien punainen. 
-Oon käyttäny ReactDataGridiä kaikissa tableissa sieltä löytyy todnäk miten saa custom css riveille tms tässä linkki dokumentteihin.
-https://reactdatagrid.io/docs/
-
-Sivuilla käytetään bootstrapin elementtejä, käytä niitä koodatessa. Tässä vielä linkki niihin:
-https://react-bootstrap.github.io/components/alerts
+Maininnan arvoisina ominaisuuksina: 
+  -käyttäjät rekisteröityivät sivuille kutsulinkillä, jonka generoin hallintasivuilta.
+  -Huutokauppa toteutettiin hyödyntäen SingalR teknologiaa, jotta huudot päivittyivät käyttäjille reaaliaikaisesti.
+  -Myyjät tekivät omat profiilit, jonne he julkaisivat myyntiin keppihevosia.
+  -Huutokauppaan osallistujan ei tarvinnut erikseen rekisteröityä sivuille huutaakseen. He liittyivät heidän instagram käyttäjänimellä(Instagram on tämänhetkinen pääalusta monelle keppihevosten valmistajalle, joten huutokaupan jälkeen loppu kommunikaatio käytiin instagramissa.)
