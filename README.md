@@ -1,9 +1,10 @@
 Horsetrading.fi verkkosivujen frontti. Olen ottanut verkkosivut alas netistä kustannus syistä, ja julkaisin koodit tänne työn näytteeksi.
 
-Tein projektin AntiTech yritykselleni React:tilla ja käytin tyylittelyyn pääosin React Bootstrappia.
+Tein projektin AntiTech yritykselleni React:tilla ja käytin tyylittelyyn pääosin React Bootstrappia. Sivuilla oli yht 15 000 kävijää.
 
 Maininnan arvoisina ominaisuuksina: 
-  -käyttäjät rekisteröityivät sivuille kutsulinkillä, jonka generoin hallintasivuilta.
+  
+  -Käyttäjät rekisteröityivät sivuille kutsulinkillä, jonka generoin hallintasivuilta.
   
   -Huutokauppa toteutettiin hyödyntäen SingalR teknologiaa, jotta huudot päivittyivät käyttäjille reaaliaikaisesti.
   
@@ -12,3 +13,7 @@ Maininnan arvoisina ominaisuuksina:
   -Huutokauppaan osallistujan ei tarvinnut erikseen rekisteröityä sivuille huutaakseen. He liittyivät heidän instagram käyttäjänimellä(Instagram on tämänhetkinen pääalusta monelle keppihevosten valmistajalle, joten huutokaupan jälkeen loppu kommunikaatio käytiin instagramissa.)
   
   -Sivu on käännetty myös englanniksi!
+
+  -Kuvat pakattiin säästääkseen tilaa, kun ne tallennettiin azuren pilvipalveluihin
+
+  
